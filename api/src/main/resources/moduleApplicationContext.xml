@@ -25,14 +25,5 @@
 
     <context:component-scan base-package="org.openmrs.module.erp" />
 
-    <!-- Adds ErpService to OpenMRS context so it can be accessed
-    calling Context.getService(ErpService.class) -->
-    <bean parent="serviceContext">
-        <property name="moduleService">
-            <list>
-                <value>org.openmrs.module.erp.api.ErpOrderService</value>
-                <ref bean="erp.ErpOrderService" />
-            </list>
-        </property>
-    </bean>
+
 </beans>

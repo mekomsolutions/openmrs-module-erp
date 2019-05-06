@@ -11,7 +11,7 @@ import com.odoojava.api.Session;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
-import org.openmrs.module.erp.api.impl.odoo.OdooOrderServiceServiceImpl;
+import org.openmrs.module.erp.api.impl.odoo.OdooOrderServiceImpl;
 import org.openmrs.module.erp.api.utils.ErpProperties;
 
 import java.util.ArrayList;
@@ -60,7 +60,7 @@ public class OdooOrderServiceImplTest {
 		Field name = new Field("name", fieldData);
 		Field amountTotal = new Field("amount_total", fieldData);
 		
-		data.put("uuid", "101659fd-383a-4305-b512-51ea34f69908");
+		data.put("partner_uuid", "101659fd-383a-4305-b512-51ea34f69908");
 		data.put("name", "SO/001");
 		data.put("amount_total", "3175.0");
 		
@@ -87,7 +87,7 @@ public class OdooOrderServiceImplTest {
 		when(objectAdapter.searchAndReadObject(any(FilterCollection.class), any(String[].class))).thenReturn(getOrder());
 		when(session.getObjectAdapter(any(String.class))).thenReturn(objectAdapter);
 		
-		OdooOrderServiceServiceImpl odooOrderService = new OdooOrderServiceServiceImpl(session);
+		OdooOrderServiceImpl odooOrderService = new OdooOrderServiceImpl(session);
 		
 		// Replay
 		

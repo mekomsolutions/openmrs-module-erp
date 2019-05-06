@@ -11,8 +11,9 @@ package org.openmrs.module.erp.web.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONObject;
 import org.openmrs.module.erp.ErpConstants;
-import org.openmrs.module.erp.api.impl.odoo.OdooOrderServiceServiceImpl;
+import org.openmrs.module.erp.api.impl.odoo.OdooOrderServiceImpl;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 import org.openmrs.module.webservices.rest.web.v1_0.controller.BaseRestController;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 
 /**
  * This class configured as controller using annotation and mapped with the URL of
@@ -29,7 +33,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Controller
 @RequestMapping(value = "/rest/" + RestConstants.VERSION_1 + "/" + "erp")
-public class ErpController extends BaseRestController {
+public class ErpOrderController extends BaseRestController {
 	
 	/** Logger for this class and subclasses */
 	protected final Log log = LogFactory.getLog(getClass());
@@ -42,9 +46,14 @@ public class ErpController extends BaseRestController {
 	 */
 	@RequestMapping(value = ErpConstants.ERP_ORDERS_URI, method = RequestMethod.GET)
 	public void getErpOrdersByPatientUuid(@PathVariable("uuid") String uuid, HttpServletResponse response)
-	        throws ResponseException {
-		OdooOrderServiceServiceImpl odooOrder = new OdooOrderServiceServiceImpl();
-		odooOrder.getErpOrdersByPatientUuid(uuid);
+	        throws ResponseException, IOException {
+		OdooOrderServiceImpl odooOrder = new OdooOrderServiceImpl();
+		ArrayList<JSONObject> orders = odooOrder.getErpOrdersByPatientUuid(uuid);
+		response.setContentType("application/json");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		out.print(orders);
+		out.flush();
 	}
 	
 }
