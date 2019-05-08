@@ -29,7 +29,7 @@ public class ErpProperties {
 		return properties != null ? properties.getProperty(key) : null;
 	}
 	
-	public static void initalize(Properties props) {
+	public static void initialize(Properties props) {
 		properties = props;
 	}
 }

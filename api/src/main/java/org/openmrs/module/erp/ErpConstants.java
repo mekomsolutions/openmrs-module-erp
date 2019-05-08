@@ -13,9 +13,18 @@ public class ErpConstants {
 	
 	public static final String MODULE_PRIVILEGE = "ERP PRIVILEGE";
 	
-	// REST API resources
+	public static final String COMPONENT_ERP_CONTEXT = MODULE_ARTIFACT_ID + ".ErpContext";
+	
+	public static final String COMPONENT_ODOO_ORDER_SERVICE = MODULE_ARTIFACT_ID + ".OdooOrderService";
+	
+	public static final String COMPONENT_ODOO_INVOICE_SERVICE = MODULE_ARTIFACT_ID + ".OdooInvoiceService";
+	
+	// REST resources
 	
 	public final static String ERP_ORDERS_URI = "/orders/{uuid}";
 	
 	public final static String ERP_ORDER_URI = "/order/{id}";
+	
+	public final static String ERP_INVOICE_URI = "/invoice";
+	
 }

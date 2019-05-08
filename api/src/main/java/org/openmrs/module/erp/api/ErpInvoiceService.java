@@ -10,10 +10,10 @@ public interface ErpInvoiceService {
 	/**
 	 * Returns an invoice by order id.
 	 * 
-	 * @param orderId The ERP invoice id
+	 * @param invoiceId The ERP invoice id
 	 * @return JSONObject
 	 * @throws APIException
 	 */
 	@Authorized(ErpConstants.MODULE_PRIVILEGE)
-	JSONObject getInvoiceById(String orderId) throws APIException;
+	JSONObject getInvoiceById(String invoiceId) throws APIException;
 }

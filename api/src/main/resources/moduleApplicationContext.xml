@@ -25,5 +25,4 @@
 
     <context:component-scan base-package="org.openmrs.module.erp" />
 
-
 </beans>

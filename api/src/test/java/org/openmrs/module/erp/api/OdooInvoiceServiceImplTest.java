@@ -11,9 +11,8 @@ import com.odoojava.api.Session;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
-import org.openmrs.module.erp.api.impl.odoo.OdooOrderServiceImpl;
+import org.openmrs.module.erp.api.impl.odoo.OdooInvoiceServiceImpl;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,11 +21,11 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
 
-public class OdooOrderServiceImplTest {
+public class OdooInvoiceServiceImplTest {
 	
-	private RowCollection getOrders() throws OdooApiException {
+	private RowCollection getIvoice() throws OdooApiException {
 		
-		RowCollection order = new RowCollection();
+		RowCollection invoice = new RowCollection();
 		
 		HashMap<String, Object> data = new HashMap<String, Object>();
 		
@@ -43,21 +42,21 @@ public class OdooOrderServiceImplTest {
 		fieldData.put("states", 1);
 		fieldData.put("company_dependent", false);
 		
-		Field id = new Field("uuid", fieldData);
+		Field id = new Field("id", fieldData);
 		Field name = new Field("name", fieldData);
 		Field amountTotal = new Field("amount_total", fieldData);
 		
-		data.put("partner_uuid", "101659fd-383a-4305-b512-51ea34f69908");
-		data.put("name", "SO/001");
+		data.put("id", "1");
+		data.put("name", "INV/001");
 		data.put("amount_total", "3175.0");
 		
 		FieldCollection fields = new FieldCollection();
 		fields.addAll(Arrays.asList(id, name, amountTotal));
 		
 		Row row = new Row(data, fields);
-		order.add(row);
+		invoice.add(row);
 		
-		return order;
+		return invoice;
 	}
 	
 	@Test
@@ -70,20 +69,19 @@ public class OdooOrderServiceImplTest {
 		// create mocked session
 		Session session = mock(Session.class);
 		ObjectAdapter objectAdapter = mock(ObjectAdapter.class);
-		when(objectAdapter.searchAndReadObject(any(FilterCollection.class), any(String[].class))).thenReturn(getOrders());
+		when(objectAdapter.searchAndReadObject(any(FilterCollection.class), any(String[].class))).thenReturn(getIvoice());
 		when(session.getObjectAdapter(any(String.class))).thenReturn(objectAdapter);
 		
-		OdooOrderServiceImpl odooOrderService = new OdooOrderServiceImpl(session);
+		OdooInvoiceServiceImpl odooInvoiceService = new OdooInvoiceServiceImpl(session);
 		
 		// Replay
 		
-		ArrayList<JSONObject> listPricesForOrderables = odooOrderService
-		        .getErpOrdersByPatientUuid("101659fd-383a-4305-b512-51ea34f69908");
+		JSONObject invoice = odooInvoiceService.getInvoiceById("1");
 		
 		// Verify
 		
-		Assert.assertEquals(String.valueOf(listPricesForOrderables.get(0).get("name")), "SO/001");
-		Assert.assertEquals(String.valueOf(listPricesForOrderables.get(0).get("amount_total")), "3175.0");
+		Assert.assertEquals(String.valueOf(invoice.get("name")), "INV/001");
+		Assert.assertEquals(String.valueOf(invoice.get("amount_total")), "3175.0");
 	}
 	
 }
