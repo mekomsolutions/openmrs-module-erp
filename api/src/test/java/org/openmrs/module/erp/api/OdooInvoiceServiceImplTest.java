@@ -23,7 +23,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 
 public class OdooInvoiceServiceImplTest {
 	
-	private RowCollection getIvoice() throws OdooApiException {
+	private RowCollection getInvoice() throws OdooApiException {
 		
 		RowCollection invoice = new RowCollection();
 		
@@ -60,7 +60,7 @@ public class OdooInvoiceServiceImplTest {
 	}
 	
 	@Test
-	public void getOrdersTest() throws Exception {
+	public void getInvoiceByIdShouldReturnInvoice() throws Exception {
 		
 		// Setup
 		
@@ -69,7 +69,7 @@ public class OdooInvoiceServiceImplTest {
 		// create mocked session
 		Session session = mock(Session.class);
 		ObjectAdapter objectAdapter = mock(ObjectAdapter.class);
-		when(objectAdapter.searchAndReadObject(any(FilterCollection.class), any(String[].class))).thenReturn(getIvoice());
+		when(objectAdapter.searchAndReadObject(any(FilterCollection.class), any(String[].class))).thenReturn(getInvoice());
 		when(session.getObjectAdapter(any(String.class))).thenReturn(objectAdapter);
 		
 		OdooInvoiceServiceImpl odooInvoiceService = new OdooInvoiceServiceImpl(session);

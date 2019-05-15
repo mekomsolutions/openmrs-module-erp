@@ -10,15 +10,14 @@ import java.util.ArrayList;
 public interface ErpOrderService {
 	
 	/**
-	 * Returns a list of erp orders by client uuid.
+	 * Returns a filtered list of erp orders.
 	 * 
-	 * @param uuid The patient uuid
+	 * @param filters The filter expressions
 	 * @return ArrayList<JSONObject>
 	 * @throws APIException
 	 */
-	
 	@Authorized(ErpConstants.MODULE_PRIVILEGE)
-	ArrayList<JSONObject> getErpOrdersByPatientUuid(String uuid) throws APIException;
+	ArrayList<JSONObject> getErpOrdersByFilters(ArrayList<Object> filters) throws APIException;
 	
 	/**
 	 * Returns an erp order by order id.

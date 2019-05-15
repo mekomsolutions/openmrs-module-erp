@@ -43,16 +43,18 @@ public class OdooOrderServiceImplTest {
 		fieldData.put("states", 1);
 		fieldData.put("company_dependent", false);
 		
-		Field id = new Field("uuid", fieldData);
+		Field id = new Field("id", fieldData);
+		Field partnerUuid = new Field("partner_uuid", fieldData);
 		Field name = new Field("name", fieldData);
 		Field amountTotal = new Field("amount_total", fieldData);
 		
+		data.put("id", "1");
 		data.put("partner_uuid", "101659fd-383a-4305-b512-51ea34f69908");
 		data.put("name", "SO/001");
 		data.put("amount_total", "3175.0");
 		
 		FieldCollection fields = new FieldCollection();
-		fields.addAll(Arrays.asList(id, name, amountTotal));
+		fields.addAll(Arrays.asList(id, partnerUuid, name, amountTotal));
 		
 		Row row = new Row(data, fields);
 		order.add(row);
@@ -61,7 +63,7 @@ public class OdooOrderServiceImplTest {
 	}
 	
 	@Test
-	public void getOrdersTest() throws Exception {
+	public void getOrdersByIdShouldReturnOrderTest() throws Exception {
 		
 		// Setup
 		
@@ -77,13 +79,12 @@ public class OdooOrderServiceImplTest {
 		
 		// Replay
 		
-		ArrayList<JSONObject> listPricesForOrderables = odooOrderService
-		        .getErpOrdersByPatientUuid("101659fd-383a-4305-b512-51ea34f69908");
+		JSONObject orders = odooOrderService.getErpOrderById("1");
 		
 		// Verify
 		
-		Assert.assertEquals(String.valueOf(listPricesForOrderables.get(0).get("name")), "SO/001");
-		Assert.assertEquals(String.valueOf(listPricesForOrderables.get(0).get("amount_total")), "3175.0");
+		Assert.assertEquals(String.valueOf(orders.get("name")), "SO/001");
+		Assert.assertEquals(String.valueOf(orders.get("amount_total")), "3175.0");
 	}
 	
 }

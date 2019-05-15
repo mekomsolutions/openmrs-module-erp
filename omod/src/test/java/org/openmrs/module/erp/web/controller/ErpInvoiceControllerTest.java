@@ -2,8 +2,8 @@ package org.openmrs.module.erp.web.controller;
 
 import org.json.JSONObject;
 import org.junit.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.Test;
+import org.junit.Before;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -33,13 +33,10 @@ public class ErpInvoiceControllerTest extends BaseModuleWebContextSensitiveTest 
 		TestHelper.setErpProperties();
 	}
 	
-	@BeforeMethod
-	public void initMocks() {
+	@Before
+	public void setup() {
+		
 		MockitoAnnotations.initMocks(this);
-	}
-	
-	@BeforeMethod
-	public void setup() throws IOException {
 		ErpInvoiceService erpInvoiceService = mock(ErpInvoiceService.class);
 		
 		Mockito.doReturn(erpInvoiceService).when(erpContext).getErpInvoiceService();
@@ -57,7 +54,7 @@ public class ErpInvoiceControllerTest extends BaseModuleWebContextSensitiveTest 
 	}
 	
 	@Test
-	public void getErpInvoiceShouldReturnResponse() {
+	public void getErpInvoiceByIdShouldReturnResponse() {
 		// Replay
 		JSONObject result = erpInvoiceController.getInvoiceById("1");
 		
