@@ -6,8 +6,11 @@ import org.openmrs.api.APIException;
 import org.openmrs.module.erp.ErpConstants;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public interface ErpOrderService {
+	
+	ArrayList<String> defaultModelAttributes();
 	
 	/**
 	 * Returns a filtered list of erp orders.
@@ -17,7 +20,7 @@ public interface ErpOrderService {
 	 * @throws APIException
 	 */
 	@Authorized(ErpConstants.MODULE_PRIVILEGE)
-	ArrayList<JSONObject> getErpOrdersByFilters(ArrayList<Object> filters) throws APIException;
+	ArrayList<Map<String, Object>> getErpOrdersByFilters(ArrayList<JSONObject> filters) throws APIException;
 	
 	/**
 	 * Returns an erp order by order id.
@@ -27,6 +30,6 @@ public interface ErpOrderService {
 	 * @throws APIException
 	 */
 	@Authorized(ErpConstants.MODULE_PRIVILEGE)
-	JSONObject getErpOrderById(String erpOrderId) throws APIException;
+	Map<String, Object> getErpOrderById(String erpOrderId) throws APIException;
 	
 }

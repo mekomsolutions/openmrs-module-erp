@@ -44,17 +44,15 @@ public class OdooOrderServiceImplTest {
 		fieldData.put("company_dependent", false);
 		
 		Field id = new Field("id", fieldData);
-		Field partnerUuid = new Field("partner_uuid", fieldData);
 		Field name = new Field("name", fieldData);
 		Field amountTotal = new Field("amount_total", fieldData);
 		
 		data.put("id", "1");
-		data.put("partner_uuid", "101659fd-383a-4305-b512-51ea34f69908");
 		data.put("name", "SO/001");
 		data.put("amount_total", "3175.0");
 		
 		FieldCollection fields = new FieldCollection();
-		fields.addAll(Arrays.asList(id, partnerUuid, name, amountTotal));
+		fields.addAll(Arrays.asList(id, name, amountTotal));
 		
 		Row row = new Row(data, fields);
 		order.add(row);
@@ -79,7 +77,7 @@ public class OdooOrderServiceImplTest {
 		
 		// Replay
 		
-		JSONObject orders = odooOrderService.getErpOrderById("1");
+		Map<String, Object> orders = odooOrderService.getErpOrderById("1");
 		
 		// Verify
 		

@@ -5,7 +5,6 @@ import com.odoojava.api.ObjectAdapter;
 import com.odoojava.api.Row;
 import com.odoojava.api.RowCollection;
 import com.odoojava.api.Session;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.openmrs.api.APIException;
 import org.openmrs.module.erp.ErpConstants;
@@ -14,6 +13,7 @@ import org.openmrs.module.erp.api.utils.ErpConnection;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,8 +22,8 @@ public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 	
 	private final static String invoiceModel = "account.invoice";
 	
-	private String[] invoiceModelAttributes = new String[] { "partner_uuid", "name", "amount_total", "state",
-	        "pricelist_id", "payment_term_id", "invoice_status", "origin", "create_date", "currency_id" };
+	private ArrayList<String> invoiceDefaultAttributes = new ArrayList<String>(Arrays.asList("name", "amount_total",
+	    "state", "pricelist_id", "payment_term_id", "invoice_status", "origin", "create_date", "currency_id"));
 	
 	private Session odooSession;
 	
@@ -36,9 +36,14 @@ public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 	}
 	
 	@Override
-	public JSONObject getInvoiceById(String invoiceId) throws APIException {
+	public ArrayList<String> defaultModelAttributes() {
+		return invoiceDefaultAttributes;
+	}
+	
+	@Override
+	public Map<String, Object> getInvoiceById(String invoiceId) throws APIException {
 		
-		JSONObject response = new JSONObject();
+		Map<String, Object> response = new HashMap<String, Object>();
 		try {
 			odooSession.startSession();
 			ObjectAdapter orderAdapter = odooSession.getObjectAdapter(invoiceModel);
@@ -46,17 +51,16 @@ public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 			
 			filters.clear();
 			filters.add("id", "=", invoiceId);
-			RowCollection records = orderAdapter.searchAndReadObject(filters, invoiceModelAttributes);
+			RowCollection records = orderAdapter.searchAndReadObject(filters,
+			    invoiceDefaultAttributes.toArray(new String[0]));
 			if ((records != null) && (records.size() > 0)) {
 				
 				Row record = records.get(0);
-				Map<String, Object> result = new HashMap<String, Object>();
-				for (String field : invoiceModelAttributes) {
+				for (String field : invoiceDefaultAttributes) {
 					Object value = record.get(field);
 					if (value != null)
-						result.put(field, value);
+						response.put(field, value);
 				}
-				response = new JSONObject(result);
 				
 			}
 		}
@@ -67,10 +71,9 @@ public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 	}
 	
 	@Override
-	public ArrayList<JSONObject> getInvoicesByFilters(ArrayList<Object> filters) {
+	public ArrayList<Map<String, Object>> getInvoicesByFilters(ArrayList<JSONObject> filters) {
 		
-		ArrayList<JSONObject> response = new ArrayList<JSONObject>();
-		JSONArray filtersObject = new JSONArray();
+		ArrayList<Map<String, Object>> response = new ArrayList<Map<String, Object>>();
 		try {
 			odooSession.startSession();
 			ObjectAdapter orderAdapter = odooSession.getObjectAdapter(invoiceModel);
@@ -78,16 +81,21 @@ public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 			
 			filterCollection.clear();
 			
-			RowCollection records = orderAdapter.searchAndReadObject(filterCollection, invoiceModelAttributes);
+			for (JSONObject filter : filters) {
+				filterCollection.add(filter.getString("field"), filter.getString("comparison"), filter.get("value"));
+			}
+			
+			RowCollection records = orderAdapter.searchAndReadObject(filterCollection,
+			    (String[]) invoiceDefaultAttributes.toArray());
 			if ((records != null) && (records.size() > 0)) {
 				for (Row record : records) {
 					Map<String, Object> result = new HashMap<String, Object>();
-					for (String field : invoiceModelAttributes) {
+					for (String field : invoiceDefaultAttributes) {
 						Object value = record.get(field);
 						if (value != null)
 							result.put(field, value);
 					}
-					response.add(new JSONObject(result));
+					response.add(result);
 				}
 			}
 		}

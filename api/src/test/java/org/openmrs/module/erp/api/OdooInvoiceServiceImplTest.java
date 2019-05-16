@@ -76,7 +76,7 @@ public class OdooInvoiceServiceImplTest {
 		
 		// Replay
 		
-		JSONObject invoice = odooInvoiceService.getInvoiceById("1");
+		Map<String, Object> invoice = odooInvoiceService.getInvoiceById("1");
 		
 		// Verify
 		

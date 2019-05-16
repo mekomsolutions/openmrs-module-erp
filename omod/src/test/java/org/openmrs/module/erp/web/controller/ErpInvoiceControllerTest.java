@@ -15,6 +15,8 @@ import org.openmrs.web.test.BaseModuleWebContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -44,19 +46,19 @@ public class ErpInvoiceControllerTest extends BaseModuleWebContextSensitiveTest 
 		
 	}
 	
-	private JSONObject getInvoice() {
-		JSONObject order = new JSONObject();
+	private Map<String, Object> getInvoice() {
+		Map<String, Object> order = new HashMap<>();
 		order.put("partner_id", "1");
 		order.put("amount_total", "3017.5");
 		order.put("name", "INV/001");
-		
+
 		return order;
 	}
 	
 	@Test
 	public void getErpInvoiceByIdShouldReturnResponse() {
 		// Replay
-		JSONObject result = erpInvoiceController.getInvoiceById("1");
+		JSONObject result = erpInvoiceController.getInvoiceById("1", "full");
 		
 		// Verify
 		Assert.assertEquals(result.getString("name"), "INV/001");
