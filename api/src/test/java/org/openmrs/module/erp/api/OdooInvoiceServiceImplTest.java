@@ -8,13 +8,16 @@ import com.odoojava.api.OdooApiException;
 import com.odoojava.api.Row;
 import com.odoojava.api.RowCollection;
 import com.odoojava.api.Session;
-import org.json.JSONObject;
+import org.apache.xmlrpc.XmlRpcException;
 import org.junit.Assert;
 import org.junit.Test;
+import org.openmrs.module.erp.Filter;
 import org.openmrs.module.erp.api.impl.odoo.OdooInvoiceServiceImpl;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.mockito.Matchers.any;
@@ -59,6 +62,8 @@ public class OdooInvoiceServiceImplTest {
 		return invoice;
 	}
 	
+	private String[] fields = { "id", "name", "origin", "amount_total" };
+	
 	@Test
 	public void getInvoiceByIdShouldReturnInvoice() throws Exception {
 		
@@ -70,6 +75,7 @@ public class OdooInvoiceServiceImplTest {
 		Session session = mock(Session.class);
 		ObjectAdapter objectAdapter = mock(ObjectAdapter.class);
 		when(objectAdapter.searchAndReadObject(any(FilterCollection.class), any(String[].class))).thenReturn(getInvoice());
+		when(objectAdapter.getFieldNames()).thenReturn(fields);
 		when(session.getObjectAdapter(any(String.class))).thenReturn(objectAdapter);
 		
 		OdooInvoiceServiceImpl odooInvoiceService = new OdooInvoiceServiceImpl(session);
@@ -80,8 +86,35 @@ public class OdooInvoiceServiceImplTest {
 		
 		// Verify
 		
-		Assert.assertEquals(String.valueOf(invoice.get("name")), "INV/001");
-		Assert.assertEquals(String.valueOf(invoice.get("amount_total")), "3175.0");
+		Assert.assertEquals("INV/001", String.valueOf(invoice.get("name")));
+		Assert.assertEquals("3175.0", String.valueOf(invoice.get("amount_total")));
+	}
+	
+	@Test
+	public void getInvoicesByFiltersShouldReturnInvoices() throws XmlRpcException, OdooApiException {
+		// Setup
+		
+		TestHelper.setErpProperties();
+		
+		// create mocked session
+		Session session = mock(Session.class);
+		ObjectAdapter objectAdapter = mock(ObjectAdapter.class);
+		when(objectAdapter.searchAndReadObject(any(FilterCollection.class), any(String[].class))).thenReturn(getInvoice());
+		when(objectAdapter.getFieldNames()).thenReturn(fields);
+		when(session.getObjectAdapter(any(String.class))).thenReturn(objectAdapter);
+		
+		OdooInvoiceServiceImpl odooInvoiceService = new OdooInvoiceServiceImpl(session);
+		
+		Filter filter = new Filter("amount_total", ">", "100");
+		
+		// Replay
+		
+		List<Map<String, Object>> invoice = odooInvoiceService.getInvoicesByFilters(Collections.singletonList(filter));
+		
+		// Verify
+		
+		Assert.assertEquals("INV/001", String.valueOf(invoice.get(0).get("name")));
+		Assert.assertEquals("3175.0", String.valueOf(invoice.get(0).get("amount_total")));
 	}
 	
 }

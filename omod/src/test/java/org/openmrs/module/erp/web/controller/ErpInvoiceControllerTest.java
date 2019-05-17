@@ -14,10 +14,12 @@ import org.openmrs.module.erp.api.TestHelper;
 import org.openmrs.web.test.BaseModuleWebContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 
@@ -43,6 +45,7 @@ public class ErpInvoiceControllerTest extends BaseModuleWebContextSensitiveTest 
 		
 		Mockito.doReturn(erpInvoiceService).when(erpContext).getErpInvoiceService();
 		Mockito.doReturn(getInvoice()).when(erpInvoiceService).getInvoiceById(anyString());
+		Mockito.doReturn(Collections.singletonList(getInvoice())).when(erpInvoiceService).getInvoicesByFilters(any());
 		
 	}
 	
@@ -61,7 +64,17 @@ public class ErpInvoiceControllerTest extends BaseModuleWebContextSensitiveTest 
 		JSONObject result = erpInvoiceController.getInvoiceById("1", "full");
 		
 		// Verify
-		Assert.assertEquals(result.getString("name"), "INV/001");
+		Assert.assertEquals("INV/001", result.getString("name"));
+		
+	}
+	
+	@Test
+	public void getErpInvoicesByFiltersShouldReturnResponse() {
+		// Replay
+		List<JSONObject> result = erpInvoiceController.getInvoicesByFilters("{}", "full");
+		
+		// Verify
+		Assert.assertEquals("INV/001", result.get(0).getString("name"));
 		
 	}
 	

@@ -5,9 +5,9 @@ import com.odoojava.api.ObjectAdapter;
 import com.odoojava.api.Row;
 import com.odoojava.api.RowCollection;
 import com.odoojava.api.Session;
-import org.json.JSONObject;
 import org.openmrs.api.APIException;
 import org.openmrs.module.erp.ErpConstants;
+import org.openmrs.module.erp.Filter;
 import org.openmrs.module.erp.api.ErpInvoiceService;
 import org.openmrs.module.erp.api.utils.ErpConnection;
 import org.springframework.stereotype.Component;
@@ -15,12 +15,13 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component(ErpConstants.COMPONENT_ODOO_INVOICE_SERVICE)
 public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 	
-	private final static String invoiceModel = "account.invoice";
+	private final static String INVOICE_MODEL = "account.invoice";
 	
 	private ArrayList<String> invoiceDefaultAttributes = new ArrayList<String>(Arrays.asList("name", "amount_total",
 	    "state", "pricelist_id", "payment_term_id", "invoice_status", "origin", "create_date", "currency_id"));
@@ -36,7 +37,7 @@ public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 	}
 	
 	@Override
-	public ArrayList<String> defaultModelAttributes() {
+	public List<String> defaultModelAttributes() {
 		return invoiceDefaultAttributes;
 	}
 	
@@ -46,13 +47,13 @@ public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 		Map<String, Object> response = new HashMap<String, Object>();
 		try {
 			odooSession.startSession();
-			ObjectAdapter orderAdapter = odooSession.getObjectAdapter(invoiceModel);
+			ObjectAdapter orderAdapter = odooSession.getObjectAdapter(INVOICE_MODEL);
 			FilterCollection filters = new FilterCollection();
+			String[] fields = orderAdapter.getFieldNames();
 			
 			filters.clear();
 			filters.add("id", "=", invoiceId);
-			RowCollection records = orderAdapter.searchAndReadObject(filters,
-			    invoiceDefaultAttributes.toArray(new String[0]));
+			RowCollection records = orderAdapter.searchAndReadObject(filters, fields);
 			if ((records != null) && (records.size() > 0)) {
 				
 				Row record = records.get(0);
@@ -71,22 +72,22 @@ public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 	}
 	
 	@Override
-	public ArrayList<Map<String, Object>> getInvoicesByFilters(ArrayList<JSONObject> filters) {
+	public List<Map<String, Object>> getInvoicesByFilters(List<Filter> filters) {
 		
-		ArrayList<Map<String, Object>> response = new ArrayList<Map<String, Object>>();
+		List<Map<String, Object>> response = new ArrayList<Map<String, Object>>();
 		try {
 			odooSession.startSession();
-			ObjectAdapter orderAdapter = odooSession.getObjectAdapter(invoiceModel);
+			ObjectAdapter orderAdapter = odooSession.getObjectAdapter(INVOICE_MODEL);
 			FilterCollection filterCollection = new FilterCollection();
+			String[] fields = orderAdapter.getFieldNames();
 			
 			filterCollection.clear();
 			
-			for (JSONObject filter : filters) {
-				filterCollection.add(filter.getString("field"), filter.getString("comparison"), filter.get("value"));
+			for (Filter filter : filters) {
+				filterCollection.add(filter.getFieldName(), filter.getComparison(), filter.getValue());
 			}
 			
-			RowCollection records = orderAdapter.searchAndReadObject(filterCollection,
-			    (String[]) invoiceDefaultAttributes.toArray());
+			RowCollection records = orderAdapter.searchAndReadObject(filterCollection, fields);
 			if ((records != null) && (records.size() > 0)) {
 				for (Row record : records) {
 					Map<String, Object> result = new HashMap<String, Object>();

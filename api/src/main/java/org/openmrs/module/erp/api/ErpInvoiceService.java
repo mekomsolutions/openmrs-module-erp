@@ -1,16 +1,16 @@
 package org.openmrs.module.erp.api;
 
-import org.json.JSONObject;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
 import org.openmrs.module.erp.ErpConstants;
+import org.openmrs.module.erp.Filter;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public interface ErpInvoiceService {
 	
-	ArrayList<String> defaultModelAttributes();
+	List<String> defaultModelAttributes();
 	
 	/**
 	 * Returns an invoice by order id.
@@ -30,5 +30,5 @@ public interface ErpInvoiceService {
 	 * @throws APIException
 	 */
 	@Authorized(ErpConstants.MODULE_PRIVILEGE)
-	ArrayList<Map<String, Object>> getInvoicesByFilters(ArrayList<JSONObject> filters) throws APIException;
+	List<Map<String, Object>> getInvoicesByFilters(List<Filter> filters) throws APIException;
 }

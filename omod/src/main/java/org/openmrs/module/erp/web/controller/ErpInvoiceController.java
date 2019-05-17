@@ -4,8 +4,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.openmrs.module.erp.ErpConstants;
 import org.openmrs.module.erp.ErpContext;
+import org.openmrs.module.erp.Filter;
 import org.openmrs.module.erp.api.ErpInvoiceService;
-import org.openmrs.module.erp.web.Representation;
+import org.openmrs.module.erp.web.JSONRepresentation;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -32,31 +34,33 @@ public class ErpInvoiceController {
 	
 	@RequestMapping(value = "/", method = RequestMethod.POST)
 	@ResponseBody
-	public ArrayList<JSONObject> getInvoicesByFilters(@RequestBody String jsonString, @RequestParam String rep) {
+	public List<JSONObject> getInvoicesByFilters(@RequestBody String jsonString, @RequestParam String rep) {
 		erpInvoiceService = erpContext.getErpInvoiceService();
 
-		Representation representation = new Representation(erpInvoiceService.defaultModelAttributes());
+		JSONRepresentation jsonRepresentation = new JSONRepresentation(erpInvoiceService.defaultModelAttributes());
 
-		ArrayList<JSONObject> filtersArray = new ArrayList<>();
+		List<Filter> filtersArray = new ArrayList<>();
 
-		ArrayList<JSONObject> records = new ArrayList<>();
+		List<JSONObject> records = new ArrayList<>();
 
 		JSONArray jsonFilters = new JSONArray();
 		JSONObject jsonObject = new JSONObject(jsonString);
-		if (jsonObject.getJSONArray("filters") != null) {
+		if (jsonObject.has("filters")) {
 			jsonFilters = jsonObject.getJSONArray("filters");
 		}
 
 		for (int i = 0; i < jsonFilters.length(); i++) {
-			JSONObject filter = jsonFilters.getJSONObject(i);
+			JSONObject jsonFilter = jsonFilters.getJSONObject(i);
+			Filter filter = new Filter(jsonFilter.getString("field"), jsonFilter.getString("comparison"),
+					jsonFilter.get("value"));
 			filtersArray.add(filter);
 		}
 
-		ArrayList<Map<String, Object>> results = erpInvoiceService.getInvoicesByFilters(filtersArray);
+		List<Map<String, Object>> results = erpInvoiceService.getInvoicesByFilters(filtersArray);
 
 		for (Map<String, Object> result :
 				results) {
-			records.add(representation.getRepresentedRecord(result, rep));
+			records.add(jsonRepresentation.getRepresentedRecord(result, rep));
 		}
 
 		return records;
@@ -68,7 +72,7 @@ public class ErpInvoiceController {
 		
 		erpInvoiceService = erpContext.getErpInvoiceService();
 		
-		return new Representation(erpInvoiceService.defaultModelAttributes()).getRepresentedRecord(
+		return new JSONRepresentation(erpInvoiceService.defaultModelAttributes()).getRepresentedRecord(
 		    erpInvoiceService.getInvoiceById(invoiceId), rep);
 	}
 	

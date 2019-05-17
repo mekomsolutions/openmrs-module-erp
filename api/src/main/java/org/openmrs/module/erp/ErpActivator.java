@@ -17,14 +17,14 @@ public class ErpActivator extends BaseModuleActivator {
 	 * @see #started()
 	 */
 	public void started() {
-		log.info("Started Erp");
+		log.info("Started OpenMRS ERP");
 	}
 	
 	/**
 	 * @see #shutdown()
 	 */
 	public void shutdown() {
-		log.info("Shutdown Erp");
+		log.info("Shutdown OpenMRS ERP");
 	}
 	
 }

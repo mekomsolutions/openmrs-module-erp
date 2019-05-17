@@ -3,9 +3,9 @@ package org.openmrs.module.erp.web.controller;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.json.JSONObject;
@@ -19,7 +19,6 @@ import org.mockito.Spy;
 import org.openmrs.module.erp.ErpContext;
 import org.openmrs.module.erp.api.ErpOrderService;
 import org.openmrs.module.erp.api.TestHelper;
-import org.openmrs.module.erp.web.Representation;
 import org.openmrs.web.test.BaseModuleWebContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -44,30 +43,40 @@ public class ErpOrderControllerTest extends BaseModuleWebContextSensitiveTest {
 		ErpOrderService erpOrderService = mock(ErpOrderService.class);
 		
 		Mockito.doReturn(erpOrderService).when(erpContext).getErpOrderService();
-		Mockito.doReturn(get_orders()).when(erpOrderService).getErpOrdersByFilters(any());
+		Mockito.doReturn(Collections.singletonList(get_order())).when(erpOrderService).getErpOrdersByFilters(any());
+		Mockito.doReturn(get_order()).when(erpOrderService).getErpOrderById(any());
 		
 	}
 	
-	private ArrayList<Map<String, Object>> get_orders() {
+	private Map<String, Object> get_order() {
 
-		ArrayList<Map<String, Object>> orders = new ArrayList<>();
 		Map<String, Object> order = new HashMap<>();
 		order.put("id", "1");
 		order.put("amount_total", "3017.5");
 		order.put("name", "SO/001");
-		orders.add(order);
 
-		return orders;
+		return order;
 	}
 	
 	@Test
 	public void getErpOrdersByFiltersShouldReturnOrders() {
 		
 		// Replay
-		ArrayList<JSONObject> result = erpOrderController.getErpOrdersByFilters("{filters:[]}", "full");
+		List<JSONObject> result = erpOrderController.getErpOrdersByFilters("{}", "full");
 		
 		// Verify
-		Assert.assertEquals(result.get(0).getString("name"), "SO/001");
+		Assert.assertEquals("SO/001", result.get(0).getString("name"));
+		
+	}
+	
+	@Test
+	public void getErpOrderByIdShouldReturnResponse() {
+		
+		// Replay
+		JSONObject result = erpOrderController.getErpOrderById("1", "full");
+		
+		// Verify
+		Assert.assertEquals("SO/001", result.getString("name"));
 		
 	}
 	

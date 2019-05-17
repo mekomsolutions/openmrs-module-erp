@@ -21,9 +21,7 @@ public class ErpConstants {
 	
 	// REST resources
 	
-	public final static String ERP_ORDERS_URI = "/orders/{uuid}";
-	
-	public final static String ERP_ORDER_URI = "/order/{id}";
+	public final static String ERP_ORDER_URI = "/order";
 	
 	public final static String ERP_INVOICE_URI = "/invoice";
 	

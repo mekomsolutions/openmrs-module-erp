@@ -4,8 +4,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.openmrs.module.erp.ErpConstants;
 import org.openmrs.module.erp.ErpContext;
+import org.openmrs.module.erp.Filter;
 import org.openmrs.module.erp.api.ErpOrderService;
-import org.openmrs.module.erp.web.Representation;
+import org.openmrs.module.erp.web.JSONRepresentation;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 import org.openmrs.module.webservices.rest.web.v1_0.controller.BaseRestController;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Controller(value = "/rest/" + RestConstants.VERSION_1 + "/" + "erp" + ErpConstants.ERP_ORDER_URI)
@@ -32,31 +34,33 @@ public class ErpOrderController extends BaseRestController {
 	
 	@RequestMapping(value = "/", method = RequestMethod.POST)
 	@ResponseBody
-	public ArrayList<JSONObject> getErpOrdersByFilters(@RequestBody String jsonString,
-	        @RequestParam(defaultValue = "default") String rep) throws ResponseException {
+	public List<JSONObject> getErpOrdersByFilters(@RequestBody String jsonString,
+			@RequestParam(defaultValue = "default") String rep) throws ResponseException {
 		erpOrderService = erpContext.getErpOrderService();
-		Representation representation = new Representation(erpOrderService.defaultModelAttributes());
+		JSONRepresentation jsonRepresentation = new JSONRepresentation(erpOrderService.defaultModelAttributes());
 
-		ArrayList<JSONObject> filtersArray = new ArrayList<>();
+		ArrayList<Filter> filtersArray = new ArrayList<>();
 
 		ArrayList<JSONObject> records = new ArrayList<>();
 
 		JSONArray jsonFilters = new JSONArray();
 		JSONObject jsonObject = new JSONObject(jsonString);
-		if (jsonObject.getJSONArray("filters") != null) {
+		if (jsonObject.has("filters")) {
 			jsonFilters = jsonObject.getJSONArray("filters");
 		}
 
 		for (int i = 0; i < jsonFilters.length(); i++) {
-			JSONObject filter = jsonFilters.getJSONObject(i);
+			JSONObject jsonFilter = jsonFilters.getJSONObject(i);
+			Filter filter = new Filter(jsonFilter.getString("field"), jsonFilter.getString("comparison"),
+					jsonFilter.get("value"));
 			filtersArray.add(filter);
 		}
 
-		ArrayList<Map<String, Object>> results = erpOrderService.getErpOrdersByFilters(filtersArray);
+		List<Map<String, Object>> results = erpOrderService.getErpOrdersByFilters(filtersArray);
 
 		for (Map<String, Object> result :
 				results) {
-			records.add(representation.getRepresentedRecord(result, rep));
+			records.add(jsonRepresentation.getRepresentedRecord(result, rep));
 		}
 
 		return records;
@@ -67,7 +71,7 @@ public class ErpOrderController extends BaseRestController {
 	public JSONObject getErpOrderById(@PathVariable("id") String id,
 	        @RequestParam(value = "rep", defaultValue = "default") String rep) throws ResponseException {
 		erpOrderService = erpContext.getErpOrderService();
-		return new Representation(erpOrderService.defaultModelAttributes()).getRepresentedRecord(
+		return new JSONRepresentation(erpOrderService.defaultModelAttributes()).getRepresentedRecord(
 		    erpOrderService.getErpOrderById(id), rep);
 	}
 	
