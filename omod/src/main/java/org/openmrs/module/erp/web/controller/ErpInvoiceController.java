@@ -6,7 +6,7 @@ import org.openmrs.module.erp.ErpConstants;
 import org.openmrs.module.erp.ErpContext;
 import org.openmrs.module.erp.Filter;
 import org.openmrs.module.erp.api.ErpInvoiceService;
-import org.openmrs.module.erp.web.JSONRepresentation;
+import org.openmrs.module.erp.web.RecordRepresentation;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,16 +32,17 @@ public class ErpInvoiceController {
 	@Autowired
 	private ErpInvoiceService erpInvoiceService;
 	
-	@RequestMapping(value = "/", method = RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.POST)
 	@ResponseBody
-	public List<JSONObject> getInvoicesByFilters(@RequestBody String jsonString, @RequestParam String rep) {
+	public Object getInvoicesByFilters(@RequestBody String jsonString,
+			@RequestParam(defaultValue = "default") String rep) {
 		erpInvoiceService = erpContext.getErpInvoiceService();
 
-		JSONRepresentation jsonRepresentation = new JSONRepresentation(erpInvoiceService.defaultModelAttributes());
+		RecordRepresentation recordRepresentation = new RecordRepresentation(erpInvoiceService.defaultModelAttributes());
 
 		List<Filter> filtersArray = new ArrayList<>();
 
-		List<JSONObject> records = new ArrayList<>();
+		List<Map<String, Object>> records = new ArrayList<>();
 
 		JSONArray jsonFilters = new JSONArray();
 		JSONObject jsonObject = new JSONObject(jsonString);
@@ -60,7 +61,7 @@ public class ErpInvoiceController {
 
 		for (Map<String, Object> result :
 				results) {
-			records.add(jsonRepresentation.getRepresentedRecord(result, rep));
+			records.add(recordRepresentation.getRepresentedRecord(result, rep));
 		}
 
 		return records;
@@ -68,11 +69,11 @@ public class ErpInvoiceController {
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseBody
-	public JSONObject getInvoiceById(@PathVariable("id") String invoiceId, @RequestBody String rep) {
+	public Object getInvoiceById(@PathVariable("id") String invoiceId, @RequestParam(defaultValue = "default") String rep) {
 		
 		erpInvoiceService = erpContext.getErpInvoiceService();
 		
-		return new JSONRepresentation(erpInvoiceService.defaultModelAttributes()).getRepresentedRecord(
+		return new RecordRepresentation(erpInvoiceService.defaultModelAttributes()).getRepresentedRecord(
 		    erpInvoiceService.getInvoiceById(invoiceId), rep);
 	}
 	

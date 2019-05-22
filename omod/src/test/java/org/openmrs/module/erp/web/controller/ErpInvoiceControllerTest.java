@@ -14,6 +14,7 @@ import org.openmrs.module.erp.api.TestHelper;
 import org.openmrs.web.test.BaseModuleWebContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -61,20 +62,21 @@ public class ErpInvoiceControllerTest extends BaseModuleWebContextSensitiveTest 
 	@Test
 	public void getErpInvoiceByIdShouldReturnResponse() {
 		// Replay
-		JSONObject result = erpInvoiceController.getInvoiceById("1", "full");
+		Object result = erpInvoiceController.getInvoiceById("1", "full");
 		
 		// Verify
-		Assert.assertEquals("INV/001", result.getString("name"));
+		Assert.assertEquals("INV/001", ((Map<String, Object>) result).get("name"));
 		
 	}
 	
 	@Test
 	public void getErpInvoicesByFiltersShouldReturnResponse() {
 		// Replay
-		List<JSONObject> result = erpInvoiceController.getInvoicesByFilters("{}", "full");
+		List<Map<String, Object>> response = (List<Map<String, Object>>) erpInvoiceController.getInvoicesByFilters("{}",
+		    "full");
 		
 		// Verify
-		Assert.assertEquals("INV/001", result.get(0).getString("name"));
+		Assert.assertEquals("INV/001", response.get(0).get("name"));
 		
 	}
 	

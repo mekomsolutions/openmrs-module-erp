@@ -6,7 +6,7 @@ import org.openmrs.module.erp.ErpConstants;
 import org.openmrs.module.erp.ErpContext;
 import org.openmrs.module.erp.Filter;
 import org.openmrs.module.erp.api.ErpOrderService;
-import org.openmrs.module.erp.web.JSONRepresentation;
+import org.openmrs.module.erp.web.RecordRepresentation;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 import org.openmrs.module.webservices.rest.web.v1_0.controller.BaseRestController;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,16 +32,16 @@ public class ErpOrderController extends BaseRestController {
 	@Autowired
 	private ErpOrderService erpOrderService;
 	
-	@RequestMapping(value = "/", method = RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.POST)
 	@ResponseBody
-	public List<JSONObject> getErpOrdersByFilters(@RequestBody String jsonString,
+	public Object getErpOrdersByFilters(@RequestBody String jsonString,
 			@RequestParam(defaultValue = "default") String rep) throws ResponseException {
 		erpOrderService = erpContext.getErpOrderService();
-		JSONRepresentation jsonRepresentation = new JSONRepresentation(erpOrderService.defaultModelAttributes());
+		RecordRepresentation recordRepresentation = new RecordRepresentation(erpOrderService.defaultModelAttributes());
 
 		ArrayList<Filter> filtersArray = new ArrayList<>();
 
-		ArrayList<JSONObject> records = new ArrayList<>();
+		List<Map<String, Object>> records = new ArrayList<>();
 
 		JSONArray jsonFilters = new JSONArray();
 		JSONObject jsonObject = new JSONObject(jsonString);
@@ -60,7 +60,7 @@ public class ErpOrderController extends BaseRestController {
 
 		for (Map<String, Object> result :
 				results) {
-			records.add(jsonRepresentation.getRepresentedRecord(result, rep));
+			records.add(recordRepresentation.getRepresentedRecord(result, rep));
 		}
 
 		return records;
@@ -68,10 +68,10 @@ public class ErpOrderController extends BaseRestController {
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseBody
-	public JSONObject getErpOrderById(@PathVariable("id") String id,
-	        @RequestParam(value = "rep", defaultValue = "default") String rep) throws ResponseException {
+	public Object getErpOrderById(@PathVariable("id") String id, @RequestParam(defaultValue = "default") String rep)
+	        throws ResponseException {
 		erpOrderService = erpContext.getErpOrderService();
-		return new JSONRepresentation(erpOrderService.defaultModelAttributes()).getRepresentedRecord(
+		return new RecordRepresentation(erpOrderService.defaultModelAttributes()).getRepresentedRecord(
 		    erpOrderService.getErpOrderById(id), rep);
 	}
 	

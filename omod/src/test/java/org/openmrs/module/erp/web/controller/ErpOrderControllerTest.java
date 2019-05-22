@@ -59,24 +59,27 @@ public class ErpOrderControllerTest extends BaseModuleWebContextSensitiveTest {
 	}
 	
 	@Test
-	public void getErpOrdersByFiltersShouldReturnOrders() {
+	public void getErpOrderByIdShouldReturnResponse() {
 		
 		// Replay
-		List<JSONObject> result = erpOrderController.getErpOrdersByFilters("{}", "full");
+		Map<String, Object> response = (Map<String, Object>) erpOrderController.getErpOrderById("1", "full");
 		
-		// Verify
-		Assert.assertEquals("SO/001", result.get(0).getString("name"));
+		JSONObject result = new JSONObject(response);
+		
+		//		// Verify
+		Assert.assertEquals("SO/001", result.getString("name"));
 		
 	}
 	
 	@Test
-	public void getErpOrderByIdShouldReturnResponse() {
+	public void getErpOrdersByFiltersShouldReturnOrders() {
 		
 		// Replay
-		JSONObject result = erpOrderController.getErpOrderById("1", "full");
+		List<Map<String, Object>> result = (List<Map<String, Object>>) erpOrderController
+		        .getErpOrdersByFilters("{}", "full");
 		
 		// Verify
-		Assert.assertEquals("SO/001", result.getString("name"));
+		Assert.assertEquals("SO/001", result.get(0).get("name"));
 		
 	}
 	
