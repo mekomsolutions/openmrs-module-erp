@@ -16,6 +16,7 @@ public class ErpActivator extends BaseModuleActivator {
 	/**
 	 * @see #started()
 	 */
+	@Override
 	public void started() {
 		log.info("Started OpenMRS ERP");
 	}

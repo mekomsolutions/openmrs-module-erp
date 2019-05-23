@@ -20,7 +20,7 @@ public interface ErpInvoiceService {
 	 * @throws APIException
 	 */
 	@Authorized(ErpConstants.MODULE_PRIVILEGE)
-	Map<String, Object> getInvoiceById(String invoiceId) throws APIException;
+	Map<String, Object> getInvoiceById(String invoiceId);
 	
 	/**
 	 * Returns an invoice by order id.
@@ -30,5 +30,5 @@ public interface ErpInvoiceService {
 	 * @throws APIException
 	 */
 	@Authorized(ErpConstants.MODULE_PRIVILEGE)
-	List<Map<String, Object>> getInvoicesByFilters(List<Filter> filters) throws APIException;
+	List<Map<String, Object>> getInvoicesByFilters(List<Filter> filters);
 }

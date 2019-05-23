@@ -7,17 +7,11 @@ import org.openmrs.module.erp.ErpContext;
 import org.openmrs.module.erp.Filter;
 import org.openmrs.module.erp.api.ErpOrderService;
 import org.openmrs.module.erp.web.RecordRepresentation;
-import org.openmrs.module.webservices.rest.web.response.ResponseException;
+import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.v1_0.controller.BaseRestController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.openmrs.module.webservices.rest.web.RestConstants;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +29,7 @@ public class ErpOrderController extends BaseRestController {
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseBody
 	public Object getErpOrdersByFilters(@RequestBody String jsonString,
-			@RequestParam(defaultValue = "default") String rep) throws ResponseException {
+			@RequestParam(defaultValue = "default") String rep) {
 		erpOrderService = erpContext.getErpOrderService();
 		RecordRepresentation recordRepresentation = new RecordRepresentation(erpOrderService.defaultModelAttributes());
 
@@ -68,8 +62,7 @@ public class ErpOrderController extends BaseRestController {
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseBody
-	public Object getErpOrderById(@PathVariable("id") String id, @RequestParam(defaultValue = "default") String rep)
-	        throws ResponseException {
+	public Object getErpOrderById(@PathVariable("id") String id, @RequestParam(defaultValue = "default") String rep) {
 		erpOrderService = erpContext.getErpOrderService();
 		return new RecordRepresentation(erpOrderService.defaultModelAttributes()).getRepresentedRecord(
 		    erpOrderService.getErpOrderById(id), rep);

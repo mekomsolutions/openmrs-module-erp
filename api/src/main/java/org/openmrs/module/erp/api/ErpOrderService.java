@@ -20,7 +20,7 @@ public interface ErpOrderService {
 	 * @throws APIException
 	 */
 	@Authorized(ErpConstants.MODULE_PRIVILEGE)
-	Map<String, Object> getErpOrderById(String erpOrderId) throws APIException;
+	Map<String, Object> getErpOrderById(String erpOrderId);
 	
 	/**
 	 * Returns a filtered list of erp orders.
@@ -30,6 +30,6 @@ public interface ErpOrderService {
 	 * @throws APIException
 	 */
 	@Authorized(ErpConstants.MODULE_PRIVILEGE)
-	List<Map<String, Object>> getErpOrdersByFilters(List<Filter> filters) throws APIException;
+	List<Map<String, Object>> getErpOrdersByFilters(List<Filter> filters);
 	
 }

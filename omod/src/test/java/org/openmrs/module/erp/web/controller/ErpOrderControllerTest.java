@@ -1,30 +1,30 @@
 package org.openmrs.module.erp.web.controller;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
+import org.json.JSONObject;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.openmrs.module.erp.ErpContext;
+import org.openmrs.module.erp.api.ErpOrderService;
+import org.openmrs.module.erp.api.utils.TestHelper;
+import org.openmrs.web.test.BaseModuleWebContextSensitiveTest;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.json.JSONObject;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
-import org.openmrs.module.erp.ErpContext;
-import org.openmrs.module.erp.api.ErpOrderService;
-import org.openmrs.module.erp.api.TestHelper;
-import org.openmrs.web.test.BaseModuleWebContextSensitiveTest;
-import org.springframework.beans.factory.annotation.Autowired;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
 
 public class ErpOrderControllerTest extends BaseModuleWebContextSensitiveTest {
 	
-	@Spy
+	@Mock
 	protected ErpContext erpContext;
 	
 	@InjectMocks
@@ -33,7 +33,7 @@ public class ErpOrderControllerTest extends BaseModuleWebContextSensitiveTest {
 	
 	public ErpOrderControllerTest() {
 		super();
-		TestHelper.setErpProperties();
+		TestHelper.createErpPropertiesFile();
 	}
 	
 	@Before

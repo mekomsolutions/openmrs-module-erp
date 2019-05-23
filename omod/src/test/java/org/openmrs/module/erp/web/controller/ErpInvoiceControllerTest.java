@@ -1,20 +1,18 @@
 package org.openmrs.module.erp.web.controller;
 
-import org.json.JSONObject;
 import org.junit.Assert;
-import org.junit.Test;
 import org.junit.Before;
+import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
 import org.openmrs.module.erp.ErpContext;
 import org.openmrs.module.erp.api.ErpInvoiceService;
-import org.openmrs.module.erp.api.TestHelper;
+import org.openmrs.module.erp.api.utils.TestHelper;
 import org.openmrs.web.test.BaseModuleWebContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +24,7 @@ import static org.mockito.Mockito.mock;
 
 public class ErpInvoiceControllerTest extends BaseModuleWebContextSensitiveTest {
 	
-	@Spy
+	@Mock
 	protected ErpContext erpContext;
 	
 	@InjectMocks
@@ -35,7 +33,7 @@ public class ErpInvoiceControllerTest extends BaseModuleWebContextSensitiveTest 
 	
 	public ErpInvoiceControllerTest() {
 		super();
-		TestHelper.setErpProperties();
+		TestHelper.createErpPropertiesFile();
 	}
 	
 	@Before
