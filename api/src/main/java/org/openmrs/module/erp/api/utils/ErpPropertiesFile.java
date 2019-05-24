@@ -9,7 +9,10 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 public class ErpPropertiesFile {
-
+	
+	private ErpPropertiesFile() {
+	}
+	
 	public static InputStream getInputStream() throws FileNotFoundException {
 		String fileName = ErpConstants.ERP_PROPERTY_FILE_NAME;
 		File file = new File(OpenmrsUtil.getApplicationDataDirectory(), fileName);

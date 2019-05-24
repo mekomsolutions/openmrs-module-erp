@@ -10,9 +10,9 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class ErpActivator extends BaseModuleActivator {
-	
+
 	private Log log = LogFactory.getLog(this.getClass());
-	
+
 	/**
 	 * @see #started()
 	 */
@@ -20,12 +20,12 @@ public class ErpActivator extends BaseModuleActivator {
 	public void started() {
 		log.info("Started OpenMRS ERP");
 	}
-	
+
 	/**
 	 * @see #shutdown()
 	 */
 	public void shutdown() {
 		log.info("Shutdown OpenMRS ERP");
 	}
-	
+
 }

@@ -14,10 +14,7 @@ import org.openmrs.module.erp.api.utils.TestHelper;
 import org.openmrs.web.test.BaseModuleWebContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -43,12 +40,13 @@ public class ErpOrderControllerTest extends BaseModuleWebContextSensitiveTest {
 		ErpOrderService erpOrderService = mock(ErpOrderService.class);
 		
 		Mockito.doReturn(erpOrderService).when(erpContext).getErpOrderService();
-		Mockito.doReturn(Collections.singletonList(get_order())).when(erpOrderService).getErpOrdersByFilters(any());
-		Mockito.doReturn(get_order()).when(erpOrderService).getErpOrderById(any());
+		Mockito.doReturn(Collections.singletonList(getOrder())).when(erpOrderService).getErpOrdersByFilters(any());
+		
+		Mockito.doReturn(getOrder()).when(erpOrderService).getErpOrderById(any());
 		
 	}
 	
-	private Map<String, Object> get_order() {
+	private Map<String, Object> getOrder() {
 
 		Map<String, Object> order = new HashMap<>();
 		order.put("id", "1");
@@ -61,26 +59,32 @@ public class ErpOrderControllerTest extends BaseModuleWebContextSensitiveTest {
 	@Test
 	public void getErpOrderByIdShouldReturnResponse() {
 		
-		// Replay
 		Map<String, Object> response = (Map<String, Object>) erpOrderController.getErpOrderById("1", "full");
 		
 		JSONObject result = new JSONObject(response);
 		
-		//		// Verify
 		Assert.assertEquals("SO/001", result.getString("name"));
 		
 	}
 	
 	@Test
-	public void getErpOrdersByFiltersShouldReturnOrders() {
+	public void shouldReturnOrdersWithEmptyFilter() {
 		
-		// Replay
 		List<Map<String, Object>> result = (List<Map<String, Object>>) erpOrderController
 		        .getErpOrdersByFilters("{}", "full");
 		
-		// Verify
 		Assert.assertEquals("SO/001", result.get(0).get("name"));
 		
 	}
 	
+	@Test
+	public void shouldReturnOrdersWithFilter() {
+		
+		String filters = "{\"filters\":[{\"field\":\"id\",\"comparison\":\"=\",\"value\":\"1\"},{\"field\":\"invoice_date\",\"comparison\":\">\",\"value\":\"2019-05-19\"}]}";
+		List<Map<String, Object>> result = (List<Map<String, Object>>) erpOrderController.getErpOrdersByFilters(filters,
+		    "full");
+		
+		Assert.assertEquals("SO/001", result.get(0).get("name"));
+		
+	}
 }

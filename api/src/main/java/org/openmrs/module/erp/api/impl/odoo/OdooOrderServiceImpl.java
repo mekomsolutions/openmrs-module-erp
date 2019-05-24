@@ -13,40 +13,40 @@ import java.util.*;
 
 @Component(ErpConstants.COMPONENT_ODOO_ORDER_SERVICE)
 public class OdooOrderServiceImpl implements ErpOrderService {
-
+	
 	private static final String ORDER_MODEL = "sale.order";
-
+	
 	private List<String> orderDefaultAttributes = Arrays.asList("name", "amount_total", "state", "pricelist_id",
 	    "payment_term_id", "invoice_status", "origin", "create_date", "currency_id", "order_line", "invoice_count",
 	    "invoice_ids", "product_id");
-
+	
 	private Session odooSession;
-
+	
 	@Autowired
 	public OdooOrderServiceImpl(ErpConnection erpConnection) {
 		this.odooSession = erpConnection.getSession();
 	}
-
+	
 	@Override
 	public List<String> defaultModelAttributes() {
 		return orderDefaultAttributes;
 	}
-
+	
 	@Override
 	public Map<String, Object> getErpOrderById(String erpOrderId) {
-
+		
 		Map<String, Object> response = new HashMap<String, Object>();
-
+		
 		try {
 			odooSession.startSession();
 			ObjectAdapter orderAdapter = odooSession.getObjectAdapter(ORDER_MODEL);
 			FilterCollection filters = new FilterCollection();
-
+			
 			String[] fields = orderAdapter.getFieldNames();
-
+			
 			filters.clear();
 			filters.add("id", "=", erpOrderId);
-
+			
 			RowCollection records = orderAdapter.searchAndReadObject(filters, orderDefaultAttributes.toArray(new String[0]));
 			if ((records != null) && (!records.isEmpty())) {
 				Row record = records.get(0);
@@ -61,12 +61,12 @@ public class OdooOrderServiceImpl implements ErpOrderService {
 		}
 		return response;
 	}
-
+	
 	@Override
 	public List<Map<String, Object>> getErpOrdersByFilters(List<Filter> filters) {
-
+		
 		ArrayList<Map<String, Object>> response = new ArrayList<Map<String, Object>>();
-
+		
 		try {
 			odooSession.startSession();
 			ObjectAdapter orderAdapter = odooSession.getObjectAdapter(ORDER_MODEL);
@@ -76,7 +76,7 @@ public class OdooOrderServiceImpl implements ErpOrderService {
 			for (Filter filter : filters) {
 				filterCollection.add(filter.getFieldName(), filter.getComparison(), filter.getValue());
 			}
-
+			
 			RowCollection records = orderAdapter.searchAndReadObject(filterCollection,
 			    orderDefaultAttributes.toArray(new String[0]));
 			if ((records != null) && (!records.isEmpty())) {
@@ -95,5 +95,5 @@ public class OdooOrderServiceImpl implements ErpOrderService {
 		}
 		return response;
 	}
-
+	
 }

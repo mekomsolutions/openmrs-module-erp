@@ -16,16 +16,16 @@ import java.util.Properties;
 
 @Component
 public class TestHelper {
-
+	
 	private static String fileName = "erp.properties";
-
+	
 	@Autowired
 	private ErpActivator erpActivator;
-
+	
 	@Autowired
 	@Qualifier(ErpConstants.COMPONENT_ERP_CONTEXT)
 	protected ErpContext context;
-
+	
 	public static void createErpPropertiesFile() {
 		File erpPropsFile = new File(OpenmrsUtil.getApplicationDataDirectory(), fileName);
 		try {
@@ -38,12 +38,12 @@ public class TestHelper {
 			e.printStackTrace();
 		}
 	}
-
+	
 	public static void removeErpPropertiesFile() {
 		File erpPropsFile = new File(OpenmrsUtil.getApplicationDataDirectory(), fileName);
 		erpPropsFile.delete();
 	}
-
+	
 	public static Properties setTestErpProps() {
 		Properties erpProperties = new Properties();
 		erpProperties.put("erp.host", "localhost");
@@ -53,7 +53,7 @@ public class TestHelper {
 		erpProperties.put("erp.password", "admin");
 		return erpProperties;
 	}
-
+	
 	public void init() throws IOException {
 		erpActivator.started();
 	}
