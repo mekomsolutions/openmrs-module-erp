@@ -14,7 +14,7 @@ public class ErpConstants {
 	
 	public static final String MODULE_ARTIFACT_ID = "erp";
 	
-	public static final String MODULE_PRIVILEGE = "ERP PRIVILEGE";
+	public static final String MODULE_PRIVILEGE = "Get ERP objects";
 	
 	public static final String ERP_PROPERTY_FILE_NAME = "erp.properties";
 	

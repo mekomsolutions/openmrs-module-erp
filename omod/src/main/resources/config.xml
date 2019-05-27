@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <module configVersion="1.2">
-	
+
 	<!-- Base Module Properties -->
 	<id>${project.parent.artifactId}</id>
 	<name>${project.parent.name}</name>
@@ -13,7 +13,7 @@
 	</description>
 
 	<activator>org.openmrs.module.erp.ErpActivator</activator>
-	
+
 	<!-- <updateURL>https://modules.openmrs.org/modules/download/@MODULE_ID@/update.rdf</updateURL> -->
 	<!-- /Base Module Properties -->
 
@@ -28,8 +28,12 @@
 		</require_module>
 	</require_modules>
 
+	<!-- Privileges -->
+	<privilege>
+		<name>Get ERP objects</name>
+		<description>Allow to retrieve ERP objects from ERP API endpoints</description>
+	</privilege>
 
-	
 	<!-- Internationalization -->
 	<!-- All message codes should start with @MODULE_ID@.* -->
 	<messages>
@@ -37,6 +41,5 @@
 		<file>messages.properties</file>
 	</messages>
 	<!-- /Internationalization -->
-	
-</module>
 
+</module>
