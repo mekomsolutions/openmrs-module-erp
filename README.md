@@ -67,6 +67,8 @@ _Optional:_
 - `rep`, the object representation, see below.
 
 **Data Parameters:**
+
+_Required:_
 - filters: an array of maps with 3 keys: `field`, `comparison`, `value`
 For instance:
 ```

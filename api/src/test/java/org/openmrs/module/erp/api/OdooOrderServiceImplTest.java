@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openmrs.module.erp.Filter;
 import org.openmrs.module.erp.api.impl.odoo.OdooOrderServiceImpl;
-import org.openmrs.module.erp.api.utils.ErpConnection;
+import org.openmrs.module.erp.api.utils.OdooConnection;
 
 import java.io.IOException;
 import java.util.*;
@@ -31,10 +31,10 @@ public class OdooOrderServiceImplTest {
 		when(objectAdapter.getFieldNames()).thenReturn(fields);
 		when(session.getObjectAdapter(any(String.class))).thenReturn(objectAdapter);
 		
-		ErpConnection erpConnection = mock(ErpConnection.class);
-		when(erpConnection.getSession()).thenReturn(session);
+		OdooConnection odooConnection = mock(OdooConnection.class);
+		when(odooConnection.getSession()).thenReturn(session);
 		
-		odooOrderService = new OdooOrderServiceImpl(erpConnection);
+		odooOrderService = new OdooOrderServiceImpl(odooConnection);
 	}
 	
 	@Test

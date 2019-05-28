@@ -24,7 +24,19 @@ public class ErpConstants {
 	
 	public static final String COMPONENT_ODOO_INVOICE_SERVICE = MODULE_ARTIFACT_ID + ".OdooInvoiceService";
 	
-	public static final String COMPONENT_ERP_CONNECTION = ".ErpConnection";
+	public static final String COMPONENT_ERP_CONNECTION = ".OdooConnection";
+	
+	// Odoo connection resources
+	
+	public static final String HOST_PROPERTY = "erp.host";
+	
+	public static final String PORT_PROPERTY = "erp.port";
+	
+	public static final String DATABASE_PROPERTY = "erp.database";
+	
+	public static final String USER_PROPERTY = "erp.user";
+	
+	public static final String PASSWORD_PROPERTY = "erp.password";
 	
 	// REST resources
 	
