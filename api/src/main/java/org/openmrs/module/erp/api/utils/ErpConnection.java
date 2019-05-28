@@ -1,81 +1,36 @@
 package org.openmrs.module.erp.api.utils;
 
-import com.odoojava.api.Session;
-import org.openmrs.module.erp.ErpConstants;
-import org.springframework.stereotype.Component;
-
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Properties;
 
-@Component(ErpConstants.COMPONENT_ERP_CONNECTION)
-public class ErpConnection {
+public interface ErpConnection {
 	
-	private static final String HOST_PROPERTY = "erp.host";
+	/**
+	 * Setup a connection to the ERP server
+	 * 
+	 * @param inStream The Connection properties' InputStream
+	 * @throws IOException
+	 */
+	void setErpConnection(InputStream inStream) throws IOException;
 	
-	private static final String PORT_PROPERTY = "erp.port";
+	/**
+	 * Return the ERP host
+	 */
+	String getHost();
 	
-	private static final String DATABASE_PROPERTY = "erp.database";
+	/**
+	 * Return the ERP port
+	 */
+	Integer getPort();
 	
-	private static final String USER_PROPERTY = "erp.user";
+	/**
+	 * Return the ERP user
+	 */
+	String getUser();
 	
-	private static final String PASSWORD_PROPERTY = "erp.password";
-	
-	private String host;
-	
-	private Integer port;
-	
-	private String database;
-	
-	private String user;
-	
-	private String password;
-	
-	private Session session;
-	
-	public ErpConnection() throws IOException {
-		setErpConnection(ErpPropertiesFile.getInputStream());
-	}
-	
-	public ErpConnection(InputStream inStream) throws IOException {
-		setErpConnection(inStream);
-	}
-	
-	private void setErpConnection(InputStream inStream) throws IOException {
-		Properties properties = new Properties();
-		properties.load(inStream);
-		
-		this.host = properties.getProperty(HOST_PROPERTY);
-		this.port = Integer.parseInt(properties.getProperty(PORT_PROPERTY));
-		this.database = properties.getProperty(DATABASE_PROPERTY);
-		this.user = properties.getProperty(USER_PROPERTY);
-		this.password = properties.getProperty(PASSWORD_PROPERTY);
-		
-		this.session = new Session(host, port, database, user, password);
-	}
-	
-	public String getHost() {
-		return host;
-	}
-	
-	public Integer getPort() {
-		return port;
-	}
-	
-	public String getDatabase() {
-		return database;
-	}
-	
-	public String getUser() {
-		return user;
-	}
-	
-	public String getPassword() {
-		return password;
-	}
-	
-	public Session getSession() {
-		return session;
-	}
+	/**
+	 * Return the ERP user's password
+	 */
+	String getPassword();
 	
 }
