@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openmrs.module.erp.Filter;
 import org.openmrs.module.erp.api.impl.odoo.OdooInvoiceServiceImpl;
-import org.openmrs.module.erp.api.utils.OdooSession;
+import org.openmrs.module.erp.api.impl.odoo.OdooSession;
 
 import java.io.IOException;
 import java.util.*;

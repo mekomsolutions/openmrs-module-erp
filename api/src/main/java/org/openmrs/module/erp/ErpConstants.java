@@ -24,7 +24,9 @@ public class ErpConstants {
 	
 	public static final String COMPONENT_ODOO_INVOICE_SERVICE = MODULE_ARTIFACT_ID + ".OdooInvoiceService";
 	
-	public static final String COMPONENT_ERP_CONNECTION = ".OdooSession";
+	public static final String COMPONENT_ODOO_SESSION = MODULE_ARTIFACT_ID + ".OdooSession";
+	
+	public static final String COMPONENT_ERP_ACTIVATOR = MODULE_ARTIFACT_ID + ".ErpActivator";
 	
 	// Odoo connection resources
 	

@@ -1,7 +1,9 @@
-package org.openmrs.module.erp.api.utils;
+package org.openmrs.module.erp.api.impl.odoo;
 
 import com.odoojava.api.Session;
 import org.openmrs.module.erp.ErpConstants;
+import org.openmrs.module.erp.api.ErpSession;
+import org.openmrs.module.erp.api.utils.ErpPropertiesFile;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -16,18 +18,24 @@ import static org.openmrs.module.erp.ErpConstants.PASSWORD_PROPERTY;
 import static org.openmrs.module.erp.ErpConstants.PORT_PROPERTY;
 import static org.openmrs.module.erp.ErpConstants.USER_PROPERTY;
 
-@Component(ErpConstants.COMPONENT_ERP_CONNECTION)
+@Component(ErpConstants.COMPONENT_ODOO_SESSION)
 public class OdooSession implements ErpSession {
 	
 	private Properties properties;
 	
 	private Session session;
 	
-	public OdooSession() throws IOException {
+	public OdooSession() {
+		
+	}
+	
+	@Override
+	public void init() throws IOException {
 		setErpSession(ErpPropertiesFile.getInputStream());
 	}
 	
-	public OdooSession(InputStream inStream) throws IOException {
+	@Override
+	public void init(InputStream inStream) throws IOException {
 		setErpSession(inStream);
 	}
 	

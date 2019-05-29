@@ -1,9 +1,13 @@
-package org.openmrs.module.erp.api.utils;
+package org.openmrs.module.erp.api;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 public interface ErpSession {
+	
+	void init() throws IOException;
+	
+	void init(InputStream inStream) throws IOException;
 	
 	/**
 	 * Setup a session used to connect to the ERP server

@@ -2,11 +2,13 @@ package org.openmrs.module.erp;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.BaseModuleActivator;
 import org.openmrs.module.Module;
+import org.openmrs.module.ModuleActivator;
 import org.openmrs.module.ModuleFactory;
+import org.openmrs.module.erp.api.impl.odoo.OdooSession;
 import org.openmrs.module.erp.api.utils.ErpPropertiesFile;
-import org.openmrs.module.erp.api.utils.OdooSession;
 import org.openmrs.module.erp.exceptions.ErpPropertyNotFoundException;
 import org.springframework.stereotype.Component;
 
@@ -16,24 +18,41 @@ import java.io.IOException;
 /**
  * This class contains the logic that is run every time this module is either started or shutdown
  */
-@Component
+@Component(ErpConstants.COMPONENT_ERP_ACTIVATOR)
 public class ErpActivator extends BaseModuleActivator {
 	
 	private Log log = LogFactory.getLog(this.getClass());
 	
 	/**
-	 * @see #willRefreshContext()
+	 * @see ModuleActivator#willRefreshContext()
 	 */
-	@Override
 	public void willRefreshContext() {
+		log.info("Refreshing " + ErpConstants.MODULE_NAME + " Module");
+	}
+	
+	/**
+	 * @see ModuleActivator#contextRefreshed()
+	 */
+	public void contextRefreshed() {
+		log.info(ErpConstants.MODULE_NAME + " Module refreshed");
+	}
+	
+	/**
+	 * @see ModuleActivator#willStart()
+	 */
+	public void willStart() {
+		log.info("Starting " + ErpConstants.MODULE_NAME + " Module");
+	}
+	
+	/**
+	 * @see #started()
+	 */
+	public void started() {
 		String errorMessage = null;
 		String error = null;
 		try {
-			// Ensure that Odoo connection can be instantiated before Spring beans initialization
-			// and catch thrown exceptions
-			
-			new OdooSession();
-			
+			OdooSession odooSession = Context.getRegisteredComponent(ErpConstants.COMPONENT_ODOO_SESSION, OdooSession.class);
+			odooSession.init();
 		}
 		catch (FileNotFoundException e) {
 			errorMessage = "Unable to find ERP properties file.";
@@ -41,10 +60,6 @@ public class ErpActivator extends BaseModuleActivator {
 		}
 		catch (IOException e) {
 			errorMessage = "Unable to read ERP properties file.";
-			error = e.getMessage();
-		}
-		catch (NullPointerException e) {
-			errorMessage = "Unable to get ERP session properties.";
 			error = e.getMessage();
 		}
 		catch (ErpPropertyNotFoundException e) {
@@ -66,11 +81,16 @@ public class ErpActivator extends BaseModuleActivator {
 	}
 	
 	/**
-	 * @see #started()
+	 * @see ModuleActivator#willStop()
 	 */
-	@Override
-	public void started() {
-		log.info("Started OpenMRS ERP");
+	public void willStop() {
+		log.info("Stopping " + ErpConstants.MODULE_NAME + " Module");
 	}
 	
+	/**
+	 * @see ModuleActivator#stopped()
+	 */
+	public void stopped() {
+		log.info(ErpConstants.MODULE_NAME + " Module stopped");
+	}
 }
