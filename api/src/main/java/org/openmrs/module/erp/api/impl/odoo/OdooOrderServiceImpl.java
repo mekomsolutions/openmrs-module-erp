@@ -5,7 +5,7 @@ import org.openmrs.api.APIException;
 import org.openmrs.module.erp.ErpConstants;
 import org.openmrs.module.erp.Filter;
 import org.openmrs.module.erp.api.ErpOrderService;
-import org.openmrs.module.erp.api.utils.OdooConnection;
+import org.openmrs.module.erp.api.utils.OdooSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,8 +23,8 @@ public class OdooOrderServiceImpl implements ErpOrderService {
 	private Session odooSession;
 	
 	@Autowired
-	public OdooOrderServiceImpl(OdooConnection odooConnection) {
-		this.odooSession = odooConnection.getSession();
+	public OdooOrderServiceImpl(OdooSession odooSession) {
+		this.odooSession = odooSession.getSession();
 	}
 	
 	@Override

@@ -9,7 +9,7 @@ import org.openmrs.api.APIException;
 import org.openmrs.module.erp.ErpConstants;
 import org.openmrs.module.erp.Filter;
 import org.openmrs.module.erp.api.ErpInvoiceService;
-import org.openmrs.module.erp.api.utils.OdooConnection;
+import org.openmrs.module.erp.api.utils.OdooSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,8 +30,8 @@ public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 	private Session odooSession;
 	
 	@Autowired
-	public OdooInvoiceServiceImpl(OdooConnection odooConnection) {
-		this.odooSession = odooConnection.getSession();
+	public OdooInvoiceServiceImpl(OdooSession odooSession) {
+		this.odooSession = odooSession.getSession();
 	}
 	
 	@Override

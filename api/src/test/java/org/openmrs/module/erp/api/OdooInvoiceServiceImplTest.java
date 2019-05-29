@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openmrs.module.erp.Filter;
 import org.openmrs.module.erp.api.impl.odoo.OdooInvoiceServiceImpl;
-import org.openmrs.module.erp.api.utils.OdooConnection;
+import org.openmrs.module.erp.api.utils.OdooSession;
 
 import java.io.IOException;
 import java.util.*;
@@ -31,10 +31,10 @@ public class OdooInvoiceServiceImplTest {
 		when(objectAdapter.getFieldNames()).thenReturn(fields);
 		when(session.getObjectAdapter(any(String.class))).thenReturn(objectAdapter);
 		
-		OdooConnection odooConnection = mock(OdooConnection.class);
-		when(odooConnection.getSession()).thenReturn(session);
+		OdooSession odooSession = mock(OdooSession.class);
+		when(odooSession.getSession()).thenReturn(session);
 		
-		odooInvoiceService = new OdooInvoiceServiceImpl(odooConnection);
+		odooInvoiceService = new OdooInvoiceServiceImpl(odooSession);
 	}
 	
 	@Test

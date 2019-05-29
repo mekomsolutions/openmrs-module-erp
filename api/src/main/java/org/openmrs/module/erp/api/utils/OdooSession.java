@@ -17,22 +17,22 @@ import static org.openmrs.module.erp.ErpConstants.PORT_PROPERTY;
 import static org.openmrs.module.erp.ErpConstants.USER_PROPERTY;
 
 @Component(ErpConstants.COMPONENT_ERP_CONNECTION)
-public class OdooConnection implements ErpConnection {
+public class OdooSession implements ErpSession {
 	
 	private Properties properties;
 	
 	private Session session;
 	
-	public OdooConnection() throws IOException {
-		setErpConnection(ErpPropertiesFile.getInputStream());
+	public OdooSession() throws IOException {
+		setErpSession(ErpPropertiesFile.getInputStream());
 	}
 	
-	public OdooConnection(InputStream inStream) throws IOException {
-		setErpConnection(inStream);
+	public OdooSession(InputStream inStream) throws IOException {
+		setErpSession(inStream);
 	}
 	
 	@Override
-	public void setErpConnection(InputStream inStream) throws IOException {
+	public void setErpSession(InputStream inStream) throws IOException {
 		
 		Map<String, Class> props = new HashMap<String, Class>();
 		props.put(HOST_PROPERTY, String.class);
