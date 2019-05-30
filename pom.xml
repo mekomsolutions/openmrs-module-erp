@@ -30,7 +30,7 @@
     </modules>
 
     <properties>
-        <openmrsPlatformVersion>2.1.3</openmrsPlatformVersion>
+        <openmrsPlatformVersion>2.1.1</openmrsPlatformVersion>
         <odoo-java-apiVersion>3.0.1</odoo-java-apiVersion>
         <webservices.restVersion>2.24.0</webservices.restVersion>
 

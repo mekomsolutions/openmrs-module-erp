@@ -1,5 +1,6 @@
 package org.openmrs.module.erp;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
@@ -56,19 +57,19 @@ public class ErpActivator extends BaseModuleActivator {
 		}
 		catch (FileNotFoundException e) {
 			errorMessage = "Unable to find ERP properties file.";
-			error = e.getMessage();
+			error = ExceptionUtils.getStackTrace(e);
 		}
 		catch (IOException e) {
 			errorMessage = "Unable to read ERP properties file.";
-			error = e.getMessage();
+			error = ExceptionUtils.getStackTrace(e);
 		}
 		catch (ErpPropertyNotFoundException e) {
 			errorMessage = "Unable to find all the required ERP session properties.";
-			error = e.getMessage();
+			error = ExceptionUtils.getStackTrace(e);
 		}
 		catch (NumberFormatException e) {
 			errorMessage = "Unable to convert property to the specified Type.";
-			error = e.getMessage();
+			error = ExceptionUtils.getStackTrace(e);
 		}
 		finally {
 			if (errorMessage != null) {
