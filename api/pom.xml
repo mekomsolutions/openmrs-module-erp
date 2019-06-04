@@ -47,60 +47,18 @@
             <version>20160212</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.openmrs.module</groupId>
-            <artifactId>reporting-api</artifactId>
-            <version>${reportingVersion}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.openmrs.module</groupId>
-            <artifactId>emrapi-api-1.10</artifactId>
-            <version>${emrapiVersion}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.openmrs.module</groupId>
-            <artifactId>reporting-api</artifactId>
-            <version>${reportingVersion}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.openmrs.module</groupId>
-            <artifactId>calculation-api</artifactId>
-            <version>${calculationVersion}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.openmrs.module</groupId>
-            <artifactId>serialization.xstream-api</artifactId>
-            <version>${serialization.xstreamVersion}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.openmrs.module</groupId>
-            <artifactId>providermanagement-api</artifactId>
-            <version>${providermanagementVersion}</version>
-            <scope>provided</scope>
-        </dependency>
-
         <!-- Test dependencies -->
 
         <dependency>
             <groupId>org.openmrs.module</groupId>
-            <artifactId>calculation-api</artifactId>
-            <version>${calculationVersion}</version>
+            <artifactId>reporting-api</artifactId>
+            <version>${reportingVersion}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.openmrs.module</groupId>
-            <artifactId>serialization.xstream-api</artifactId>
-            <version>${serialization.xstreamVersion}</version>
+            <artifactId>calculation-api</artifactId>
+            <version>${calculationVersion}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

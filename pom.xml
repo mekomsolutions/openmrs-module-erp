@@ -53,6 +53,9 @@
     </properties>
 
     <dependencies>
+
+        <!-- OpenMRS Core dependencies -->
+
         <dependency>
             <groupId>org.openmrs.api</groupId>
             <artifactId>openmrs-api</artifactId>
@@ -68,18 +71,7 @@
             <type>jar</type>
         </dependency>
 
-        <dependency>
-            <groupId>org.openmrs.module</groupId>
-            <artifactId>appframework-api</artifactId>
-            <version>${appframeworkVersion}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.openmrs.module</groupId>
-            <artifactId>uiframework-api</artifactId>
-            <version>${uiframeworkVersion}</version>
-            <scope>provided</scope>
-        </dependency>
+        <!-- OpenMRS Core test dependencies -->
 
         <dependency>
             <groupId>org.openmrs.api</groupId>
@@ -95,6 +87,16 @@
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
+
+        <!-- OpenMRS modules dependencies -->
+
+        <dependency>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>emrapi-api</artifactId>
+            <version>${emrapiVersion}</version>
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
 
     <repositories>
