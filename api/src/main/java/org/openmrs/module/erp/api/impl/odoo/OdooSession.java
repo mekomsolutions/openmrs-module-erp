@@ -12,11 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import static org.openmrs.module.erp.ErpConstants.DATABASE_PROPERTY;
-import static org.openmrs.module.erp.ErpConstants.HOST_PROPERTY;
-import static org.openmrs.module.erp.ErpConstants.PASSWORD_PROPERTY;
-import static org.openmrs.module.erp.ErpConstants.PORT_PROPERTY;
-import static org.openmrs.module.erp.ErpConstants.USER_PROPERTY;
+import static org.openmrs.module.erp.ErpConstants.*;
 
 @Component(ErpConstants.COMPONENT_ODOO_SESSION)
 public class OdooSession implements ErpSession {
@@ -26,7 +22,6 @@ public class OdooSession implements ErpSession {
 	private Session session;
 	
 	public OdooSession() {
-		
 	}
 	
 	@Override

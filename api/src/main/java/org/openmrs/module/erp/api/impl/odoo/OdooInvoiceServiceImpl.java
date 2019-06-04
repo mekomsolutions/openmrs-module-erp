@@ -26,11 +26,16 @@ public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 	private ArrayList<String> invoiceDefaultAttributes = new ArrayList<String>(Arrays.asList("name", "amount_total",
 	    "state", "pricelist_id", "payment_term_id", "invoice_status", "origin", "create_date", "currency_id"));
 	
-	private Session odooSession;
+	private Session session;
 	
 	@Autowired
+	private OdooSession odooSession;
+	
+	public OdooInvoiceServiceImpl() {
+	}
+	
 	public OdooInvoiceServiceImpl(OdooSession odooSession) {
-		this.odooSession = odooSession.getSession();
+		this.session = odooSession.getSession();
 	}
 	
 	@Override
@@ -42,9 +47,12 @@ public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 	public Map<String, Object> getInvoiceById(String invoiceId) {
 		
 		Map<String, Object> response = new HashMap<String, Object>();
+		if (this.session == null) {
+			this.session = odooSession.getSession();
+		}
 		try {
-			odooSession.startSession();
-			ObjectAdapter orderAdapter = odooSession.getObjectAdapter(INVOICE_MODEL);
+			session.startSession();
+			ObjectAdapter orderAdapter = session.getObjectAdapter(INVOICE_MODEL);
 			FilterCollection filters = new FilterCollection();
 			String[] fields = orderAdapter.getFieldNames();
 			
@@ -73,8 +81,8 @@ public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 		
 		List<Map<String, Object>> response = new ArrayList<Map<String, Object>>();
 		try {
-			odooSession.startSession();
-			ObjectAdapter orderAdapter = odooSession.getObjectAdapter(INVOICE_MODEL);
+			session.startSession();
+			ObjectAdapter orderAdapter = session.getObjectAdapter(INVOICE_MODEL);
 			FilterCollection filterCollection = new FilterCollection();
 			String[] fields = orderAdapter.getFieldNames();
 			
