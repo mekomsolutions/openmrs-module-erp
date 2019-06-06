@@ -53,13 +53,14 @@ public class OdooOrderServiceImpl implements ErpOrderService {
 			filters.clear();
 			filters.add("id", "=", erpOrderId);
 			
-			RowCollection records = orderAdapter.searchAndReadObject(filters, orderDefaultAttributes.toArray(new String[0]));
+			RowCollection records = orderAdapter.searchAndReadObject(filters, fields);
 			if ((records != null) && (!records.isEmpty())) {
 				Row record = records.get(0);
 				for (String field : fields) {
 					Object value = record.get(field);
 					response.put(field, value);
 				}
+				response.put("order_lines", getErpOrderLinesByOrderId(erpOrderId));
 			}
 		}
 		catch (Exception e) {
@@ -72,7 +73,9 @@ public class OdooOrderServiceImpl implements ErpOrderService {
 	public List<Map<String, Object>> getErpOrdersByFilters(List<Filter> filters) {
 		
 		ArrayList<Map<String, Object>> response = new ArrayList<Map<String, Object>>();
-		
+		if (this.session == null) {
+			this.session = odooSession.getSession();
+		}
 		try {
 			session.startSession();
 			ObjectAdapter orderAdapter = session.getObjectAdapter(ORDER_MODEL);
@@ -83,8 +86,41 @@ public class OdooOrderServiceImpl implements ErpOrderService {
 				filterCollection.add(filter.getFieldName(), filter.getComparison(), filter.getValue());
 			}
 			
-			RowCollection records = orderAdapter.searchAndReadObject(filterCollection,
-			    orderDefaultAttributes.toArray(new String[0]));
+			RowCollection records = orderAdapter.searchAndReadObject(filterCollection, fields);
+			if ((records != null) && (!records.isEmpty())) {
+				for (Row record : records) {
+					Map<String, Object> result = new HashMap<String, Object>();
+					for (String field : fields) {
+						Object value = record.get(field);
+						result.put(field, value);
+					}
+					response.add(result);
+				}
+			}
+		}
+		catch (Exception e) {
+			throw new APIException("Error while reading data from ERP server", e);
+		}
+		return response;
+	}
+	
+	private List<Map<String, Object>> getErpOrderLinesByOrderId(String erpOrderId) {
+		
+		List<Map<String, Object>> response = new ArrayList<Map<String, Object>>();
+		if (this.session == null) {
+			this.session = odooSession.getSession();
+		}
+		try {
+			this.session.startSession();
+			ObjectAdapter orderAdapter = this.session.getObjectAdapter("sale.order.line");
+			FilterCollection filterCollection = new FilterCollection();
+			String[] fields = orderAdapter.getFieldNames();
+			
+			filterCollection.clear();
+			
+			filterCollection.add("order_id", "=", erpOrderId);
+			
+			RowCollection records = orderAdapter.searchAndReadObject(filterCollection, fields);
 			if ((records != null) && (!records.isEmpty())) {
 				for (Row record : records) {
 					Map<String, Object> result = new HashMap<String, Object>();
