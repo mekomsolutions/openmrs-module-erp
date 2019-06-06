@@ -53,7 +53,7 @@ public class OdooOrderServiceImpl implements ErpOrderService {
 			filters.clear();
 			filters.add("id", "=", erpOrderId);
 			
-			RowCollection records = orderAdapter.searchAndReadObject(filters, orderDefaultAttributes.toArray(new String[0]));
+			RowCollection records = orderAdapter.searchAndReadObject(filters, fields);
 			if ((records != null) && (!records.isEmpty())) {
 				Row record = records.get(0);
 				for (String field : fields) {
@@ -72,7 +72,9 @@ public class OdooOrderServiceImpl implements ErpOrderService {
 	public List<Map<String, Object>> getErpOrdersByFilters(List<Filter> filters) {
 		
 		ArrayList<Map<String, Object>> response = new ArrayList<Map<String, Object>>();
-		
+		if (this.session == null) {
+			this.session = odooSession.getSession();
+		}
 		try {
 			session.startSession();
 			ObjectAdapter orderAdapter = session.getObjectAdapter(ORDER_MODEL);
@@ -83,8 +85,7 @@ public class OdooOrderServiceImpl implements ErpOrderService {
 				filterCollection.add(filter.getFieldName(), filter.getComparison(), filter.getValue());
 			}
 			
-			RowCollection records = orderAdapter.searchAndReadObject(filterCollection,
-			    orderDefaultAttributes.toArray(new String[0]));
+			RowCollection records = orderAdapter.searchAndReadObject(filterCollection, fields);
 			if ((records != null) && (!records.isEmpty())) {
 				for (Row record : records) {
 					Map<String, Object> result = new HashMap<String, Object>();

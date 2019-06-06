@@ -62,10 +62,9 @@ public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 			if ((records != null) && (!records.isEmpty())) {
 				
 				Row record = records.get(0);
-				for (String field : invoiceDefaultAttributes) {
+				for (String field : fields) {
 					Object value = record.get(field);
-					if (value != null)
-						response.put(field, value);
+					response.put(field, value);
 				}
 				
 			}
@@ -80,6 +79,9 @@ public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 	public List<Map<String, Object>> getInvoicesByFilters(List<Filter> filters) {
 		
 		List<Map<String, Object>> response = new ArrayList<Map<String, Object>>();
+		if (this.session == null) {
+			this.session = odooSession.getSession();
+		}
 		try {
 			session.startSession();
 			ObjectAdapter orderAdapter = session.getObjectAdapter(INVOICE_MODEL);
@@ -96,10 +98,9 @@ public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 			if ((records != null) && (!records.isEmpty())) {
 				for (Row record : records) {
 					Map<String, Object> result = new HashMap<String, Object>();
-					for (String field : invoiceDefaultAttributes) {
+					for (String field : fields) {
 						Object value = record.get(field);
-						if (value != null)
-							result.put(field, value);
+						result.put(field, value);
 					}
 					response.add(result);
 				}
