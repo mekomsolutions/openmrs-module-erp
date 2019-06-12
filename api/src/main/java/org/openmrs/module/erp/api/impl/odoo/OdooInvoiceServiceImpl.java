@@ -51,8 +51,8 @@ public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 			this.session = odooSession.getSession();
 		}
 		try {
-			session.startSession();
-			ObjectAdapter orderAdapter = session.getObjectAdapter(INVOICE_MODEL);
+			this.session.startSession();
+			ObjectAdapter orderAdapter = this.session.getObjectAdapter(INVOICE_MODEL);
 			FilterCollection filters = new FilterCollection();
 			String[] fields = orderAdapter.getFieldNames();
 			
@@ -66,7 +66,7 @@ public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 					Object value = record.get(field);
 					response.put(field, value);
 				}
-				
+				response.put("invoice_lines", getInvoiceLinesByInvoiceId(invoiceId));
 			}
 		}
 		catch (Exception e) {
@@ -102,6 +102,8 @@ public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 						Object value = record.get(field);
 						result.put(field, value);
 					}
+					String invoiceId = String.valueOf(result.get("id"));
+					result.put("invoice_lines", getInvoiceLinesByInvoiceId(invoiceId));
 					response.add(result);
 				}
 			}
@@ -111,4 +113,36 @@ public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 		}
 		return response;
 	}
+	
+	private List<Map<String, Object>> getInvoiceLinesByInvoiceId(String invoiceId) {
+		
+		List<Map<String, Object>> response = new ArrayList<Map<String, Object>>();
+		try {
+			session.startSession();
+			ObjectAdapter orderAdapter = session.getObjectAdapter("account.invoice.line");
+			FilterCollection filterCollection = new FilterCollection();
+			String[] fields = orderAdapter.getFieldNames();
+			
+			filterCollection.clear();
+			
+			filterCollection.add("invoice_id", "=", invoiceId);
+			
+			RowCollection records = orderAdapter.searchAndReadObject(filterCollection, fields);
+			if ((records != null) && (!records.isEmpty())) {
+				for (Row record : records) {
+					Map<String, Object> result = new HashMap<String, Object>();
+					for (String field : fields) {
+						Object value = record.get(field);
+						result.put(field, value);
+					}
+					response.add(result);
+				}
+			}
+		}
+		catch (Exception e) {
+			throw new APIException("Error while reading data from ERP server", e);
+		}
+		return response;
+	}
+	
 }
