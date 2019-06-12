@@ -102,6 +102,8 @@ public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 						Object value = record.get(field);
 						result.put(field, value);
 					}
+					String invoiceId = String.valueOf(result.get("id"));
+					result.put("invoice_lines", getInvoiceLinesByInvoiceId(invoiceId));
 					response.add(result);
 				}
 			}
@@ -111,20 +113,20 @@ public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 		}
 		return response;
 	}
-
+	
 	private List<Map<String, Object>> getInvoiceLinesByInvoiceId(String invoiceId) {
-
+		
 		List<Map<String, Object>> response = new ArrayList<Map<String, Object>>();
 		try {
 			session.startSession();
 			ObjectAdapter orderAdapter = session.getObjectAdapter("account.invoice.line");
 			FilterCollection filterCollection = new FilterCollection();
 			String[] fields = orderAdapter.getFieldNames();
-
+			
 			filterCollection.clear();
-
+			
 			filterCollection.add("invoice_id", "=", invoiceId);
-
+			
 			RowCollection records = orderAdapter.searchAndReadObject(filterCollection, fields);
 			if ((records != null) && (!records.isEmpty())) {
 				for (Row record : records) {
@@ -142,5 +144,5 @@ public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 		}
 		return response;
 	}
-
+	
 }

@@ -94,6 +94,8 @@ public class OdooOrderServiceImpl implements ErpOrderService {
 						Object value = record.get(field);
 						result.put(field, value);
 					}
+					String erpOrderId = (String.valueOf(result.get("id")));
+					result.put("order_lines", getErpOrderLinesByOrderId(erpOrderId));
 					response.add(result);
 				}
 			}
@@ -103,9 +105,9 @@ public class OdooOrderServiceImpl implements ErpOrderService {
 		}
 		return response;
 	}
-
+	
 	private List<Map<String, Object>> getErpOrderLinesByOrderId(String erpOrderId) {
-
+		
 		List<Map<String, Object>> response = new ArrayList<Map<String, Object>>();
 		if (this.session == null) {
 			this.session = odooSession.getSession();
@@ -115,11 +117,11 @@ public class OdooOrderServiceImpl implements ErpOrderService {
 			ObjectAdapter orderAdapter = this.session.getObjectAdapter("sale.order.line");
 			FilterCollection filterCollection = new FilterCollection();
 			String[] fields = orderAdapter.getFieldNames();
-
+			
 			filterCollection.clear();
-
+			
 			filterCollection.add("order_id", "=", erpOrderId);
-
+			
 			RowCollection records = orderAdapter.searchAndReadObject(filterCollection, fields);
 			if ((records != null) && (!records.isEmpty())) {
 				for (Row record : records) {
