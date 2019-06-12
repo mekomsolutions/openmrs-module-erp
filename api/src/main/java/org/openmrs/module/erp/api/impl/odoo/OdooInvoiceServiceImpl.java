@@ -79,6 +79,9 @@ public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 	public List<Map<String, Object>> getInvoicesByFilters(List<Filter> filters) {
 		
 		List<Map<String, Object>> response = new ArrayList<Map<String, Object>>();
+		if (this.session == null) {
+			this.session = odooSession.getSession();
+		}
 		try {
 			session.startSession();
 			ObjectAdapter orderAdapter = session.getObjectAdapter(INVOICE_MODEL);
@@ -108,20 +111,20 @@ public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 		}
 		return response;
 	}
-	
+
 	private List<Map<String, Object>> getInvoiceLinesByInvoiceId(String invoiceId) {
-		
+
 		List<Map<String, Object>> response = new ArrayList<Map<String, Object>>();
 		try {
 			session.startSession();
 			ObjectAdapter orderAdapter = session.getObjectAdapter("account.invoice.line");
 			FilterCollection filterCollection = new FilterCollection();
 			String[] fields = orderAdapter.getFieldNames();
-			
+
 			filterCollection.clear();
-			
+
 			filterCollection.add("invoice_id", "=", invoiceId);
-			
+
 			RowCollection records = orderAdapter.searchAndReadObject(filterCollection, fields);
 			if ((records != null) && (!records.isEmpty())) {
 				for (Row record : records) {
@@ -139,5 +142,5 @@ public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 		}
 		return response;
 	}
-	
+
 }
