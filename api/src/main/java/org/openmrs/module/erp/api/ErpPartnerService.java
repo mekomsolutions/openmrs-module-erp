@@ -8,28 +8,28 @@ import org.openmrs.module.erp.Filter;
 import java.util.List;
 import java.util.Map;
 
-public interface ErpOrderService {
+public interface ErpPartnerService {
 	
 	List<String> defaultModelAttributes();
 	
 	/**
-	 * Returns an ERP order by order id.
+	 * Returns an ERP partner by order id.
 	 * 
-	 * @param erpOrderId The ERP order id
+	 * @param erpPartnerId The ERP partner id
 	 * @return JSONObject
 	 * @throws APIException
 	 */
 	@Authorized(ErpConstants.MODULE_PRIVILEGE)
-	Map<String, Object> getErpOrderById(String erpOrderId);
+	Map<String, Object> getErpPartnerById(String erpPartnerId);
 	
 	/**
-	 * Returns a filtered list of ERP orders.
+	 * Returns a filtered list of ERP partners.
 	 * 
 	 * @param filters The filter expressions
 	 * @return ArrayList<JSONObject>
 	 * @throws APIException
 	 */
 	@Authorized(ErpConstants.MODULE_PRIVILEGE)
-	List<Map<String, Object>> getErpOrdersByFilters(List<Filter> filters);
+	List<Map<String, Object>> getErpPartnersByFilters(List<Filter> filters);
 	
 }

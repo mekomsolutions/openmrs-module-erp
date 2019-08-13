@@ -17,7 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@Controller(value = "/rest/" + RestConstants.VERSION_1 + "/" + "erp" + ErpConstants.ERP_ORDER_URI)
+@Controller
+@RequestMapping(value = "/rest/" + RestConstants.VERSION_1 + ErpConstants.ERP_URI + ErpConstants.ERP_ORDER_URI)
 public class ErpOrderController extends BaseRestController {
 	
 	@Autowired
