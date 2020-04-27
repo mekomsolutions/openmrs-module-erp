@@ -4,6 +4,7 @@ import org.openmrs.module.emrapi.utils.ModuleProperties;
 import org.openmrs.module.erp.api.ErpInvoiceService;
 import org.openmrs.module.erp.api.ErpOrderService;
 import org.openmrs.module.erp.api.ErpPartnerService;
+import org.openmrs.module.erp.api.ErpProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -23,6 +24,10 @@ public class ErpContext extends ModuleProperties {
 	@Qualifier(ErpConstants.COMPONENT_ODOO_PARTNER_SERVICE)
 	protected ErpPartnerService erpPartnerService;
 	
+	@Autowired
+	@Qualifier(ErpConstants.COMPONENT_ODOO_PRODUCT_SERVICE)
+	protected ErpProductService erpProductService;
+	
 	public ErpOrderService getErpOrderService() {
 		return erpOrderService;
 	}
@@ -33,5 +38,9 @@ public class ErpContext extends ModuleProperties {
 	
 	public ErpPartnerService getErpPartnerService() {
 		return erpPartnerService;
+	}
+	
+	public ErpProductService getErpProductService() {
+		return erpProductService;
 	}
 }
