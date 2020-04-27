@@ -31,6 +31,14 @@ _Example with ERP Orders_
 
 Log in OpenMRS.
 
+### Fetch a single product by ID:
+**Method:** `GET`
+
+**URL:** `/openmrs/ws/rest/v1/erp/product/{id}`
+- `{id}`, a single product ID  
+
+
+
 ### Fetch a single order by ID:
 **Method:** `GET`
 
