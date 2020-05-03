@@ -56,6 +56,7 @@ public class ErpProductControllerTest extends BaseModuleWebContextSensitiveTest 
 		product.put("name", "medA");
 		product.put("actual_stock", "5");
 		product.put("price", "100");
+		product.put("uuid", "a-b-c");
 
 		return product;
 	}

@@ -15,7 +15,7 @@ public class OdooProductServiceImpl implements ErpProductService {
 	
 	private static final String PRODUCT_MODEL = "product.product";
 	
-	private List<String> productDefaultAttributes = Arrays.asList("id", "name", "actual_stock", "price", "mrp");
+	private List<String> productDefaultAttributes = Arrays.asList("id", "uuid", "name", "actual_stock", "price", "mrp");
 	
 	private Session session;
 	
@@ -49,7 +49,7 @@ public class OdooProductServiceImpl implements ErpProductService {
 			String[] fields = productAdapter.getFieldNames();
 			
 			filters.clear();
-			filters.add("id", "=", erpProductId);
+			filters.add("uuid", "=", erpProductId);
 			
 			RowCollection records = productAdapter.searchAndReadObject(filters, fields);
 			if ((records != null) && (!records.isEmpty())) {

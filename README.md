@@ -31,11 +31,11 @@ _Example with ERP Orders_
 
 Log in OpenMRS.
 
-### Fetch a single product by ID:
+### Fetch a single product by UUID:
 **Method:** `GET`
 
-**URL:** `/openmrs/ws/rest/v1/erp/product/{id}`
-- `{id}`, a single product ID  
+**URL:** `/openmrs/ws/rest/v1/erp/product/{uuid}`
+- `{uuid`, a product UUID  
 
 
 
