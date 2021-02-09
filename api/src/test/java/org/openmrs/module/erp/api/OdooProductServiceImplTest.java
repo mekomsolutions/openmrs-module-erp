@@ -24,7 +24,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 
 public class OdooProductServiceImplTest {
 	
-	private String[] fields = { "id", "uuid", "name", "actual_stock", "price", "mrp" };
+	private String[] fields = { "id", "uuid", "name", "actual_stock", "qty_available", "price", "mrp" };
 	
 	private ErpProductService odooProductService;
 	

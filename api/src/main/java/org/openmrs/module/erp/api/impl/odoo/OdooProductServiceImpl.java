@@ -15,7 +15,8 @@ public class OdooProductServiceImpl implements ErpProductService {
 	
 	private static final String PRODUCT_MODEL = "product.product";
 	
-	private List<String> productDefaultAttributes = Arrays.asList("id", "uuid", "name", "actual_stock", "price", "mrp");
+	private List<String> productDefaultAttributes = Arrays.asList("id", "uuid", "name", "actual_stock", "qty_available",
+	    "price", "mrp");
 	
 	private Session session;
 	

@@ -85,6 +85,7 @@ public class TestHelper {
 		data.put("name", "REC/001");
 		data.put("amount_total", "3175.0");
 		data.put("actual_stock", "5");
+		data.put("qty_available", "4");
 		data.put("uuid", "a-b-c");
 		
 		FieldCollection fields = new FieldCollection();
