@@ -31,8 +31,9 @@
 
     <properties>
         <openmrsPlatformVersion>2.1.1</openmrsPlatformVersion>
-        <odoo-java-apiVersion>3.0.1</odoo-java-apiVersion>
+<!--        <odoo-java-apiVersion>3.0.1</odoo-java-apiVersion>-->
         <webservices.restVersion>2.24.0</webservices.restVersion>
+        <xml-rpc-version></xml-rpc-version>
 
         <appframeworkVersion>2.2.1</appframeworkVersion>
         <uiframeworkVersion>3.3.1</uiframeworkVersion>

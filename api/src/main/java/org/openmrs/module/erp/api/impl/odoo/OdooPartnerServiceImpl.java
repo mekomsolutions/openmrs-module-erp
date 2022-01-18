@@ -1,6 +1,6 @@
 package org.openmrs.module.erp.api.impl.odoo;
 
-import com.odoojava.api.*;
+//import com.odoojava.api.*;
 import org.openmrs.api.APIException;
 import org.openmrs.module.erp.ErpConstants;
 import org.openmrs.module.erp.Filter;
@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 
+import static java.util.Arrays.asList;
+
 @Component(ErpConstants.COMPONENT_ODOO_PARTNER_SERVICE)
 public class OdooPartnerServiceImpl implements ErpPartnerService {
 	
@@ -17,7 +19,7 @@ public class OdooPartnerServiceImpl implements ErpPartnerService {
 	
 	private List<String> partnerDefaultAttributes = Arrays.asList("id", "name", "uuid", "create_date");
 	
-	private Session session;
+	//	private Session session;
 	
 	@Autowired
 	private OdooSession odooSession;
@@ -26,7 +28,7 @@ public class OdooPartnerServiceImpl implements ErpPartnerService {
 	}
 	
 	public OdooPartnerServiceImpl(OdooSession odooSession) {
-		this.session = odooSession.getSession();
+		this.odooSession = odooSession;
 	}
 	
 	@Override
@@ -38,23 +40,27 @@ public class OdooPartnerServiceImpl implements ErpPartnerService {
 	public Map<String, Object> getErpPartnerById(String erpPartnerId) {
 		
 		Map<String, Object> response = new HashMap<String, Object>();
-		if (this.session == null) {
-			this.session = odooSession.getSession();
-		}
+		
 		try {
-			session.startSession();
-			ObjectAdapter partnerAdapter = session.getObjectAdapter(PARTNER_MODEL);
-			FilterCollection filters = new FilterCollection();
 			
-			String[] fields = partnerAdapter.getFieldNames();
+			//			ObjectAdapter orderAdapter = session.getObjectAdapter(ORDER_MODEL);
+			//			FilterCollection filters = new FilterCollection();
+			//
+			//			String[] fields = orderAdapter.getFieldNames();
+			//
+			//			filters.clear();
+			//			filters.add("id", "=", erpOrderId);
+			//
+			//			RowCollection records = orderAdapter.searchAndReadObject(filters, fields);
 			
-			filters.clear();
-			filters.add("id", "=", erpPartnerId);
+			// new HashMap() {{ put("limit", 1);}}
 			
-			RowCollection records = partnerAdapter.searchAndReadObject(filters, fields);
-			if ((records != null) && (!records.isEmpty())) {
-				Row record = records.get(0);
-				for (String field : fields) {
+			Object[] records = (Object[]) odooSession.execute("read", PARTNER_MODEL,
+			    Collections.singletonList(Integer.parseInt(erpPartnerId)), null);
+			
+			if ((records != null) && (records.length > 0)) {
+				Map record = (Map) records[0];
+				for (String field : partnerDefaultAttributes) {
 					Object value = record.get(field);
 					response.put(field, value);
 				}
@@ -68,31 +74,43 @@ public class OdooPartnerServiceImpl implements ErpPartnerService {
 	
 	@Override
 	public List<Map<String, Object>> getErpPartnersByFilters(List<Filter> filters) {
-		
 		ArrayList<Map<String, Object>> response = new ArrayList<Map<String, Object>>();
-		if (this.session == null) {
-			this.session = odooSession.getSession();
-		}
+
 		try {
-			session.startSession();
-			ObjectAdapter partnerAdapter = session.getObjectAdapter(PARTNER_MODEL);
-			FilterCollection filterCollection = new FilterCollection();
-			String[] fields = partnerAdapter.getFieldNames();
-			filterCollection.clear();
+			List<List<Object>> filterCollection = new ArrayList<List<Object>>();
+//			session.startSession();
+//			ObjectAdapter orderAdapter = session.getObjectAdapter(ORDER_MODEL);
+
+//			String[] fields = orderAdapter.getFieldNames();
+//			filterCollection.clear();
+
+
 			for (Filter filter : filters) {
-				filterCollection.add(filter.getFieldName(), filter.getComparison(), filter.getValue());
+
+				filterCollection.add(asList(filter.getFieldName(),
+						filter.getComparison(),
+						filter.getValue()));
 			}
-			
-			RowCollection records = partnerAdapter.searchAndReadObject(filterCollection, fields);
-			if ((records != null) && (!records.isEmpty())) {
-				for (Row record : records) {
+
+//			RowCollection records = orderAdapter.searchAndReadObject(filterCollection, fields);
+
+			ArrayList<String> fields = odooSession.getDomainFields(PARTNER_MODEL);
+			Object[] records = (Object[]) odooSession.execute("search_read", PARTNER_MODEL, filterCollection, new HashMap() {{
+				put("fields", fields);
+			}});
+
+			if ((records != null) && (records.length > 0)) {
+
+				asList(records).forEach(record -> {
+					Map<String, Object> rec = (Map<String, Object>) record;
 					Map<String, Object> result = new HashMap<String, Object>();
 					for (String field : fields) {
-						Object value = record.get(field);
+						Object value = rec.get(field);
 						result.put(field, value);
 					}
 					response.add(result);
-				}
+				});
+
 			}
 		}
 		catch (Exception e) {
@@ -100,5 +118,4 @@ public class OdooPartnerServiceImpl implements ErpPartnerService {
 		}
 		return response;
 	}
-	
 }

@@ -26,7 +26,7 @@ public class OdooSessionTest {
 	@Test
 	public void shouldConstructErpConnection() throws IOException {
 		odooSession.init(new FileInputStream(erpPropFile));
-		Assert.assertEquals("localhost", odooSession.getHost());
+		Assert.assertEquals("http://localhost", odooSession.getHost());
 	}
 	
 	@Test(expected = IOException.class)
