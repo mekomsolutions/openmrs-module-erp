@@ -1,11 +1,5 @@
 package org.openmrs.module.erp.api.impl.odoo;
 
-//import com.odoojava.api.FilterCollection;
-//import com.odoojava.api.ObjectAdapter;
-//import com.odoojava.api.Row;
-//import com.odoojava.api.RowCollection;
-//import com.odoojava.api.Session;
-//import org.openmrs.api.APIException;
 import org.openmrs.api.APIException;
 import org.openmrs.module.erp.ErpConstants;
 import org.openmrs.module.erp.Filter;
@@ -25,7 +19,7 @@ import static java.util.Arrays.asList;
 @Component(ErpConstants.COMPONENT_ODOO_INVOICE_SERVICE)
 public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 	
-	private static final String INVOICE_MODEL = "account.invoice";
+	private static final String INVOICE_MODEL = "account.move";
 	
 	private ArrayList<String> invoiceDefaultAttributes = new ArrayList<String>(Arrays.asList("name", "amount_total",
 	    "state", "pricelist_id", "payment_term_id", "invoice_status", "origin", "create_date", "currency_id"));
@@ -48,21 +42,9 @@ public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 	@Override
 	public Map<String, Object> getInvoiceById(String invoiceId) {
 		
-		Map<String, Object> response = new HashMap<String, Object>();
+		Map<String, Object> response = new HashMap<>();
 		
 		try {
-			
-			//			ObjectAdapter orderAdapter = session.getObjectAdapter(ORDER_MODEL);
-			//			FilterCollection filters = new FilterCollection();
-			//
-			//			String[] fields = orderAdapter.getFieldNames();
-			//
-			//			filters.clear();
-			//			filters.add("id", "=", erpOrderId);
-			//
-			//			RowCollection records = orderAdapter.searchAndReadObject(filters, fields);
-			
-			// new HashMap() {{ put("limit", 1);}}
 			
 			Object[] records = (Object[]) odooSession.execute("read", INVOICE_MODEL,
 			    Collections.singletonList(Integer.parseInt(invoiceId)), null);
@@ -87,13 +69,7 @@ public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 		ArrayList<Map<String, Object>> response = new ArrayList<Map<String, Object>>();
 
 		try {
-			List<List<Object>> filterCollection = new ArrayList<List<Object>>();
-//			session.startSession();
-//			ObjectAdapter orderAdapter = session.getObjectAdapter(ORDER_MODEL);
-
-//			String[] fields = orderAdapter.getFieldNames();
-//			filterCollection.clear();
-
+			List<List<Object>> filterCollection = new ArrayList<>();
 
 			for (Filter filter : filters) {
 
@@ -101,8 +77,6 @@ public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 						filter.getComparison(),
 						filter.getValue()));
 			}
-
-//			RowCollection records = orderAdapter.searchAndReadObject(filterCollection, fields);
 
 			ArrayList<String> fields = odooSession.getDomainFields(INVOICE_MODEL);
 			Object[] records = (Object[]) odooSession.execute("search_read", INVOICE_MODEL, filterCollection, new HashMap() {{
@@ -132,24 +106,17 @@ public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 	
 	private List<Map<String, Object>> getInvoiceLinesByInvoiceId(String invoiceId) {
 
-		List<Map<String, Object>> response = new ArrayList<Map<String, Object>>();
-		List<List<Object>> filterCollection = new ArrayList<List<Object>>();
+		List<Map<String, Object>> response = new ArrayList<>();
+		List<List<Object>> filterCollection = new ArrayList<>();
 
 		try {
-//			this.session.startSession();
-//			ObjectAdapter orderAdapter = this.session.getObjectAdapter("sale.order.line");
-//			FilterCollection filterCollection = new FilterCollection();
-//			String[] fields = orderAdapter.getFieldNames();
-//
-//			filterCollection.clear();
-//
 
-			List<Object> condition = asList("order_id", "=", Integer.parseInt(invoiceId));
+			List<Object> condition = asList("move_id", "=", Integer.parseInt(invoiceId));
 
 			filterCollection.add(condition);
 
-			ArrayList<String> fields = odooSession.getDomainFields("account.invoice.line");
-			Object[] records = (Object[]) odooSession.execute("search_read", "account.invoice.line", filterCollection, new HashMap() {{
+			ArrayList<String> fields = odooSession.getDomainFields("account.move.line");
+			Object[] records = (Object[]) odooSession.execute("search_read", "account.move.line", filterCollection, new HashMap() {{
 				put("fields", fields);
 				put("limit", 15);
 			}});
@@ -165,15 +132,6 @@ public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 					}
 					response.add(result);
 				});
-
-//				for (Object record : result) {
-//					record = new HashMap<String, Object>();
-//					for (String field : fields) {
-//						Object value = record.get(field);
-//						result.put(field, value);
-//					}
-//					response.add(result);
-//				}
 			}
 		}
 		catch (Exception e) {

@@ -1,6 +1,5 @@
 package org.openmrs.module.erp.api.impl.odoo;
 
-import com.sun.rowset.internal.Row;
 import org.openmrs.api.APIException;
 import org.openmrs.module.erp.ErpConstants;
 import org.openmrs.module.erp.Filter;
@@ -9,12 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 
@@ -48,18 +45,6 @@ public class OdooOrderServiceImpl implements ErpOrderService {
 		
 		try {
 			
-			//			ObjectAdapter orderAdapter = session.getObjectAdapter(ORDER_MODEL);
-			//			FilterCollection filters = new FilterCollection();
-			//
-			//			String[] fields = orderAdapter.getFieldNames();
-			//
-			//			filters.clear();
-			//			filters.add("id", "=", erpOrderId);
-			//
-			//			RowCollection records = orderAdapter.searchAndReadObject(filters, fields);
-			
-			// new HashMap() {{ put("limit", 1);}}
-			
 			Object[] records = (Object[]) odooSession.execute("read", ORDER_MODEL,
 			    Collections.singletonList(Integer.parseInt(erpOrderId)), null);
 			
@@ -85,12 +70,6 @@ public class OdooOrderServiceImpl implements ErpOrderService {
 
 		try {
 			List<List<Object>> filterCollection = new ArrayList<List<Object>>();
-//			session.startSession();
-//			ObjectAdapter orderAdapter = session.getObjectAdapter(ORDER_MODEL);
-
-//			String[] fields = orderAdapter.getFieldNames();
-//			filterCollection.clear();
-
 
 			for (Filter filter : filters) {
 
@@ -98,8 +77,6 @@ public class OdooOrderServiceImpl implements ErpOrderService {
 						filter.getComparison(),
 						filter.getValue()));
 			}
-			
-//			RowCollection records = orderAdapter.searchAndReadObject(filterCollection, fields);
 
 			ArrayList<String> fields = odooSession.getDomainFields(ORDER_MODEL);
 			Object[] records = (Object[]) odooSession.execute("search_read", ORDER_MODEL, filterCollection, new HashMap() {{
@@ -134,13 +111,6 @@ public class OdooOrderServiceImpl implements ErpOrderService {
 		List<List<Object>> filterCollection = new ArrayList<List<Object>>();
 
 		try {
-//			this.session.startSession();
-//			ObjectAdapter orderAdapter = this.session.getObjectAdapter("sale.order.line");
-//			FilterCollection filterCollection = new FilterCollection();
-//			String[] fields = orderAdapter.getFieldNames();
-//
-//			filterCollection.clear();
-//
 
 			List<Object> condition = asList("order_id", "=", Integer.parseInt(erpOrderId));
 
@@ -165,16 +135,6 @@ public class OdooOrderServiceImpl implements ErpOrderService {
 					}
 					response.add(result);
 				});
-
-
-//				for (Object record : result) {
-//					record = new HashMap<String, Object>();
-//					for (String field : fields) {
-//						Object value = record.get(field);
-//						result.put(field, value);
-//					}
-//					response.add(result);
-//				}
 			}
 		}
 		catch (Exception e) {

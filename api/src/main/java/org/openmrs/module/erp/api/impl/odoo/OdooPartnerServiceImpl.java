@@ -1,6 +1,5 @@
 package org.openmrs.module.erp.api.impl.odoo;
 
-//import com.odoojava.api.*;
 import org.openmrs.api.APIException;
 import org.openmrs.module.erp.ErpConstants;
 import org.openmrs.module.erp.Filter;
@@ -17,9 +16,7 @@ public class OdooPartnerServiceImpl implements ErpPartnerService {
 	
 	private static final String PARTNER_MODEL = "res.partner";
 	
-	private List<String> partnerDefaultAttributes = Arrays.asList("id", "name", "uuid", "create_date");
-	
-	//	private Session session;
+	private List<String> partnerDefaultAttributes = Arrays.asList("id", "name", "ref", "create_date");
 	
 	@Autowired
 	private OdooSession odooSession;
@@ -42,18 +39,6 @@ public class OdooPartnerServiceImpl implements ErpPartnerService {
 		Map<String, Object> response = new HashMap<String, Object>();
 		
 		try {
-			
-			//			ObjectAdapter orderAdapter = session.getObjectAdapter(ORDER_MODEL);
-			//			FilterCollection filters = new FilterCollection();
-			//
-			//			String[] fields = orderAdapter.getFieldNames();
-			//
-			//			filters.clear();
-			//			filters.add("id", "=", erpOrderId);
-			//
-			//			RowCollection records = orderAdapter.searchAndReadObject(filters, fields);
-			
-			// new HashMap() {{ put("limit", 1);}}
 			
 			Object[] records = (Object[]) odooSession.execute("read", PARTNER_MODEL,
 			    Collections.singletonList(Integer.parseInt(erpPartnerId)), null);
@@ -78,12 +63,6 @@ public class OdooPartnerServiceImpl implements ErpPartnerService {
 
 		try {
 			List<List<Object>> filterCollection = new ArrayList<List<Object>>();
-//			session.startSession();
-//			ObjectAdapter orderAdapter = session.getObjectAdapter(ORDER_MODEL);
-
-//			String[] fields = orderAdapter.getFieldNames();
-//			filterCollection.clear();
-
 
 			for (Filter filter : filters) {
 
@@ -91,9 +70,6 @@ public class OdooPartnerServiceImpl implements ErpPartnerService {
 						filter.getComparison(),
 						filter.getValue()));
 			}
-
-//			RowCollection records = orderAdapter.searchAndReadObject(filterCollection, fields);
-
 			ArrayList<String> fields = odooSession.getDomainFields(PARTNER_MODEL);
 			Object[] records = (Object[]) odooSession.execute("search_read", PARTNER_MODEL, filterCollection, new HashMap() {{
 				put("fields", fields);

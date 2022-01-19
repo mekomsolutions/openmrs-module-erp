@@ -1,16 +1,11 @@
 package org.openmrs.module.erp.api;
 
-//import com.odoojava.api.FilterCollection;
-//import com.odoojava.api.ObjectAdapter;
-//import com.odoojava.api.OdooApiException;
-//import com.odoojava.api.Session;
 import org.apache.xmlrpc.XmlRpcException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openmrs.module.erp.Filter;
 import org.openmrs.module.erp.api.impl.odoo.OdooInvoiceServiceImpl;
-import org.openmrs.module.erp.api.impl.odoo.OdooOrderServiceImpl;
 import org.openmrs.module.erp.api.impl.odoo.OdooSession;
 
 import java.util.ArrayList;
@@ -21,7 +16,6 @@ import java.util.Map;
 import static java.util.Arrays.asList;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
-//import static org.openmrs.module.erp.api.utils.TestHelper.getOdooRecord;
 import static org.openmrs.module.erp.api.utils.TestHelper.getOdooRecord;
 import static org.powermock.api.mockito.PowerMockito.when;
 

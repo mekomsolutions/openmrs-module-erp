@@ -134,7 +134,6 @@ public class OdooSession implements ErpSession {
 				}}
 		));
 
-
 		return new ArrayList<>(fieldsResult.keySet());
 
 	}
