@@ -1,6 +1,5 @@
 package org.openmrs.module.erp.api.impl.odoo;
 
-import com.odoojava.api.*;
 import org.openmrs.api.APIException;
 import org.openmrs.module.erp.ErpConstants;
 import org.openmrs.module.erp.Filter;
@@ -8,18 +7,21 @@ import org.openmrs.module.erp.api.ErpOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static java.util.Arrays.asList;
 
 @Component(ErpConstants.COMPONENT_ODOO_ORDER_SERVICE)
 public class OdooOrderServiceImpl implements ErpOrderService {
 	
 	private static final String ORDER_MODEL = "sale.order";
 	
-	private List<String> orderDefaultAttributes = Arrays.asList("name", "amount_total", "state", "pricelist_id",
-	    "payment_term_id", "invoice_status", "origin", "create_date", "currency_id", "order_line", "invoice_count",
-	    "invoice_ids", "product_id");
-	
-	private Session session;
+	private List<String> orderDefaultAttributes = asList("name", "amount_total", "state", "pricelist_id", "payment_term_id",
+	    "invoice_status", "origin", "create_date", "currency_id", "order_line", "invoice_count", "invoice_ids", "product_id");
 	
 	@Autowired
 	private OdooSession odooSession;
@@ -28,7 +30,7 @@ public class OdooOrderServiceImpl implements ErpOrderService {
 	}
 	
 	public OdooOrderServiceImpl(OdooSession odooSession) {
-		this.session = odooSession.getSession();
+		this.odooSession = odooSession;
 	}
 	
 	@Override
@@ -40,23 +42,15 @@ public class OdooOrderServiceImpl implements ErpOrderService {
 	public Map<String, Object> getErpOrderById(String erpOrderId) {
 		
 		Map<String, Object> response = new HashMap<String, Object>();
-		if (this.session == null) {
-			this.session = odooSession.getSession();
-		}
+		
 		try {
-			session.startSession();
-			ObjectAdapter orderAdapter = session.getObjectAdapter(ORDER_MODEL);
-			FilterCollection filters = new FilterCollection();
 			
-			String[] fields = orderAdapter.getFieldNames();
+			Object[] records = (Object[]) odooSession.execute("read", ORDER_MODEL,
+			    Collections.singletonList(Integer.parseInt(erpOrderId)), null);
 			
-			filters.clear();
-			filters.add("id", "=", erpOrderId);
-			
-			RowCollection records = orderAdapter.searchAndReadObject(filters, fields);
-			if ((records != null) && (!records.isEmpty())) {
-				Row record = records.get(0);
-				for (String field : fields) {
+			if ((records != null) && (records.length > 0)) {
+				Map record = (Map) records[0];
+				for (String field : orderDefaultAttributes) {
 					Object value = record.get(field);
 					response.put(field, value);
 				}
@@ -73,31 +67,36 @@ public class OdooOrderServiceImpl implements ErpOrderService {
 	public List<Map<String, Object>> getErpOrdersByFilters(List<Filter> filters) {
 		
 		ArrayList<Map<String, Object>> response = new ArrayList<Map<String, Object>>();
-		if (this.session == null) {
-			this.session = odooSession.getSession();
-		}
+
 		try {
-			session.startSession();
-			ObjectAdapter orderAdapter = session.getObjectAdapter(ORDER_MODEL);
-			FilterCollection filterCollection = new FilterCollection();
-			String[] fields = orderAdapter.getFieldNames();
-			filterCollection.clear();
+			List<List<Object>> filterCollection = new ArrayList<List<Object>>();
+
 			for (Filter filter : filters) {
-				filterCollection.add(filter.getFieldName(), filter.getComparison(), filter.getValue());
+
+				filterCollection.add(asList(filter.getFieldName(),
+						filter.getComparison(),
+						filter.getValue()));
 			}
-			
-			RowCollection records = orderAdapter.searchAndReadObject(filterCollection, fields);
-			if ((records != null) && (!records.isEmpty())) {
-				for (Row record : records) {
+
+			ArrayList<String> fields = odooSession.getDomainFields(ORDER_MODEL);
+			Object[] records = (Object[]) odooSession.execute("search_read", ORDER_MODEL, filterCollection, new HashMap() {{
+				put("fields", fields);
+			}});
+
+			if ((records != null) && (records.length > 0)) {
+
+				asList(records).forEach(record -> {
+					Map<String, Object> rec = (Map<String, Object>) record;
 					Map<String, Object> result = new HashMap<String, Object>();
 					for (String field : fields) {
-						Object value = record.get(field);
+						Object value = rec.get(field);
 						result.put(field, value);
 					}
 					String erpOrderId = (String.valueOf(result.get("id")));
 					result.put("order_lines", getErpOrderLinesByOrderId(erpOrderId));
 					response.add(result);
-				}
+				});
+
 			}
 		}
 		catch (Exception e) {
@@ -109,29 +108,33 @@ public class OdooOrderServiceImpl implements ErpOrderService {
 	private List<Map<String, Object>> getErpOrderLinesByOrderId(String erpOrderId) {
 		
 		List<Map<String, Object>> response = new ArrayList<Map<String, Object>>();
-		if (this.session == null) {
-			this.session = odooSession.getSession();
-		}
+		List<List<Object>> filterCollection = new ArrayList<List<Object>>();
+
 		try {
-			this.session.startSession();
-			ObjectAdapter orderAdapter = this.session.getObjectAdapter("sale.order.line");
-			FilterCollection filterCollection = new FilterCollection();
-			String[] fields = orderAdapter.getFieldNames();
-			
-			filterCollection.clear();
-			
-			filterCollection.add("order_id", "=", erpOrderId);
-			
-			RowCollection records = orderAdapter.searchAndReadObject(filterCollection, fields);
-			if ((records != null) && (!records.isEmpty())) {
-				for (Row record : records) {
-					Map<String, Object> result = new HashMap<String, Object>();
+
+			List<Object> condition = asList("order_id", "=", Integer.parseInt(erpOrderId));
+
+			filterCollection.add(condition);
+
+
+
+			ArrayList<String> fields = odooSession.getDomainFields("sale.order.line");
+			Object[] records = (Object[]) odooSession.execute("search_read", "sale.order.line", filterCollection, new HashMap() {{
+				put("fields", fields);
+				put("limit", 15);
+			}});
+
+			if ((records != null) && (records.length > 0)) {
+
+				asList(records).forEach(record -> {
+					Map<String, Object> rec = (Map<String, Object>) record;
+					Map<String, Object> result = new HashMap<>();
 					for (String field : fields) {
-						Object value = record.get(field);
+						Object value = rec.get(field);
 						result.put(field, value);
 					}
 					response.add(result);
-				}
+				});
 			}
 		}
 		catch (Exception e) {
@@ -139,5 +142,4 @@ public class OdooOrderServiceImpl implements ErpOrderService {
 		}
 		return response;
 	}
-	
 }

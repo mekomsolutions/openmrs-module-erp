@@ -1,9 +1,5 @@
 package org.openmrs.module.erp.api;
 
-import com.odoojava.api.FilterCollection;
-import com.odoojava.api.ObjectAdapter;
-import com.odoojava.api.OdooApiException;
-import com.odoojava.api.Session;
 import org.apache.xmlrpc.XmlRpcException;
 import org.junit.Assert;
 import org.junit.Before;
@@ -12,10 +8,12 @@ import org.openmrs.module.erp.Filter;
 import org.openmrs.module.erp.api.impl.odoo.OdooOrderServiceImpl;
 import org.openmrs.module.erp.api.impl.odoo.OdooSession;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.openmrs.module.erp.api.utils.TestHelper.getOdooRecord;
@@ -28,18 +26,13 @@ public class OdooOrderServiceImplTest {
 	private ErpOrderService odooOrderService;
 	
 	@Before
-	public void setup() throws XmlRpcException, OdooApiException {
+	public void setup() throws XmlRpcException {
 		// Setup mocks
-		Session session = mock(Session.class);
-		ObjectAdapter objectAdapter = mock(ObjectAdapter.class);
-		when(objectAdapter.searchAndReadObject(any(FilterCollection.class), any(String[].class)))
-		        .thenReturn(getOdooRecord());
-		when(objectAdapter.getFieldNames()).thenReturn(fields);
-		when(session.getObjectAdapter(any(String.class))).thenReturn(objectAdapter);
-		
+
 		OdooSession odooSession = mock(OdooSession.class);
-		when(odooSession.getSession()).thenReturn(session);
-		
+		when(odooSession.execute(any(String.class), any(String.class), any(), any())).thenReturn(getOdooRecord());
+		when(odooSession.getDomainFields(any())).thenReturn(new ArrayList<>(asList(fields)));
+
 		odooOrderService = new OdooOrderServiceImpl(odooSession);
 	}
 	

@@ -1,6 +1,6 @@
 package org.openmrs.module.erp.api.utils;
 
-import com.odoojava.api.*;
+//import com.odoojava.api.*;
 import org.openmrs.module.erp.ErpActivator;
 import org.openmrs.module.erp.ErpConstants;
 import org.openmrs.module.erp.ErpContext;
@@ -13,10 +13,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+
+import static java.util.Arrays.asList;
 
 @Component
 public class TestHelper {
@@ -58,12 +60,12 @@ public class TestHelper {
 		return erpProperties;
 	}
 	
-	public static RowCollection getOdooRecord() throws OdooApiException {
-		
-		RowCollection order = new RowCollection();
-		
-		HashMap<String, Object> data = new HashMap<String, Object>();
-		
+	public static Object[] getOdooRecord() {
+
+		ArrayList order = new ArrayList();
+
+		HashMap<String, Object> data = new HashMap<>();
+
 		Map<String, Object> fieldData = new HashMap<String, Object>();
 		fieldData.put("string", "Reference Order");
 		fieldData.put("type", "string");
@@ -76,22 +78,30 @@ public class TestHelper {
 		fieldData.put("readonly", true);
 		fieldData.put("states", 1);
 		fieldData.put("company_dependent", false);
-		
-		Field id = new Field("id", fieldData);
-		Field name = new Field("name", fieldData);
-		Field amountTotal = new Field("amount_total", fieldData);
-		
+
+		Map<String, Object> id = new HashMap() {{
+			put("id", "1");
+		}};
+
+		Map<String, Object> name = new HashMap() {{
+			put("name", "REC/001");
+		}};
+
+		Map<String, Object> amountTotal = new HashMap() {{
+			put("amount_total", "3175.0");
+		}};
+
 		data.put("id", "1");
 		data.put("name", "REC/001");
 		data.put("amount_total", "3175.0");
-		
-		FieldCollection fields = new FieldCollection();
-		fields.addAll(Arrays.asList(id, name, amountTotal));
-		
-		Row row = new Row(data, fields);
-		order.add(row);
-		
-		return order;
+
+		ArrayList<Object> fields = new ArrayList<>();
+		fields.addAll(asList(id, name, amountTotal));
+
+		order.add(data);
+
+
+		return order.toArray();
 	}
 	
 	public void init() throws IOException {

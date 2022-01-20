@@ -1,6 +1,8 @@
 package org.openmrs.module.erp.api.impl.odoo;
 
-import com.odoojava.api.Session;
+import org.apache.xmlrpc.XmlRpcException;
+import org.apache.xmlrpc.client.XmlRpcClient;
+import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 import org.openmrs.module.erp.ErpConstants;
 import org.openmrs.module.erp.api.ErpSession;
 import org.openmrs.module.erp.api.utils.ErpPropertiesFile;
@@ -8,10 +10,17 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
 import static org.openmrs.module.erp.ErpConstants.*;
 
 @Component(ErpConstants.COMPONENT_ODOO_SESSION)
@@ -19,7 +28,9 @@ public class OdooSession implements ErpSession {
 	
 	private Properties properties;
 	
-	private Session session;
+	private int uid;
+	
+	private XmlRpcClient client;
 	
 	public OdooSession() {
 	}
@@ -46,7 +57,33 @@ public class OdooSession implements ErpSession {
 		
 		this.properties = ErpPropertiesFile.getProperties(inStream, props);
 		
-		this.session = new Session(getHost(), getPort(), getDatabase(), getUser(), getPassword());
+		this.client = new XmlRpcClient() {
+			
+			{
+				setConfig(new XmlRpcClientConfigImpl() {
+					
+					{
+						setServerURL(new URL(String.format("%s/xmlrpc/2/object",
+						    getHost().concat(":").concat(String.valueOf(getPort())
+						    
+						    ))));
+					}
+				});
+			}
+		};
+		
+		final XmlRpcClientConfigImpl common_config = new XmlRpcClientConfigImpl();
+		common_config.setServerURL(new URL(String.format("%s/xmlrpc/2/common",
+		    getHost().concat(":").concat(String.valueOf(getPort())
+		    
+		    ))));
+		try {
+			uid = (Integer) client.execute(common_config, "authenticate",
+			    asList(getDatabase(), getUser(), getPassword(), emptyMap()));
+		}
+		catch (XmlRpcException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
@@ -73,8 +110,31 @@ public class OdooSession implements ErpSession {
 		return properties.getProperty(DATABASE_PROPERTY);
 	}
 	
-	public Session getSession() {
-		return session;
+	public Object execute(String method, String model, List dataParams, HashMap requestParams) throws XmlRpcException {
+		
+		List<Object> params;
+		
+		if (requestParams == null) {
+			params = Collections.singletonList(dataParams);
+			return client.execute("execute_kw", asList(getDatabase(), uid, getPassword(), model, method, params));
+		} else {
+			params = asList(dataParams);
+			return client.execute("execute_kw",
+			    asList(getDatabase(), uid, getPassword(), model, method, params, requestParams));
+		}
 	}
 	
+	public ArrayList<String> getDomainFields(String model) throws XmlRpcException {
+
+		Map<String, Map<String, Object>> fieldsResult = (Map<String, Map<String, Object>>) client.execute("execute_kw", asList(
+				getDatabase(), uid, getPassword(),
+				model, "fields_get", emptyList(),
+				new HashMap() {{
+					put("attributes", asList("string"));
+				}}
+		));
+
+		return new ArrayList<>(fieldsResult.keySet());
+
+	}
 }

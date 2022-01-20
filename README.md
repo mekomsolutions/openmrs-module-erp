@@ -2,7 +2,10 @@
 OpenMRS module to expose an API endpoint to access ERP data
 
 ### Supported ERPs and models:
-- Odoo 10
+- Odoo 14
+  + Orders
+  + Invoices
+- Odoo 10 (_deprectated since 2.x_)
   + Orders
   + Invoices
 
