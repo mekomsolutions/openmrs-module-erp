@@ -29,7 +29,7 @@ public class ErpInvoiceController {
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseBody
 	public Object getInvoicesByFilters(@RequestBody String jsonString,
-			@RequestParam(defaultValue = "default") String rep) {
+			@RequestParam(value = "rep", defaultValue = "default") String rep) {
 		erpInvoiceService = erpContext.getErpInvoiceService();
 
 		RecordRepresentation recordRepresentation = new RecordRepresentation(erpInvoiceService.defaultModelAttributes());
@@ -63,7 +63,8 @@ public class ErpInvoiceController {
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseBody
-	public Object getInvoiceById(@PathVariable("id") String invoiceId, @RequestParam(defaultValue = "default") String rep) {
+	public Object getInvoiceById(@PathVariable("id") String invoiceId,
+	        @RequestParam(value = "rep", defaultValue = "default") String rep) {
 		
 		erpInvoiceService = erpContext.getErpInvoiceService();
 		
