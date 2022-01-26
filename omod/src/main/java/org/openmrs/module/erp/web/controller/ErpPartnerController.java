@@ -30,7 +30,7 @@ public class ErpPartnerController extends BaseRestController {
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseBody
 	public Object getErpPartnersByFilters(@RequestBody String jsonString,
-										  @RequestParam(defaultValue = "default") String rep) {
+										  @RequestParam(value = "rep", defaultValue = "default") String rep) {
 		erpPartnerService = erpContext.getErpPartnerService();
 		RecordRepresentation recordRepresentation = new RecordRepresentation(erpPartnerService.defaultModelAttributes());
 
@@ -63,7 +63,8 @@ public class ErpPartnerController extends BaseRestController {
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseBody
-	public Object getErpPartnerById(@PathVariable("id") String id, @RequestParam(defaultValue = "default") String rep) {
+	public Object getErpPartnerById(@PathVariable("id") String id,
+	        @RequestParam(value = "rep", defaultValue = "default") String rep) {
 		erpPartnerService = erpContext.getErpPartnerService();
 		return new RecordRepresentation(erpPartnerService.defaultModelAttributes()).getRepresentedRecord(
 		    erpPartnerService.getErpPartnerById(id), rep);

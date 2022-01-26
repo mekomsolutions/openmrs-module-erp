@@ -30,7 +30,7 @@ public class ErpOrderController extends BaseRestController {
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseBody
 	public Object getErpOrdersByFilters(@RequestBody String jsonString,
-			@RequestParam(defaultValue = "default") String rep) {
+			@RequestParam(value = "rep", defaultValue = "default") String rep) {
 		erpOrderService = erpContext.getErpOrderService();
 		RecordRepresentation recordRepresentation = new RecordRepresentation(erpOrderService.defaultModelAttributes());
 
@@ -63,7 +63,8 @@ public class ErpOrderController extends BaseRestController {
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseBody
-	public Object getErpOrderById(@PathVariable("id") String id, @RequestParam(defaultValue = "default") String rep) {
+	public Object getErpOrderById(@PathVariable("id") String id,
+	        @RequestParam(value = "rep", defaultValue = "default") String rep) {
 		erpOrderService = erpContext.getErpOrderService();
 		return new RecordRepresentation(erpOrderService.defaultModelAttributes()).getRepresentedRecord(
 		    erpOrderService.getErpOrderById(id), rep);
