@@ -49,7 +49,7 @@ public class OdooPartnerServiceImpl implements ErpPartnerService {
 				odooClient.authenticate();
 			}
 			catch (IOException e) {
-				throw new APIException("Cannot authenticate to Odoo server");
+				throw new APIException("Cannot authenticate to Odoo server", e);
 			}
 		}
 		
@@ -80,7 +80,7 @@ public class OdooPartnerServiceImpl implements ErpPartnerService {
 			try {
 				odooClient.authenticate();
 			} catch (IOException e) {
-				throw new APIException("Cannot authenticate to Odoo server");
+				throw new APIException("Cannot authenticate to Odoo server", e);
 			}
 		}
 

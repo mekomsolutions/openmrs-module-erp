@@ -49,7 +49,7 @@ public class OdooOrderServiceImpl implements ErpOrderService {
 				odooClient.authenticate();
 			}
 			catch (IOException e) {
-				throw new APIException("Cannot authenticate to Odoo server");
+				throw new APIException("Cannot authenticate to Odoo server", e);
 			}
 		}
 		
@@ -82,7 +82,7 @@ public class OdooOrderServiceImpl implements ErpOrderService {
 			try {
 				odooClient.authenticate();
 			} catch (IOException e) {
-				throw new APIException("Cannot authenticate to Odoo server");
+				throw new APIException("Cannot authenticate to Odoo server", e);
 			}
 		}
 
@@ -132,17 +132,14 @@ public class OdooOrderServiceImpl implements ErpOrderService {
 			try {
 				odooClient.authenticate();
 			} catch (IOException e) {
-				throw new APIException("Cannot authenticate to Odoo server");
+				throw new APIException("Cannot authenticate to Odoo server", e);
 			}
 		}
 
 		try {
 
 			List<Object> condition = asList("order_id", "=", Integer.parseInt(erpOrderId));
-
 			filterCollection.add(condition);
-
-
 
 			ArrayList<String> fields = odooClient.getDomainFields("sale.order.line");
 			Object[] records = (Object[]) odooClient.execute("search_read", "sale.order.line", filterCollection, new HashMap() {{
