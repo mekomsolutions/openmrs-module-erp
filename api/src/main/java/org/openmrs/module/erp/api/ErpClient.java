@@ -3,7 +3,7 @@ package org.openmrs.module.erp.api;
 import java.io.IOException;
 import java.io.InputStream;
 
-public interface ErpSession {
+public interface ErpClient {
 	
 	void init() throws IOException;
 	

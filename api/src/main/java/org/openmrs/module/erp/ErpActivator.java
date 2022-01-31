@@ -8,7 +8,7 @@ import org.openmrs.module.BaseModuleActivator;
 import org.openmrs.module.Module;
 import org.openmrs.module.ModuleActivator;
 import org.openmrs.module.ModuleFactory;
-import org.openmrs.module.erp.api.impl.odoo.OdooSession;
+import org.openmrs.module.erp.api.impl.odoo.OdooClient;
 import org.openmrs.module.erp.api.utils.ErpPropertiesFile;
 import org.openmrs.module.erp.exceptions.ErpPropertyNotFoundException;
 import org.springframework.stereotype.Component;
@@ -52,7 +52,7 @@ public class ErpActivator extends BaseModuleActivator {
 		String errorMessage = null;
 		String error = null;
 		try {
-			OdooSession odooSession = Context.getRegisteredComponent(ErpConstants.COMPONENT_ODOO_SESSION, OdooSession.class);
+			OdooClient odooSession = Context.getRegisteredComponent(ErpConstants.COMPONENT_ODOO_SESSION, OdooClient.class);
 			odooSession.init();
 		}
 		catch (FileNotFoundException e) {

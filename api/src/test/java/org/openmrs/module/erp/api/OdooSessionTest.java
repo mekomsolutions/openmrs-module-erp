@@ -3,7 +3,7 @@ package org.openmrs.module.erp.api;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.openmrs.module.erp.api.impl.odoo.OdooSession;
+import org.openmrs.module.erp.api.impl.odoo.OdooClient;
 import org.springframework.util.ResourceUtils;
 
 import java.io.File;
@@ -15,7 +15,7 @@ public class OdooSessionTest {
 	
 	private File erpPropFile;
 	
-	private OdooSession odooSession = new OdooSession();
+	private OdooClient odooSession = new OdooClient();
 	
 	@Before
 	public void before() throws FileNotFoundException {

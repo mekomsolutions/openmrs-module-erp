@@ -7,6 +7,7 @@ import org.openmrs.module.erp.api.ErpOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,13 +25,13 @@ public class OdooOrderServiceImpl implements ErpOrderService {
 	    "invoice_status", "origin", "create_date", "currency_id", "order_line", "invoice_count", "invoice_ids", "product_id");
 	
 	@Autowired
-	private OdooSession odooSession;
+	private OdooClient odooClient;
 	
 	public OdooOrderServiceImpl() {
 	}
 	
-	public OdooOrderServiceImpl(OdooSession odooSession) {
-		this.odooSession = odooSession;
+	public OdooOrderServiceImpl(OdooClient odooClient) {
+		this.odooClient = odooClient;
 	}
 	
 	@Override
@@ -43,9 +44,18 @@ public class OdooOrderServiceImpl implements ErpOrderService {
 		
 		Map<String, Object> response = new HashMap<String, Object>();
 		
+		if (odooClient.getUid().isEmpty()) {
+			try {
+				odooClient.authenticate();
+			}
+			catch (IOException e) {
+				throw new APIException("Cannot authenticate to Odoo server");
+			}
+		}
+		
 		try {
 			
-			Object[] records = (Object[]) odooSession.execute("read", ORDER_MODEL,
+			Object[] records = (Object[]) odooClient.execute("read", ORDER_MODEL,
 			    Collections.singletonList(Integer.parseInt(erpOrderId)), null);
 			
 			if ((records != null) && (records.length > 0)) {
@@ -66,10 +76,18 @@ public class OdooOrderServiceImpl implements ErpOrderService {
 	@Override
 	public List<Map<String, Object>> getErpOrdersByFilters(List<Filter> filters) {
 		
-		ArrayList<Map<String, Object>> response = new ArrayList<Map<String, Object>>();
+		ArrayList<Map<String, Object>> response = new ArrayList<>();
+
+		if (odooClient.getUid().isEmpty()) {
+			try {
+				odooClient.authenticate();
+			} catch (IOException e) {
+				throw new APIException("Cannot authenticate to Odoo server");
+			}
+		}
 
 		try {
-			List<List<Object>> filterCollection = new ArrayList<List<Object>>();
+			List<List<Object>> filterCollection = new ArrayList<>();
 
 			for (Filter filter : filters) {
 
@@ -78,8 +96,8 @@ public class OdooOrderServiceImpl implements ErpOrderService {
 						filter.getValue()));
 			}
 
-			ArrayList<String> fields = odooSession.getDomainFields(ORDER_MODEL);
-			Object[] records = (Object[]) odooSession.execute("search_read", ORDER_MODEL, filterCollection, new HashMap() {{
+			ArrayList<String> fields = odooClient.getDomainFields(ORDER_MODEL);
+			Object[] records = (Object[]) odooClient.execute("search_read", ORDER_MODEL, filterCollection, new HashMap() {{
 				put("fields", fields);
 			}});
 
@@ -107,8 +125,16 @@ public class OdooOrderServiceImpl implements ErpOrderService {
 	
 	private List<Map<String, Object>> getErpOrderLinesByOrderId(String erpOrderId) {
 		
-		List<Map<String, Object>> response = new ArrayList<Map<String, Object>>();
-		List<List<Object>> filterCollection = new ArrayList<List<Object>>();
+		List<Map<String, Object>> response = new ArrayList<>();
+		List<List<Object>> filterCollection = new ArrayList<>();
+
+		if (odooClient.getUid().isEmpty()) {
+			try {
+				odooClient.authenticate();
+			} catch (IOException e) {
+				throw new APIException("Cannot authenticate to Odoo server");
+			}
+		}
 
 		try {
 
@@ -118,8 +144,8 @@ public class OdooOrderServiceImpl implements ErpOrderService {
 
 
 
-			ArrayList<String> fields = odooSession.getDomainFields("sale.order.line");
-			Object[] records = (Object[]) odooSession.execute("search_read", "sale.order.line", filterCollection, new HashMap() {{
+			ArrayList<String> fields = odooClient.getDomainFields("sale.order.line");
+			Object[] records = (Object[]) odooClient.execute("search_read", "sale.order.line", filterCollection, new HashMap() {{
 				put("fields", fields);
 				put("limit", 15);
 			}});

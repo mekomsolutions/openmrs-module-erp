@@ -7,6 +7,7 @@ import org.openmrs.module.erp.api.ErpInvoiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,13 +26,13 @@ public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 	    "state", "pricelist_id", "payment_term_id", "invoice_status", "origin", "create_date", "currency_id"));
 	
 	@Autowired
-	private OdooSession odooSession;
+	private OdooClient odooClient;
 	
 	public OdooInvoiceServiceImpl() {
 	}
 	
-	public OdooInvoiceServiceImpl(OdooSession odooSession) {
-		this.odooSession = odooSession;
+	public OdooInvoiceServiceImpl(OdooClient odooClient) {
+		this.odooClient = odooClient;
 	}
 	
 	@Override
@@ -43,10 +44,18 @@ public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 	public Map<String, Object> getInvoiceById(String invoiceId) {
 		
 		Map<String, Object> response = new HashMap<>();
+
+		if (odooClient.getUid().isEmpty()) {
+			try {
+				odooClient.authenticate();
+			} catch (IOException e) {
+				throw new APIException("Cannot authenticate to Odoo server");
+			}
+		}
 		
 		try {
 			
-			Object[] records = (Object[]) odooSession.execute("read", INVOICE_MODEL,
+			Object[] records = (Object[]) odooClient.execute("read", INVOICE_MODEL,
 			    Collections.singletonList(Integer.parseInt(invoiceId)), null);
 			
 			if ((records != null) && (records.length > 0)) {
@@ -68,6 +77,14 @@ public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 	public List<Map<String, Object>> getInvoicesByFilters(List<Filter> filters) {
 		ArrayList<Map<String, Object>> response = new ArrayList<Map<String, Object>>();
 
+		if (odooClient.getUid().isEmpty()) {
+			try {
+				odooClient.authenticate();
+			} catch (IOException e) {
+				throw new APIException("Cannot authenticate to Odoo server");
+			}
+		}
+
 		try {
 			List<List<Object>> filterCollection = new ArrayList<>();
 
@@ -78,8 +95,8 @@ public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 						filter.getValue()));
 			}
 
-			ArrayList<String> fields = odooSession.getDomainFields(INVOICE_MODEL);
-			Object[] records = (Object[]) odooSession.execute("search_read", INVOICE_MODEL, filterCollection, new HashMap() {{
+			ArrayList<String> fields = odooClient.getDomainFields(INVOICE_MODEL);
+			Object[] records = (Object[]) odooClient.execute("search_read", INVOICE_MODEL, filterCollection, new HashMap() {{
 				put("fields", fields);
 			}});
 
@@ -109,14 +126,22 @@ public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 		List<Map<String, Object>> response = new ArrayList<>();
 		List<List<Object>> filterCollection = new ArrayList<>();
 
+		if (odooClient.getUid().isEmpty()) {
+			try {
+				odooClient.authenticate();
+			} catch (IOException e) {
+				throw new APIException("Cannot authenticate to Odoo server");
+			}
+		}
+
 		try {
 
 			List<Object> condition = asList("move_id", "=", Integer.parseInt(invoiceId));
 
 			filterCollection.add(condition);
 
-			ArrayList<String> fields = odooSession.getDomainFields("account.move.line");
-			Object[] records = (Object[]) odooSession.execute("search_read", "account.move.line", filterCollection, new HashMap() {{
+			ArrayList<String> fields = odooClient.getDomainFields("account.move.line");
+			Object[] records = (Object[]) odooClient.execute("search_read", "account.move.line", filterCollection, new HashMap() {{
 				put("fields", fields);
 				put("limit", 15);
 			}});

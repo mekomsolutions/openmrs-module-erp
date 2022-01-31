@@ -3,8 +3,9 @@ package org.openmrs.module.erp.api.impl.odoo;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
+import org.openmrs.api.APIException;
 import org.openmrs.module.erp.ErpConstants;
-import org.openmrs.module.erp.api.ErpSession;
+import org.openmrs.module.erp.api.ErpClient;
 import org.openmrs.module.erp.api.utils.ErpPropertiesFile;
 import org.springframework.stereotype.Component;
 
@@ -21,18 +22,22 @@ import java.util.Properties;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
-import static org.openmrs.module.erp.ErpConstants.*;
+import static org.openmrs.module.erp.ErpConstants.DATABASE_PROPERTY;
+import static org.openmrs.module.erp.ErpConstants.HOST_PROPERTY;
+import static org.openmrs.module.erp.ErpConstants.PASSWORD_PROPERTY;
+import static org.openmrs.module.erp.ErpConstants.PORT_PROPERTY;
+import static org.openmrs.module.erp.ErpConstants.USER_PROPERTY;
 
 @Component(ErpConstants.COMPONENT_ODOO_SESSION)
-public class OdooSession implements ErpSession {
+public class OdooClient implements ErpClient {
 	
 	private Properties properties;
 	
-	private int uid;
+	private int uid = 0;
 	
 	private XmlRpcClient client;
 	
-	public OdooSession() {
+	public OdooClient() {
 	}
 	
 	@Override
@@ -64,25 +69,25 @@ public class OdooSession implements ErpSession {
 					
 					{
 						setServerURL(new URL(String.format("%s/xmlrpc/2/object",
-						    getHost().concat(":").concat(String.valueOf(getPort())
-						    
-						    ))));
+						    getHost().concat(":").concat(String.valueOf(getPort())))));
 					}
 				});
 			}
 		};
-		
-		final XmlRpcClientConfigImpl common_config = new XmlRpcClientConfigImpl();
+	}
+	
+	public void authenticate() throws IOException {
+		XmlRpcClientConfigImpl common_config = new XmlRpcClientConfigImpl();
 		common_config.setServerURL(new URL(String.format("%s/xmlrpc/2/common",
-		    getHost().concat(":").concat(String.valueOf(getPort())
-		    
-		    ))));
+		    getHost().concat(":").concat(String.valueOf(getPort())))));
+		
 		try {
 			uid = (Integer) client.execute(common_config, "authenticate",
 			    asList(getDatabase(), getUser(), getPassword(), emptyMap()));
 		}
 		catch (XmlRpcException e) {
 			e.printStackTrace();
+			throw new APIException("Cannot authenticate to Odoo server");
 		}
 	}
 	
@@ -101,6 +106,13 @@ public class OdooSession implements ErpSession {
 		return properties.getProperty(USER_PROPERTY);
 	}
 	
+	public String getUid() {
+		if (this.uid == 0) {
+			return "";
+		}
+		return String.valueOf(this.uid);
+	}
+
 	@Override
 	public String getPassword() {
 		return properties.getProperty(PASSWORD_PROPERTY);
