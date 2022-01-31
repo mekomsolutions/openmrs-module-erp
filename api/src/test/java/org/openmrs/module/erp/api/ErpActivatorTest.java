@@ -7,12 +7,9 @@ import org.openmrs.module.Module;
 import org.openmrs.module.ModuleFactory;
 import org.openmrs.module.erp.ErpActivator;
 import org.openmrs.module.erp.ErpConstants;
-import org.openmrs.module.erp.api.impl.odoo.OdooSession;
-import org.openmrs.module.erp.exceptions.ErpPropertyNotFoundException;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import static org.junit.Assert.assertNotNull;

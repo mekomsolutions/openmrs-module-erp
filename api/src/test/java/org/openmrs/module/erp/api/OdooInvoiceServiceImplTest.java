@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openmrs.module.erp.Filter;
 import org.openmrs.module.erp.api.impl.odoo.OdooInvoiceServiceImpl;
-import org.openmrs.module.erp.api.impl.odoo.OdooSession;
+import org.openmrs.module.erp.api.impl.odoo.OdooClient;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,7 +29,8 @@ public class OdooInvoiceServiceImplTest {
 	public void setup() throws XmlRpcException {
 		// Setup mocks
 
-		OdooSession odooSession = mock(OdooSession.class);
+		OdooClient odooSession = mock(OdooClient.class);
+		when(odooSession.getUid()).thenReturn("1");
 		when(odooSession.execute(any(String.class), any(String.class), any(), any())).thenReturn(getOdooRecord());
 		when(odooSession.getDomainFields(any())).thenReturn(new ArrayList<>(asList(fields)));
 
