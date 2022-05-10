@@ -112,7 +112,7 @@ public class OdooClient implements ErpClient {
 		}
 		return String.valueOf(this.uid);
 	}
-
+	
 	@Override
 	public String getPassword() {
 		return properties.getProperty(PASSWORD_PROPERTY);

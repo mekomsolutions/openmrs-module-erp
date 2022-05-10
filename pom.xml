@@ -103,13 +103,13 @@
         <repository>
             <id>openmrs-repo</id>
             <name>OpenMRS Nexus Repository</name>
-            <url>http://mavenrepo.openmrs.org/nexus/content/repositories/public</url>
+            <url>https://mavenrepo.openmrs.org/nexus/content/repositories/public</url>
         </repository>
         <repository>
             <id>central</id>
             <name>Maven Repository Switchboard</name>
             <layout>default</layout>
-            <url>http://repo1.maven.org/maven2</url>
+            <url>https://repo1.maven.org/maven2</url>
         </repository>
         <repository>
             <id>mks-nexus-public</id>
@@ -124,7 +124,7 @@
         <pluginRepository>
             <id>openmrs-repo</id>
             <name>OpenMRS Nexus Repository</name>
-            <url>http://mavenrepo.openmrs.org/nexus/content/repositories/public</url>
+            <url>https://mavenrepo.openmrs.org/nexus/content/repositories/public</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
