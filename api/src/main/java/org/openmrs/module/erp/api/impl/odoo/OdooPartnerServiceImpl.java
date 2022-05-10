@@ -71,7 +71,7 @@ public class OdooPartnerServiceImpl implements ErpPartnerService {
 		}
 		return response;
 	}
-
+	
 	@Override
 	public List<Map<String, Object>> getErpPartnersByFilters(List<Filter> filters) {
 		ArrayList<Map<String, Object>> response = new ArrayList<Map<String, Object>>();
