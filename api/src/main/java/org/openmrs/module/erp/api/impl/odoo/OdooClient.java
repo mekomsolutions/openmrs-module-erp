@@ -1,5 +1,27 @@
 package org.openmrs.module.erp.api.impl.odoo;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
+import static java.util.Collections.singletonList;
+import static java.util.Collections.singletonMap;
+import static org.openmrs.module.erp.ErpConstants.DATABASE_PROPERTY;
+import static org.openmrs.module.erp.ErpConstants.HOST_PROPERTY;
+import static org.openmrs.module.erp.ErpConstants.PASSWORD_PROPERTY;
+import static org.openmrs.module.erp.ErpConstants.PORT_PROPERTY;
+import static org.openmrs.module.erp.ErpConstants.USER_PROPERTY;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
@@ -9,31 +31,12 @@ import org.openmrs.module.erp.api.ErpClient;
 import org.openmrs.module.erp.api.utils.ErpPropertiesFile;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.emptyMap;
-import static org.openmrs.module.erp.ErpConstants.DATABASE_PROPERTY;
-import static org.openmrs.module.erp.ErpConstants.HOST_PROPERTY;
-import static org.openmrs.module.erp.ErpConstants.PASSWORD_PROPERTY;
-import static org.openmrs.module.erp.ErpConstants.PORT_PROPERTY;
-import static org.openmrs.module.erp.ErpConstants.USER_PROPERTY;
-
 @Component(ErpConstants.COMPONENT_ODOO_SESSION)
 public class OdooClient implements ErpClient {
 	
 	private Properties properties;
 	
-	private int uid = 0;
+	private Integer uid;
 	
 	private XmlRpcClient client;
 	
@@ -76,10 +79,10 @@ public class OdooClient implements ErpClient {
 		};
 	}
 	
-	public void authenticate() throws IOException {
+	public void authenticate() throws MalformedURLException {
 		XmlRpcClientConfigImpl common_config = new XmlRpcClientConfigImpl();
-		common_config.setServerURL(new URL(String.format("%s/xmlrpc/2/common",
-		    getHost().concat(":").concat(String.valueOf(getPort())))));
+		common_config.setServerURL(
+		    new URL(String.format("%s/xmlrpc/2/common", getHost().concat(":").concat(String.valueOf(getPort())))));
 		
 		try {
 			uid = (Integer) client.execute(common_config, "authenticate",
@@ -107,7 +110,7 @@ public class OdooClient implements ErpClient {
 	}
 	
 	public String getUid() {
-		if (this.uid == 0) {
+		if (this.uid == null) {
 			return "";
 		}
 		return String.valueOf(this.uid);
@@ -137,16 +140,44 @@ public class OdooClient implements ErpClient {
 	}
 	
 	public ArrayList<String> getDomainFields(String model) throws XmlRpcException {
-
-		Map<String, Map<String, Object>> fieldsResult = (Map<String, Map<String, Object>>) client.execute("execute_kw", asList(
-				getDatabase(), uid, getPassword(),
-				model, "fields_get", emptyList(),
-				new HashMap() {{
-					put("attributes", asList("string"));
-				}}
-		));
-
+		
+		Map<String, Map<String, Object>> fieldsResult = (Map<String, Map<String, Object>>) client.execute("execute_kw",
+		    asList(getDatabase(), uid, getPassword(), model, "fields_get", emptyList(), new HashMap() {
+			    
+			    {
+				    put("attributes", asList("string"));
+			    }
+		    }));
+		
 		return new ArrayList<>(fieldsResult.keySet());
-
+		
 	}
+	
+	/**
+	 * Searches and returns entities matching the specified criteria in the odoo instance i.e. by using
+	 * the semantics of the odoo search_read web service the search_read method.
+	 * 
+	 * @param model the name of the odoo model to search
+	 * @param criteria the search criteria to apply e.g. ["name", "=", "test"], ["id", ">", "2"]
+	 * @param fields the list of the model fields to include for each returned item's payload
+	 * @return an array of matching results
+	 * @throws XmlRpcException
+	 * @throws MalformedURLException
+	 */
+	public Object[] searchAndRead(String model, List<Object> criteria, List<String> fields)
+	    throws XmlRpcException, MalformedURLException {
+		
+		authenticateIfNecessary();
+		
+		//TODO Add an API for the criteria argument instead of using a list
+		return (Object[]) client.execute("execute_kw", asList(getDatabase(), uid, getPassword(), model, "search_read",
+		    singletonList(singletonList(criteria)), singletonMap("fields", fields)));
+	}
+	
+	private void authenticateIfNecessary() throws MalformedURLException {
+		if (uid == null) {
+			authenticate();
+		}
+	}
+	
 }

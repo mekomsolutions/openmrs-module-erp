@@ -1,6 +1,6 @@
 package org.openmrs.module.erp.impl.odoo;
 
-public class MaintenanceRequest extends BaseOdooModel {
+public class MaintenanceRequest extends BaseNamedOdooModel {
 	
 	private Equipment equipment;
 	
@@ -20,11 +20,6 @@ public class MaintenanceRequest extends BaseOdooModel {
 	 */
 	public void setEquipment(Equipment equipment) {
 		this.equipment = equipment;
-	}
-	
-	@Override
-	public String toString() {
-		return getClass().getSimpleName() + " for " + getEquipment();
 	}
 	
 }

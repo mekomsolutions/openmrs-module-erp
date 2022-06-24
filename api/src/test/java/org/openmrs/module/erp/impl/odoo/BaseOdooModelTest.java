@@ -9,8 +9,6 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.openmrs.module.erp.BaseOdooModel;
-import org.openmrs.module.erp.OdooModel;
 
 public class BaseOdooModelTest {
 	
