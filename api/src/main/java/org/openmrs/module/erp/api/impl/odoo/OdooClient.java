@@ -155,7 +155,7 @@ public class OdooClient implements ErpClient {
 	
 	/**
 	 * Searches and returns entities matching the specified criteria in the odoo instance i.e. by using
-	 * the semantics of the odoo search_read web service the search_read method.
+	 * the semantics of the odoo search_read web service method.
 	 * 
 	 * @param model the name of the odoo model to search
 	 * @param criteria the search criteria to apply e.g. ["name", "=", "test"], ["id", ">", "2"]
@@ -172,6 +172,25 @@ public class OdooClient implements ErpClient {
 		//TODO Add an API for the criteria argument instead of using a list
 		return (Object[]) client.execute("execute_kw", asList(getDatabase(), uid, getPassword(), model, "search_read",
 		    singletonList(singletonList(criteria)), singletonMap("fields", fields)));
+	}
+	
+	/**
+	 * Searches and returns ids for entities matching the specified criteria in the odoo instance i.e.
+	 * by using the semantics of the odoo search web service method.
+	 * 
+	 * @param model the name of the odoo model to search
+	 * @param criteria the search criteria to apply e.g. ["name", "=", "test"], ["id", ">", "2"]
+	 * @return an array of matching results
+	 * @throws XmlRpcException
+	 * @throws MalformedURLException
+	 */
+	public Object[] search(String model, List<Object> criteria) throws XmlRpcException, MalformedURLException {
+		
+		authenticateIfNecessary();
+		
+		//TODO Add an API for the criteria argument instead of using a list
+		return (Object[]) client.execute("execute_kw",
+		    asList(getDatabase(), uid, getPassword(), model, "search", singletonList(singletonList(criteria))));
 	}
 	
 	private void authenticateIfNecessary() throws MalformedURLException {

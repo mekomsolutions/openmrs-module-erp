@@ -70,11 +70,9 @@ public class OdooClientTest {
 		final String op = "=";
 		final Integer id = 1;
 		final String nameField = "name";
-		final String user = "tester";
 		final String host = "http://test.server";
 		final Integer port = 8071;
 		Whitebox.setInternalState(odooClient, "uid", (Integer) null);
-		when(mockProperties.getProperty(ErpConstants.USER_PROPERTY)).thenReturn(user);
 		when(mockProperties.getProperty(ErpConstants.PASSWORD_PROPERTY)).thenReturn(ODOO_PASSWORD);
 		when(mockProperties.getProperty(ErpConstants.DATABASE_PROPERTY)).thenReturn(ODOO_DB);
 		when(mockProperties.getProperty(ErpConstants.HOST_PROPERTY)).thenReturn(host);
@@ -87,6 +85,42 @@ public class OdooClientTest {
 		Mockito.verify(mockXmlRpcClient).execute("execute_kw",
 		    asList(ODOO_DB, ODOO_USER_ID, ODOO_PASSWORD, modelName, "search_read",
 		        singletonList(singletonList(asList(idField, op, id))), singletonMap("fields", singletonList(nameField))));
+	}
+	
+	@Test
+	public void search_shouldExecuteTheOdooRpcSearchCall() throws Exception {
+		final String modelName = "maintenance.stage";
+		final String doneField = "done";
+		final String op = "=";
+		when(mockProperties.getProperty(ErpConstants.PASSWORD_PROPERTY)).thenReturn(ODOO_PASSWORD);
+		when(mockProperties.getProperty(ErpConstants.DATABASE_PROPERTY)).thenReturn(ODOO_DB);
+		
+		odooClient.search(modelName, asList(doneField, op, false));
+		
+		Mockito.verify(mockXmlRpcClient).execute("execute_kw", asList(ODOO_DB, ODOO_USER_ID, ODOO_PASSWORD, modelName,
+		    "search", singletonList(singletonList(asList(doneField, op, false)))));
+	}
+	
+	@Test
+	public void search_shouldAuthenticateWithOdooIfNecessary() throws Exception {
+		final String modelName = "maintenance.stage";
+		final String doneField = "done";
+		final String op = "=";
+		final String user = "tester";
+		final String host = "http://test.server";
+		final Integer port = 8071;
+		Whitebox.setInternalState(odooClient, "uid", (Integer) null);
+		when(mockProperties.getProperty(ErpConstants.PASSWORD_PROPERTY)).thenReturn(ODOO_PASSWORD);
+		when(mockProperties.getProperty(ErpConstants.DATABASE_PROPERTY)).thenReturn(ODOO_DB);
+		when(mockProperties.getProperty(ErpConstants.HOST_PROPERTY)).thenReturn(host);
+		when(mockProperties.getProperty(ErpConstants.PORT_PROPERTY)).thenReturn(port.toString());
+		when(mockXmlRpcClient.execute(any(XmlRpcClientConfig.class), eq("authenticate"), anyList()))
+		        .thenReturn(ODOO_USER_ID);
+		
+		odooClient.search(modelName, asList(doneField, op, false));
+		
+		Mockito.verify(mockXmlRpcClient).execute("execute_kw", asList(ODOO_DB, ODOO_USER_ID, ODOO_PASSWORD, modelName,
+		    "search", singletonList(singletonList(asList(doneField, op, false)))));
 	}
 	
 }
