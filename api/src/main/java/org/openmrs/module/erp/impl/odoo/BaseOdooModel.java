@@ -6,26 +6,16 @@ package org.openmrs.module.erp.impl.odoo;
  */
 public abstract class BaseOdooModel implements OdooModel {
 	
-	private Integer id;
+	protected Integer id;
 	
 	/**
 	 * Gets the id
-	 *
+	 * 
 	 * @return the id
 	 */
 	@Override
 	public Integer getId() {
 		return id;
-	}
-	
-	/**
-	 * Sets the id
-	 *
-	 * @param id the id to set
-	 */
-	@Override
-	public void setId(Integer id) {
-		this.id = id;
 	}
 	
 	/**

@@ -7,8 +7,6 @@ public interface OdooModel {
 	
 	Integer getId();
 	
-	void setId(Integer id);
-	
 	//TODO Add more fields like create_date
 	
 }

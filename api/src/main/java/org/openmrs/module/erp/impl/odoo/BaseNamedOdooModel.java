@@ -5,24 +5,15 @@ package org.openmrs.module.erp.impl.odoo;
  */
 public abstract class BaseNamedOdooModel extends BaseOdooModel {
 	
-	private String name;
+	protected String name;
 	
 	/**
 	 * Gets the name
-	 *
+	 * 
 	 * @return the name
 	 */
 	public String getName() {
 		return name;
-	}
-	
-	/**
-	 * Sets the name
-	 *
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
 	}
 	
 	@Override

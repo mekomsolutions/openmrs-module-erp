@@ -180,7 +180,7 @@ public class OdooClient implements ErpClient {
 	 * 
 	 * @param model the name of the odoo model to search
 	 * @param criteria the search criteria to apply e.g. ["name", "=", "test"], ["id", ">", "2"]
-	 * @return an array of matching results
+	 * @return an array of matching entity ids
 	 * @throws XmlRpcException
 	 * @throws MalformedURLException
 	 */

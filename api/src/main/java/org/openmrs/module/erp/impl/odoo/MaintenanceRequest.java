@@ -4,6 +4,11 @@ public class MaintenanceRequest extends BaseNamedOdooModel {
 	
 	private Equipment equipment;
 	
+	public MaintenanceRequest(Integer id, Equipment equipment) {
+		this.id = id;
+		this.equipment = equipment;
+	}
+	
 	/**
 	 * Gets the equipment
 	 *
@@ -11,15 +16,6 @@ public class MaintenanceRequest extends BaseNamedOdooModel {
 	 */
 	public Equipment getEquipment() {
 		return equipment;
-	}
-	
-	/**
-	 * Sets the equipment
-	 *
-	 * @param equipment the equipment to set
-	 */
-	public void setEquipment(Equipment equipment) {
-		this.equipment = equipment;
 	}
 	
 }
