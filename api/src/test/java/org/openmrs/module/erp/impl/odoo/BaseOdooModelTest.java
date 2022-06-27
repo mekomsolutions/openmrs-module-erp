@@ -12,29 +12,37 @@ import org.junit.Test;
 
 public class BaseOdooModelTest {
 	
-	class TestModel extends BaseOdooModel {}
+	class TestModel extends BaseOdooModel {
+		
+		TestModel(Integer id) {
+			this.id = id;
+		}
+	}
 	
-	class OtherTestModel extends BaseOdooModel {}
+	class OtherTestModel extends BaseOdooModel {
+		
+		OtherTestModel(Integer id) {
+			this.id = id;
+		}
+	}
 	
 	@Test
 	public void equals_shouldReturnFalseIfOtherObjectIsNull() {
-		assertFalse(new TestModel().equals(null));
+		assertFalse(new TestModel(null).equals(null));
 	}
 	
 	@Test
 	public void equals_shouldReturnFalseIfThisObjectHasNoIdAndTheOtherDoes() {
-		OdooModel obj = new TestModel();
+		OdooModel obj = new TestModel(null);
 		assertNull(obj.getId());
-		OdooModel other = new TestModel();
-		other.setId(2);
+		OdooModel other = new TestModel(2);
 		assertFalse(obj.equals(other));
 	}
 	
 	@Test
 	public void equals_shouldReturnFalseIfThisObjectHasAnIdAndTheOtherDoesNot() {
-		OdooModel obj = new TestModel();
-		obj.setId(1);
-		OdooModel other = new TestModel();
+		OdooModel obj = new TestModel(1);
+		OdooModel other = new TestModel(null);
 		assertNull(other.getId());
 		assertFalse(obj.equals(other));
 	}
@@ -42,34 +50,30 @@ public class BaseOdooModelTest {
 	@Test
 	public void equals_shouldReturnFalseIfOtherObjectHasTheSameIdButOfDifferentType() {
 		final Integer id = 1;
-		OdooModel obj = new TestModel();
-		obj.setId(id);
-		OdooModel other = new OtherTestModel();
-		other.setId(id);
+		OdooModel obj = new TestModel(id);
+		OdooModel other = new OtherTestModel(id);
 		assertFalse(obj.equals(other));
 	}
 	
 	@Test
 	public void equals_shouldReturnFalseForObjectsOfTheSameTypeButDifferentIds() {
-		OdooModel obj = new TestModel();
-		obj.setId(1);
-		OdooModel other = new TestModel();
-		other.setId(2);
+		OdooModel obj = new TestModel(1);
+		OdooModel other = new TestModel(2);
 		assertFalse(obj.equals(other));
 	}
 	
 	@Test
 	public void equals_shouldReturnFalseForDifferentObjectsAndBothHaveNullIds() {
-		OdooModel obj = new TestModel();
+		OdooModel obj = new TestModel(null);
 		assertNull(obj.getId());
-		OdooModel other = new TestModel();
+		OdooModel other = new TestModel(null);
 		assertNull(other.getId());
 		assertFalse(obj.equals(other));
 	}
 	
 	@Test
 	public void equals_shouldReturnTrueForSameObjectsAndBothHaveNullIds() {
-		OdooModel obj = new TestModel();
+		OdooModel obj = new TestModel(null);
 		assertNull(obj.getId());
 		assertTrue(obj.equals(obj));
 	}
@@ -77,14 +81,13 @@ public class BaseOdooModelTest {
 	@Test
 	public void hashCode_shouldReturnTheId() {
 		final int id = 3;
-		OdooModel obj = new TestModel();
-		obj.setId(id);
+		OdooModel obj = new TestModel(id);
 		Assert.assertEquals(id, obj.hashCode());
 	}
 	
 	@Test
 	public void hashCode_shouldDelegateToSuperclassIfTheObjectHasNoId() {
-		OdooModel obj = new TestModel();
+		OdooModel obj = new TestModel(null);
 		Assert.assertNotNull(obj.hashCode());
 	}
 	

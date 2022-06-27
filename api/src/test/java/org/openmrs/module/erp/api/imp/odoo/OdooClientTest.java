@@ -106,7 +106,6 @@ public class OdooClientTest {
 		final String modelName = "maintenance.stage";
 		final String doneField = "done";
 		final String op = "=";
-		final String user = "tester";
 		final String host = "http://test.server";
 		final Integer port = 8071;
 		Whitebox.setInternalState(odooClient, "uid", (Integer) null);
