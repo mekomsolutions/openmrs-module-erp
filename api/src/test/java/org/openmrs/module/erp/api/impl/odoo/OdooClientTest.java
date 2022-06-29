@@ -1,4 +1,4 @@
-package org.openmrs.module.erp.api.imp.odoo;
+package org.openmrs.module.erp.api.impl.odoo;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;

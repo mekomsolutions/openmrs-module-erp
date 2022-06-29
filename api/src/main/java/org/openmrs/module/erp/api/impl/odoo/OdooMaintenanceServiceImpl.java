@@ -1,9 +1,7 @@
 package org.openmrs.module.erp.api.impl.odoo;
 
 import static java.util.Arrays.asList;
-import static org.openmrs.module.erp.impl.odoo.OdooMaintenanceConstants.MODEL_MAINTENANCE_EQUIPMENT;
-import static org.openmrs.module.erp.impl.odoo.OdooMaintenanceConstants.MODEL_MAINTENANCE_REQUEST;
-import static org.openmrs.module.erp.impl.odoo.OdooMaintenanceConstants.MODEL_MAINTENANCE_STAGE;
+import static java.util.Collections.unmodifiableList;
 
 import java.net.MalformedURLException;
 import java.util.Arrays;
@@ -29,6 +27,17 @@ public class OdooMaintenanceServiceImpl extends BaseOpenmrsService implements Er
 	
 	private static final Logger logger = LoggerFactory.getLogger(OdooMaintenanceServiceImpl.class);
 	
+	protected static final String MODEL_REQUEST = "maintenance.request";
+	
+	protected static final String MODEL_EQUIPMENT = "maintenance.equipment";
+	
+	protected static final String MODEL_STAGE = "maintenance.stage";
+	
+	protected static final List<String> REQUEST_FETCH_FIELDS = unmodifiableList(asList("equipment_id"));
+	
+	protected static final List<String> EQUIPMENT_FETCH_FIELDS = unmodifiableList(
+	    asList("name", "category_id", "serial_no", "location"));
+	
 	private OdooClient odooClient;
 	
 	@Autowired
@@ -39,12 +48,12 @@ public class OdooMaintenanceServiceImpl extends BaseOpenmrsService implements Er
 	@Override
 	public List<MaintenanceRequest> getMaintenanceRequests() throws APIException {
 		List<Map> activeRequests = Arrays.stream(getActiveRequests()).map(r -> (Map) r).collect(Collectors.toList());
-		List<Integer> equipmentIds = activeRequests.stream().map(r -> (Integer) ((List) r.get("equipment_id")).get(0))
+		List<Integer> equipmentIds = activeRequests.stream().map(r -> (Integer) ((Object[]) r.get("equipment_id"))[0])
 		        .collect(Collectors.toList());
 		
 		try {
-			Object[] equipmentsData = odooClient.searchAndRead(MODEL_MAINTENANCE_EQUIPMENT,
-			    asList("id", "in", equipmentIds), asList("name", "category_id", "serial_no", "location"));
+			Object[] equipmentsData = odooClient.searchAndRead(MODEL_EQUIPMENT, asList("id", "in", equipmentIds),
+			    EQUIPMENT_FETCH_FIELDS);
 			
 			List<Equipment> equipments = OdooJsonUtils.convertToList(equipmentsData, Equipment.class);
 			Map<Integer, Equipment> idAndEquipmentMap = equipments.stream()
@@ -52,7 +61,7 @@ public class OdooMaintenanceServiceImpl extends BaseOpenmrsService implements Er
 			
 			List<MaintenanceRequest> requests = activeRequests.stream().map(r -> {
 				Integer id = (Integer) r.get("id");
-				Integer equipmentId = (Integer) ((List) r.get("equipment_id")).get(0);
+				Integer equipmentId = (Integer) ((Object[]) r.get("equipment_id"))[0];
 				MaintenanceRequest request = new MaintenanceRequest(id, idAndEquipmentMap.get(equipmentId));
 				return request;
 			}).collect(Collectors.toList());
@@ -75,8 +84,7 @@ public class OdooMaintenanceServiceImpl extends BaseOpenmrsService implements Er
 				logger.debug("Non terminal maintenance stage ids: " + asList(stageIds));
 			}
 			
-			return odooClient.searchAndRead(MODEL_MAINTENANCE_REQUEST,
-			    asList("stage_id", "in", stageIds), asList("equipment_id"));
+			return odooClient.searchAndRead(MODEL_REQUEST, asList("stage_id", "in", stageIds), REQUEST_FETCH_FIELDS);
 		}
 		catch (XmlRpcException e) {
 			throw new APIException(e);
@@ -88,7 +96,7 @@ public class OdooMaintenanceServiceImpl extends BaseOpenmrsService implements Er
 	
 	private Object[] getNonTerminalMaintenanceStageIds() {
 		try {
-			return odooClient.search(MODEL_MAINTENANCE_STAGE, asList("done", "=", false));
+			return odooClient.search(MODEL_STAGE, asList("done", "=", false));
 		}
 		catch (XmlRpcException e) {
 			throw new APIException(e);

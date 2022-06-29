@@ -1,10 +1,13 @@
-package org.openmrs.module.erp.api.imp.odoo;
+package org.openmrs.module.erp.api.impl.odoo;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.openmrs.module.erp.impl.odoo.OdooMaintenanceConstants.MODEL_MAINTENANCE_REQUEST;
-import static org.openmrs.module.erp.impl.odoo.OdooMaintenanceConstants.MODEL_MAINTENANCE_STAGE;
+import static org.openmrs.module.erp.api.impl.odoo.OdooMaintenanceServiceImpl.EQUIPMENT_FETCH_FIELDS;
+import static org.openmrs.module.erp.api.impl.odoo.OdooMaintenanceServiceImpl.MODEL_EQUIPMENT;
+import static org.openmrs.module.erp.api.impl.odoo.OdooMaintenanceServiceImpl.MODEL_REQUEST;
+import static org.openmrs.module.erp.api.impl.odoo.OdooMaintenanceServiceImpl.MODEL_STAGE;
+import static org.openmrs.module.erp.api.impl.odoo.OdooMaintenanceServiceImpl.REQUEST_FETCH_FIELDS;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,10 +19,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.openmrs.module.erp.api.impl.odoo.OdooClient;
-import org.openmrs.module.erp.api.impl.odoo.OdooMaintenanceServiceImpl;
 import org.openmrs.module.erp.impl.odoo.MaintenanceRequest;
-import org.openmrs.module.erp.impl.odoo.OdooMaintenanceConstants;
 
 public class OdooMaintenanceServiceImplTest {
 	
@@ -41,18 +41,17 @@ public class OdooMaintenanceServiceImplTest {
 	@Test
 	public void getMaintenanceRequests_shouldFetchTheMaintenanceRequestsThatAreNotYetDone() throws Exception {
 		Object[] stageIds = getStageIds();
-		Mockito.when(mockOdooClient.search(MODEL_MAINTENANCE_STAGE, asList("done", "=", false))).thenReturn(stageIds);
+		Mockito.when(mockOdooClient.search(MODEL_STAGE, asList("done", "=", false))).thenReturn(stageIds);
 		
 		Object[] requestData = OdooTestUtils.loadResource("odoo_maintenance_requests.json");
-		Mockito.when(mockOdooClient.searchAndRead(MODEL_MAINTENANCE_REQUEST, asList("stage_id", "in", stageIds),
-		    asList("equipment_id"))).thenReturn(requestData);
+		Mockito.when(mockOdooClient.searchAndRead(MODEL_REQUEST, asList("stage_id", "in", stageIds), REQUEST_FETCH_FIELDS))
+		        .thenReturn(requestData);
 		
 		List<Map> activeRequests = Arrays.stream(requestData).map(r -> (Map) r).collect(Collectors.toList());
 		Object[] equipmentData = OdooTestUtils.loadResource("odoo_maintenance_equipment.json");
-		List<Integer> equipmentIds = activeRequests.stream().map(r -> (Integer) ((List) r.get("equipment_id")).get(0))
+		List<Integer> equipmentIds = activeRequests.stream().map(r -> (Integer) ((Object[]) r.get("equipment_id"))[0])
 		        .collect(Collectors.toList());
-		Mockito.when(mockOdooClient.searchAndRead(OdooMaintenanceConstants.MODEL_MAINTENANCE_EQUIPMENT,
-		    asList("id", "in", equipmentIds), asList("name", "category_id", "serial_no", "location")))
+		Mockito.when(mockOdooClient.searchAndRead(MODEL_EQUIPMENT, asList("id", "in", equipmentIds), EQUIPMENT_FETCH_FIELDS))
 		        .thenReturn(equipmentData);
 		
 		List<MaintenanceRequest> requests = service.getMaintenanceRequests();
