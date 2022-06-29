@@ -1,0 +1,22 @@
+[
+    {
+        "id": 101,
+        "name": "Upper Left Limb",
+        "category_id": [
+            201,
+            "prosthesis"
+        ],
+        "serial_no": "ULL",
+        "location": "Repair House 1"
+    },
+    {
+        "id": 102,
+        "name": "Lower Left Limb",
+        "category_id": [
+            202,
+            "orthesis"
+        ],
+        "serial_no": "LLL",
+        "location": "Repair House 2"
+    }
+]

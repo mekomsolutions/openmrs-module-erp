@@ -17,6 +17,6 @@ public interface ErpMaintenanceService extends OpenmrsService {
 	 * @throws APIException
 	 */
 	@Authorized(ErpConstants.MODULE_PRIVILEGE)
-	List<MaintenanceRequest> getActiveMaintenanceRequests() throws APIException;
+	List<MaintenanceRequest> getMaintenanceRequests() throws APIException;
 	
 }
