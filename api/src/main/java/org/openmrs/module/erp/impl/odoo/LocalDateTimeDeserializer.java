@@ -11,6 +11,10 @@ import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.DeserializationContext;
 import org.codehaus.jackson.map.deser.std.StdDeserializer;
 
+/**
+ * Custom deserializer that converts odoo datetime strings to the equivalent datetime instant of the
+ * timezone of the OpenMRS server.
+ */
 public class LocalDateTimeDeserializer extends StdDeserializer<LocalDateTime> {
 	
 	public LocalDateTimeDeserializer() {

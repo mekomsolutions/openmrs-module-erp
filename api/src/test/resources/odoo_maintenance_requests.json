@@ -1,16 +1,24 @@
 [
     {
         "id": 1,
+        "name": "Upper Left Limb Repair",
         "equipment_id": [
             101,
             "Upper Left Limb"
-        ]
+        ],
+        "request_date": "2022-06-28",
+        "schedule_date": "2022-06-28 11:00:15",
+        "duration": 1.0
     },
     {
         "id": 2,
+        "name": "Lower Left Limb Repair",
         "equipment_id": [
             102,
             "Lower left Limb"
-        ]
+        ],
+        "request_date": "2022-06-29",
+        "schedule_date": "2022-06-29 16:00:20",
+        "duration": 2.0
     }
 ]

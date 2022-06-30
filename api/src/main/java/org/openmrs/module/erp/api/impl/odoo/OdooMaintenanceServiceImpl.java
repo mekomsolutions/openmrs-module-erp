@@ -4,7 +4,6 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;
 
 import java.net.MalformedURLException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -14,6 +13,7 @@ import org.apache.xmlrpc.XmlRpcException;
 import org.openmrs.api.APIException;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.erp.ErpConstants;
+import org.openmrs.module.erp.Utils;
 import org.openmrs.module.erp.api.ErpMaintenanceService;
 import org.openmrs.module.erp.impl.odoo.Equipment;
 import org.openmrs.module.erp.impl.odoo.MaintenanceRequest;
@@ -33,7 +33,8 @@ public class OdooMaintenanceServiceImpl extends BaseOpenmrsService implements Er
 	
 	protected static final String MODEL_STAGE = "maintenance.stage";
 	
-	protected static final List<String> REQUEST_FETCH_FIELDS = unmodifiableList(asList("equipment_id"));
+	protected static final List<String> REQUEST_FETCH_FIELDS = unmodifiableList(
+	    asList("name", "equipment_id", "request_date", "schedule_date", "duration"));
 	
 	protected static final List<String> EQUIPMENT_FETCH_FIELDS = unmodifiableList(
 	    asList("name", "category_id", "serial_no", "location"));
@@ -47,24 +48,19 @@ public class OdooMaintenanceServiceImpl extends BaseOpenmrsService implements Er
 	
 	@Override
 	public List<MaintenanceRequest> getMaintenanceRequests() throws APIException {
-		List<Map> activeRequests = Arrays.stream(getActiveRequests()).map(r -> (Map) r).collect(Collectors.toList());
-		List<Integer> equipmentIds = activeRequests.stream().map(r -> (Integer) ((Object[]) r.get("equipment_id"))[0])
-		        .collect(Collectors.toList());
+		List<MaintenanceRequest> requests = OdooJsonUtils.convertToList(getActiveRequests(), MaintenanceRequest.class);
+		List<Integer> equipmentIds = requests.stream().map(r -> r.getEquipmentId()).collect(Collectors.toList());
 		
 		try {
 			Object[] equipmentsData = odooClient.searchAndRead(MODEL_EQUIPMENT, asList("id", "in", equipmentIds),
 			    EQUIPMENT_FETCH_FIELDS);
-			
 			List<Equipment> equipments = OdooJsonUtils.convertToList(equipmentsData, Equipment.class);
 			Map<Integer, Equipment> idAndEquipmentMap = equipments.stream()
 			        .collect(Collectors.toMap(Equipment::getId, Function.identity()));
 			
-			List<MaintenanceRequest> requests = activeRequests.stream().map(r -> {
-				Integer id = (Integer) r.get("id");
-				Integer equipmentId = (Integer) ((Object[]) r.get("equipment_id"))[0];
-				MaintenanceRequest request = new MaintenanceRequest(id, idAndEquipmentMap.get(equipmentId));
-				return request;
-			}).collect(Collectors.toList());
+			requests.stream().forEach(r -> {
+				Utils.setPropertyValue(r, "equipment", idAndEquipmentMap.get(r.getEquipmentId()));
+			});
 			
 			return requests;
 		}

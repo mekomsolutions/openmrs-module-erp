@@ -8,6 +8,9 @@ import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.DeserializationContext;
 import org.codehaus.jackson.map.deser.std.StdDeserializer;
 
+/**
+ * Custom deserializer to convert odoo dates strings
+ */
 public class LocalDateDeserializer extends StdDeserializer<LocalDate> {
 	
 	public LocalDateDeserializer() {
