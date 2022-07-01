@@ -18,6 +18,7 @@ public class Utils {
 		Field field = null;
 		try {
 			field = target.getClass().getDeclaredField(propertyName);
+			isAccessible = field.isAccessible();
 			field.setAccessible(true);
 			field.set(target, value);
 		}
