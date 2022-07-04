@@ -1,8 +1,7 @@
 package org.openmrs.module.erp.api.impl.odoo;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -11,8 +10,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.module.SimpleModule;
 import org.codehaus.jackson.map.type.CollectionType;
 import org.openmrs.module.erp.impl.odoo.BaseOdooModel;
-import org.openmrs.module.erp.impl.odoo.LocalDateDeserializer;
-import org.openmrs.module.erp.impl.odoo.LocalDateTimeDeserializer;
+import org.openmrs.module.erp.impl.odoo.DateDeserializer;
 
 public class OdooJsonUtils {
 	
@@ -21,8 +19,7 @@ public class OdooJsonUtils {
 	static {
 		MAPPER = new ObjectMapper();
 		SimpleModule module = new SimpleModule("odooModule", Version.unknownVersion());
-		module.addDeserializer(LocalDate.class, new LocalDateDeserializer());
-		module.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer());
+		module.addDeserializer(Date.class, new DateDeserializer());
 		MAPPER.registerModule(module);
 	}
 	

@@ -1,7 +1,6 @@
 package org.openmrs.module.erp.impl.odoo;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
@@ -13,10 +12,10 @@ public class MaintenanceRequest extends BaseNamedOdooModel {
 	private Object[] equipmentRef;
 	
 	@JsonProperty("request_date")
-	private LocalDate requestDate;
+	private Date requestDate;
 	
 	@JsonProperty("schedule_date")
-	private LocalDateTime scheduleDate;
+	private Date scheduleDate;
 	
 	@JsonProperty
 	private Double duration;
@@ -53,7 +52,7 @@ public class MaintenanceRequest extends BaseNamedOdooModel {
 	 * 
 	 * @return the requestDate
 	 */
-	public LocalDate getRequestDate() {
+	public Date getRequestDate() {
 		return requestDate;
 	}
 	
@@ -62,7 +61,7 @@ public class MaintenanceRequest extends BaseNamedOdooModel {
 	 * 
 	 * @return the scheduleDate
 	 */
-	public LocalDateTime getScheduleDate() {
+	public Date getScheduleDate() {
 		return scheduleDate;
 	}
 	

@@ -17,6 +17,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.erp.api.ErpMaintenanceService;
 import org.openmrs.module.erp.impl.odoo.Equipment;
 import org.openmrs.module.erp.impl.odoo.MaintenanceRequest;
+import org.openmrs.module.erp.impl.odoo.OdooConstants;
 import org.openmrs.module.erp.rest.ErpRestConstants;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.annotation.PropertyGetter;
@@ -65,6 +66,11 @@ public class MaintenanceRequestResource extends DelegatingCrudResource<Maintenan
 		equipmentResource.put("category", category);
 		equipmentResource.put("display", equipment.getName());
 		return equipmentResource;
+	}
+	
+	@PropertyGetter("requestDate")
+	public String getScheduleDate(MaintenanceRequest delegate) {
+		return OdooConstants.DATE_FORMATTER.format(delegate.getRequestDate());
 	}
 	
 	@PropertyGetter("display")
