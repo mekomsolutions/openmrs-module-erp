@@ -26,8 +26,6 @@ public class ErpConstants {
 	
 	public static final String COMPONENT_ODOO_PARTNER_SERVICE = MODULE_ARTIFACT_ID + ".OdooPartnerService";
 	
-	public static final String COMPONENT_ODOO_MAINTENANCE_SERVICE = MODULE_ARTIFACT_ID + ".OdooMaintenanceService";
-	
 	public static final String COMPONENT_ODOO_SESSION = MODULE_ARTIFACT_ID + ".OdooSession";
 	
 	public static final String COMPONENT_ERP_ACTIVATOR = MODULE_ARTIFACT_ID + ".ErpActivator";
@@ -53,6 +51,4 @@ public class ErpConstants {
 	public static final String ERP_INVOICE_URI = "/invoice";
 	
 	public static final String ERP_PARTNER_URI = "/partner";
-	
-	public static final String ERP_MAINTENANCE_REQUEST_URI = "/maintenancerequest";
 }

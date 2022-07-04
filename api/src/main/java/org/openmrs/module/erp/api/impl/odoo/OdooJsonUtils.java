@@ -40,12 +40,12 @@ public class OdooJsonUtils {
 		for (Object o : data) {
 			Map<String, Object> item = (Map) o;
 			for (Map.Entry<String, Object> entry : item.entrySet()) {
-				Object value = convertValueIfNecessary(entry.getValue());
+				Object value = convertToNullIfFalse(entry.getValue());
 				if (value != null && value.getClass().isArray()) {
 					Object[] oldElements = (Object[]) value;
 					List newElements = new ArrayList(oldElements.length);
 					for (Object arrayItem : oldElements) {
-						newElements.add(convertValueIfNecessary(arrayItem));
+						newElements.add(convertToNullIfFalse(arrayItem));
 					}
 					value = newElements;
 				}
@@ -58,7 +58,7 @@ public class OdooJsonUtils {
 		return MAPPER.convertValue(data, javaType);
 	}
 	
-	private static Object convertValueIfNecessary(Object o) {
+	private static Object convertToNullIfFalse(Object o) {
 		if (o != null && "false".equalsIgnoreCase(o.toString())) {
 			return null;
 		}

@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 import org.apache.xmlrpc.XmlRpcException;
 import org.openmrs.api.APIException;
 import org.openmrs.api.impl.BaseOpenmrsService;
-import org.openmrs.module.erp.ErpConstants;
 import org.openmrs.module.erp.Utils;
 import org.openmrs.module.erp.api.ErpMaintenanceService;
 import org.openmrs.module.erp.impl.odoo.Equipment;
@@ -20,9 +19,7 @@ import org.openmrs.module.erp.impl.odoo.MaintenanceRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component(ErpConstants.COMPONENT_ODOO_MAINTENANCE_SERVICE)
 public class OdooMaintenanceServiceImpl extends BaseOpenmrsService implements ErpMaintenanceService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(OdooMaintenanceServiceImpl.class);
