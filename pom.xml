@@ -70,12 +70,6 @@
             <scope>provided</scope>
             <type>jar</type>
         </dependency>
-        <dependency>
-            <groupId>org.openmrs.tools</groupId>
-            <artifactId>openmrs-tools</artifactId>
-            <version>${openmrsPlatformVersion}</version>
-            <scope>provided</scope>
-        </dependency>
 
         <!-- OpenMRS Core test dependencies -->
 
