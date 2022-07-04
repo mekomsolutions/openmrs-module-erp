@@ -61,11 +61,11 @@ public class TestHelper {
 	}
 	
 	public static Object[] getOdooRecord() {
-
+		
 		ArrayList order = new ArrayList();
-
+		
 		HashMap<String, Object> data = new HashMap<>();
-
+		
 		Map<String, Object> fieldData = new HashMap<String, Object>();
 		fieldData.put("string", "Reference Order");
 		fieldData.put("type", "string");
@@ -78,29 +78,37 @@ public class TestHelper {
 		fieldData.put("readonly", true);
 		fieldData.put("states", 1);
 		fieldData.put("company_dependent", false);
-
-		Map<String, Object> id = new HashMap() {{
-			put("id", "1");
-		}};
-
-		Map<String, Object> name = new HashMap() {{
-			put("name", "REC/001");
-		}};
-
-		Map<String, Object> amountTotal = new HashMap() {{
-			put("amount_total", "3175.0");
-		}};
-
+		
+		Map<String, Object> id = new HashMap() {
+			
+			{
+				put("id", "1");
+			}
+		};
+		
+		Map<String, Object> name = new HashMap() {
+			
+			{
+				put("name", "REC/001");
+			}
+		};
+		
+		Map<String, Object> amountTotal = new HashMap() {
+			
+			{
+				put("amount_total", "3175.0");
+			}
+		};
+		
 		data.put("id", "1");
 		data.put("name", "REC/001");
 		data.put("amount_total", "3175.0");
-
+		
 		ArrayList<Object> fields = new ArrayList<>();
 		fields.addAll(asList(id, name, amountTotal));
-
+		
 		order.add(data);
-
-
+		
 		return order.toArray();
 	}
 	

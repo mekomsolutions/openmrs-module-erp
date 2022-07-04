@@ -47,12 +47,12 @@ public class ErpOrderControllerTest extends BaseModuleWebContextSensitiveTest {
 	}
 	
 	private Map<String, Object> getOrder() {
-
+		
 		Map<String, Object> order = new HashMap<>();
 		order.put("id", "1");
 		order.put("amount_total", "3017.5");
 		order.put("name", "SO/001");
-
+		
 		return order;
 	}
 	
@@ -70,8 +70,8 @@ public class ErpOrderControllerTest extends BaseModuleWebContextSensitiveTest {
 	@Test
 	public void shouldReturnOrdersWithEmptyFilter() {
 		
-		List<Map<String, Object>> result = (List<Map<String, Object>>) erpOrderController
-		        .getErpOrdersByFilters("{}", "full");
+		List<Map<String, Object>> result = (List<Map<String, Object>>) erpOrderController.getErpOrdersByFilters("{}",
+		    "full");
 		
 		Assert.assertEquals("SO/001", result.get(0).get("name"));
 		

@@ -53,7 +53,7 @@ public class ErpInvoiceControllerTest extends BaseModuleWebContextSensitiveTest 
 		order.put("partner_id", "1");
 		order.put("amount_total", "3017.5");
 		order.put("name", "INV/001");
-
+		
 		return order;
 	}
 	

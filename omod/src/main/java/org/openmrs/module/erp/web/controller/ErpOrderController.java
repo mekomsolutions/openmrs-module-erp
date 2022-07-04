@@ -30,44 +30,43 @@ public class ErpOrderController extends BaseRestController {
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseBody
 	public Object getErpOrdersByFilters(@RequestBody String jsonString,
-			@RequestParam(value = "rep", defaultValue = "default") String rep) {
+	                                    @RequestParam(value = "rep", defaultValue = "default") String rep) {
 		erpOrderService = erpContext.getErpOrderService();
 		RecordRepresentation recordRepresentation = new RecordRepresentation(erpOrderService.defaultModelAttributes());
-
+		
 		ArrayList<Filter> filtersArray = new ArrayList<>();
-
+		
 		List<Map<String, Object>> records = new ArrayList<>();
-
+		
 		JSONArray jsonFilters = new JSONArray();
 		JSONObject jsonObject = new JSONObject(jsonString);
 		if (jsonObject.has("filters")) {
 			jsonFilters = jsonObject.getJSONArray("filters");
 		}
-
+		
 		for (int i = 0; i < jsonFilters.length(); i++) {
 			JSONObject jsonFilter = jsonFilters.getJSONObject(i);
 			Filter filter = new Filter(jsonFilter.getString("field"), jsonFilter.getString("comparison"),
-					jsonFilter.get("value"));
+			        jsonFilter.get("value"));
 			filtersArray.add(filter);
 		}
-
+		
 		List<Map<String, Object>> results = erpOrderService.getErpOrdersByFilters(filtersArray);
-
-		for (Map<String, Object> result :
-				results) {
+		
+		for (Map<String, Object> result : results) {
 			records.add(recordRepresentation.getRepresentedRecord(result, rep));
 		}
-
+		
 		return records;
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public Object getErpOrderById(@PathVariable("id") String id,
-	        @RequestParam(value = "rep", defaultValue = "default") String rep) {
+	                              @RequestParam(value = "rep", defaultValue = "default") String rep) {
 		erpOrderService = erpContext.getErpOrderService();
-		return new RecordRepresentation(erpOrderService.defaultModelAttributes()).getRepresentedRecord(
-		    erpOrderService.getErpOrderById(id), rep);
+		return new RecordRepresentation(erpOrderService.defaultModelAttributes())
+		        .getRepresentedRecord(erpOrderService.getErpOrderById(id), rep);
 	}
 	
 }

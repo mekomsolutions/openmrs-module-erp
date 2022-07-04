@@ -23,7 +23,7 @@ public class MaintenanceRequest extends BaseNamedOdooModel {
 	
 	/**
 	 * Gets the equipment
-	 *
+	 * 
 	 * @return the equipment
 	 */
 	public Equipment getEquipment() {
@@ -32,7 +32,7 @@ public class MaintenanceRequest extends BaseNamedOdooModel {
 	
 	/**
 	 * Gets the equipment id
-	 *
+	 * 
 	 * @return the equipment id
 	 */
 	public Integer getEquipmentId() {
@@ -41,7 +41,7 @@ public class MaintenanceRequest extends BaseNamedOdooModel {
 	
 	/**
 	 * Gets the equipment name
-	 *
+	 * 
 	 * @return the equipment name
 	 */
 	public String getEquipmentName() {
@@ -50,7 +50,7 @@ public class MaintenanceRequest extends BaseNamedOdooModel {
 	
 	/**
 	 * Gets the requestDate
-	 *
+	 * 
 	 * @return the requestDate
 	 */
 	public LocalDate getRequestDate() {
@@ -59,7 +59,7 @@ public class MaintenanceRequest extends BaseNamedOdooModel {
 	
 	/**
 	 * Gets the scheduleDate
-	 *
+	 * 
 	 * @return the scheduleDate
 	 */
 	public LocalDateTime getScheduleDate() {
@@ -68,7 +68,7 @@ public class MaintenanceRequest extends BaseNamedOdooModel {
 	
 	/**
 	 * Gets the duration
-	 *
+	 * 
 	 * @return the duration
 	 */
 	public Double getDuration() {

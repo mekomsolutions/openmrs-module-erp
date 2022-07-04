@@ -30,44 +30,43 @@ public class ErpPartnerController extends BaseRestController {
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseBody
 	public Object getErpPartnersByFilters(@RequestBody String jsonString,
-										  @RequestParam(value = "rep", defaultValue = "default") String rep) {
+	                                      @RequestParam(value = "rep", defaultValue = "default") String rep) {
 		erpPartnerService = erpContext.getErpPartnerService();
 		RecordRepresentation recordRepresentation = new RecordRepresentation(erpPartnerService.defaultModelAttributes());
-
+		
 		ArrayList<Filter> filtersArray = new ArrayList<>();
-
+		
 		List<Map<String, Object>> records = new ArrayList<>();
-
+		
 		JSONArray jsonFilters = new JSONArray();
 		JSONObject jsonObject = new JSONObject(jsonString);
 		if (jsonObject.has("filters")) {
 			jsonFilters = jsonObject.getJSONArray("filters");
 		}
-
+		
 		for (int i = 0; i < jsonFilters.length(); i++) {
 			JSONObject jsonFilter = jsonFilters.getJSONObject(i);
 			Filter filter = new Filter(jsonFilter.getString("field"), jsonFilter.getString("comparison"),
-					jsonFilter.get("value"));
+			        jsonFilter.get("value"));
 			filtersArray.add(filter);
 		}
-
+		
 		List<Map<String, Object>> results = erpPartnerService.getErpPartnersByFilters(filtersArray);
-
-		for (Map<String, Object> result :
-				results) {
+		
+		for (Map<String, Object> result : results) {
 			records.add(recordRepresentation.getRepresentedRecord(result, rep));
 		}
-
+		
 		return records;
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public Object getErpPartnerById(@PathVariable("id") String id,
-	        @RequestParam(value = "rep", defaultValue = "default") String rep) {
+	                                @RequestParam(value = "rep", defaultValue = "default") String rep) {
 		erpPartnerService = erpContext.getErpPartnerService();
-		return new RecordRepresentation(erpPartnerService.defaultModelAttributes()).getRepresentedRecord(
-		    erpPartnerService.getErpPartnerById(id), rep);
+		return new RecordRepresentation(erpPartnerService.defaultModelAttributes())
+		        .getRepresentedRecord(erpPartnerService.getErpPartnerById(id), rep);
 	}
 	
 }

@@ -75,31 +75,33 @@ public class OdooPartnerServiceImpl implements ErpPartnerService {
 	@Override
 	public List<Map<String, Object>> getErpPartnersByFilters(List<Filter> filters) {
 		ArrayList<Map<String, Object>> response = new ArrayList<Map<String, Object>>();
-
+		
 		if (odooClient.getUid().isEmpty()) {
 			try {
 				odooClient.authenticate();
-			} catch (IOException e) {
+			}
+			catch (IOException e) {
 				throw new APIException("Cannot authenticate to Odoo server", e);
 			}
 		}
-
+		
 		try {
 			List<List<Object>> filterCollection = new ArrayList<List<Object>>();
-
+			
 			for (Filter filter : filters) {
-
-				filterCollection.add(asList(filter.getFieldName(),
-						filter.getComparison(),
-						filter.getValue()));
+				
+				filterCollection.add(asList(filter.getFieldName(), filter.getComparison(), filter.getValue()));
 			}
 			ArrayList<String> fields = odooClient.getDomainFields(PARTNER_MODEL);
-			Object[] records = (Object[]) odooClient.execute("search_read", PARTNER_MODEL, filterCollection, new HashMap() {{
-				put("fields", fields);
-			}});
-
+			Object[] records = (Object[]) odooClient.execute("search_read", PARTNER_MODEL, filterCollection, new HashMap() {
+				
+				{
+					put("fields", fields);
+				}
+			});
+			
 			if ((records != null) && (records.length > 0)) {
-
+				
 				asList(records).forEach(record -> {
 					Map<String, Object> rec = (Map<String, Object>) record;
 					Map<String, Object> result = new HashMap<String, Object>();
@@ -109,7 +111,7 @@ public class OdooPartnerServiceImpl implements ErpPartnerService {
 					}
 					response.add(result);
 				});
-
+				
 			}
 		}
 		catch (Exception e) {

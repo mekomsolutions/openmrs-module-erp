@@ -29,47 +29,46 @@ public class ErpInvoiceController {
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseBody
 	public Object getInvoicesByFilters(@RequestBody String jsonString,
-			@RequestParam(value = "rep", defaultValue = "default") String rep) {
+	                                   @RequestParam(value = "rep", defaultValue = "default") String rep) {
 		erpInvoiceService = erpContext.getErpInvoiceService();
-
+		
 		RecordRepresentation recordRepresentation = new RecordRepresentation(erpInvoiceService.defaultModelAttributes());
-
+		
 		List<Filter> filtersArray = new ArrayList<>();
-
+		
 		List<Map<String, Object>> records = new ArrayList<>();
-
+		
 		JSONArray jsonFilters = new JSONArray();
 		JSONObject jsonObject = new JSONObject(jsonString);
 		if (jsonObject.has("filters")) {
 			jsonFilters = jsonObject.getJSONArray("filters");
 		}
-
+		
 		for (int i = 0; i < jsonFilters.length(); i++) {
 			JSONObject jsonFilter = jsonFilters.getJSONObject(i);
 			Filter filter = new Filter(jsonFilter.getString("field"), jsonFilter.getString("comparison"),
-					jsonFilter.get("value"));
+			        jsonFilter.get("value"));
 			filtersArray.add(filter);
 		}
-
+		
 		List<Map<String, Object>> results = erpInvoiceService.getInvoicesByFilters(filtersArray);
-
-		for (Map<String, Object> result :
-				results) {
+		
+		for (Map<String, Object> result : results) {
 			records.add(recordRepresentation.getRepresentedRecord(result, rep));
 		}
-
+		
 		return records;
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public Object getInvoiceById(@PathVariable("id") String invoiceId,
-	        @RequestParam(value = "rep", defaultValue = "default") String rep) {
+	                             @RequestParam(value = "rep", defaultValue = "default") String rep) {
 		
 		erpInvoiceService = erpContext.getErpInvoiceService();
 		
-		return new RecordRepresentation(erpInvoiceService.defaultModelAttributes()).getRepresentedRecord(
-		    erpInvoiceService.getInvoiceById(invoiceId), rep);
+		return new RecordRepresentation(erpInvoiceService.defaultModelAttributes())
+		        .getRepresentedRecord(erpInvoiceService.getInvoiceById(invoiceId), rep);
 	}
 	
 }

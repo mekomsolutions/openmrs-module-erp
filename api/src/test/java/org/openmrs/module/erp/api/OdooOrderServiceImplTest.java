@@ -28,12 +28,12 @@ public class OdooOrderServiceImplTest {
 	@Before
 	public void setup() throws XmlRpcException {
 		// Setup mocks
-
+		
 		OdooClient odooSession = mock(OdooClient.class);
 		when(odooSession.getUid()).thenReturn("1");
 		when(odooSession.execute(any(String.class), any(String.class), any(), any())).thenReturn(getOdooRecord());
 		when(odooSession.getDomainFields(any())).thenReturn(new ArrayList<>(asList(fields)));
-
+		
 		odooOrderService = new OdooOrderServiceImpl(odooSession);
 	}
 	

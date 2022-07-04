@@ -90,5 +90,4 @@ public class OdooMaintenanceServiceImplTest {
 		assertEquals("LLL", lowerLeftLimbReq.getEquipment().getSerialNo());
 		assertEquals("Repair House 2", lowerLeftLimbReq.getEquipment().getLocation());
 	}
-	
 }

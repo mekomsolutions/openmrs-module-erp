@@ -50,12 +50,12 @@ public class ErpPartnerControllerTest extends BaseModuleWebContextSensitiveTest 
 	}
 	
 	private Map<String, Object> getPartner() {
-
+		
 		Map<String, Object> partner = new HashMap<>();
 		partner.put("id", "1");
 		partner.put("uuid", "1234-4321");
 		partner.put("name", "Romain B");
-
+		
 		return partner;
 	}
 	

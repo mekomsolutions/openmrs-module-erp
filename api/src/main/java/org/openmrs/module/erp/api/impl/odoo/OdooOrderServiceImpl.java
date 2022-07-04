@@ -22,7 +22,8 @@ public class OdooOrderServiceImpl implements ErpOrderService {
 	private static final String ORDER_MODEL = "sale.order";
 	
 	private List<String> orderDefaultAttributes = asList("name", "amount_total", "state", "pricelist_id", "payment_term_id",
-	    "invoice_status", "origin", "create_date", "currency_id", "order_line", "invoice_count", "invoice_ids", "product_id");
+	    "invoice_status", "origin", "create_date", "currency_id", "order_line", "invoice_count", "invoice_ids",
+	    "product_id");
 	
 	@Autowired
 	private OdooClient odooClient;
@@ -77,32 +78,34 @@ public class OdooOrderServiceImpl implements ErpOrderService {
 	public List<Map<String, Object>> getErpOrdersByFilters(List<Filter> filters) {
 		
 		ArrayList<Map<String, Object>> response = new ArrayList<>();
-
+		
 		if (odooClient.getUid().isEmpty()) {
 			try {
 				odooClient.authenticate();
-			} catch (IOException e) {
+			}
+			catch (IOException e) {
 				throw new APIException("Cannot authenticate to Odoo server", e);
 			}
 		}
-
+		
 		try {
 			List<List<Object>> filterCollection = new ArrayList<>();
-
+			
 			for (Filter filter : filters) {
-
-				filterCollection.add(asList(filter.getFieldName(),
-						filter.getComparison(),
-						filter.getValue()));
+				
+				filterCollection.add(asList(filter.getFieldName(), filter.getComparison(), filter.getValue()));
 			}
-
+			
 			ArrayList<String> fields = odooClient.getDomainFields(ORDER_MODEL);
-			Object[] records = (Object[]) odooClient.execute("search_read", ORDER_MODEL, filterCollection, new HashMap() {{
-				put("fields", fields);
-			}});
-
+			Object[] records = (Object[]) odooClient.execute("search_read", ORDER_MODEL, filterCollection, new HashMap() {
+				
+				{
+					put("fields", fields);
+				}
+			});
+			
 			if ((records != null) && (records.length > 0)) {
-
+				
 				asList(records).forEach(record -> {
 					Map<String, Object> rec = (Map<String, Object>) record;
 					Map<String, Object> result = new HashMap<String, Object>();
@@ -114,7 +117,7 @@ public class OdooOrderServiceImpl implements ErpOrderService {
 					result.put("order_lines", getErpOrderLinesByOrderId(erpOrderId));
 					response.add(result);
 				});
-
+				
 			}
 		}
 		catch (Exception e) {
@@ -127,28 +130,33 @@ public class OdooOrderServiceImpl implements ErpOrderService {
 		
 		List<Map<String, Object>> response = new ArrayList<>();
 		List<List<Object>> filterCollection = new ArrayList<>();
-
+		
 		if (odooClient.getUid().isEmpty()) {
 			try {
 				odooClient.authenticate();
-			} catch (IOException e) {
+			}
+			catch (IOException e) {
 				throw new APIException("Cannot authenticate to Odoo server", e);
 			}
 		}
-
+		
 		try {
-
+			
 			List<Object> condition = asList("order_id", "=", Integer.parseInt(erpOrderId));
 			filterCollection.add(condition);
-
+			
 			ArrayList<String> fields = odooClient.getDomainFields("sale.order.line");
-			Object[] records = (Object[]) odooClient.execute("search_read", "sale.order.line", filterCollection, new HashMap() {{
-				put("fields", fields);
-				put("limit", 15);
-			}});
-
+			Object[] records = (Object[]) odooClient.execute("search_read", "sale.order.line", filterCollection,
+			    new HashMap() {
+				    
+				    {
+					    put("fields", fields);
+					    put("limit", 15);
+				    }
+			    });
+			
 			if ((records != null) && (records.length > 0)) {
-
+				
 				asList(records).forEach(record -> {
 					Map<String, Object> rec = (Map<String, Object>) record;
 					Map<String, Object> result = new HashMap<>();

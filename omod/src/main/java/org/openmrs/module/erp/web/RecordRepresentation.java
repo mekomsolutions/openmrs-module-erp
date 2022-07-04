@@ -24,24 +24,23 @@ public class RecordRepresentation {
 	}
 	
 	public Map<String, Object> getRepresentedRecord(Map<String, Object> record, String rep) {
-
+		
 		List<String> fields;
-
+		
 		if (rep.startsWith(FULL))
 			return record;
 		else if (rep.startsWith(CUSTOM) && rep.contains(":"))
 			fields = parseCustomRepresentationFields(rep);
 		else
 			fields = defaultAttributes;
-
+		
 		Map<String, Object> filteredRecords = new HashMap<>();
-		for (Map.Entry<String, Object> recordField :
-				record.entrySet()) {
+		for (Map.Entry<String, Object> recordField : record.entrySet()) {
 			if (fields.contains(recordField.getKey())) {
 				filteredRecords.put(recordField.getKey(), recordField.getValue());
 			}
 		}
-
+		
 		return filteredRecords;
 	}
 }
