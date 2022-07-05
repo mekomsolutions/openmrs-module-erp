@@ -9,14 +9,11 @@
  */
 package org.openmrs.module.erp.web.rest.v1_0.resource;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.openmrs.api.context.Context;
-import org.openmrs.module.erp.api.ErpMaintenanceService;
-import org.openmrs.module.erp.impl.odoo.Equipment;
-import org.openmrs.module.erp.impl.odoo.MaintenanceRequest;
+import org.openmrs.module.erp.api.ErpInventoryService;
+import org.openmrs.module.erp.impl.odoo.InventoryAdjustment;
 import org.openmrs.module.erp.impl.odoo.OdooConstants;
 import org.openmrs.module.erp.web.rest.ErpRestConstants;
 import org.openmrs.module.webservices.rest.web.RequestContext;
@@ -30,9 +27,9 @@ import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceD
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = ErpRestConstants.REST_NAMESPACE
-        + "/maintenancerequest", supportedClass = MaintenanceRequest.class, supportedOpenmrsVersions = { "1.10.*", "1.11.*",
-                "1.12.*", "2.0.*", "2.1.*", "2.2.*", "2.3.*", "2.4.*", "2.5.*" })
-public class MaintenanceRequestResource extends BaseNamedOdooResource<MaintenanceRequest> {
+        + "/inventoryadjustment", supportedClass = InventoryAdjustment.class, supportedOpenmrsVersions = { "1.10.*",
+                "1.11.*", "1.12.*", "2.0.*", "2.1.*", "2.2.*", "2.3.*", "2.4.*", "2.5.*" })
+public class InventoryAdjustmentResource extends BaseNamedOdooResource<InventoryAdjustment> {
 	
 	/**
 	 * @see DelegatingCrudResource#getRepresentationDescription(Representation)
@@ -40,38 +37,19 @@ public class MaintenanceRequestResource extends BaseNamedOdooResource<Maintenanc
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
 		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
-		description.addRequiredProperty("equipment");
-		description.addRequiredProperty("requestDate");
-		description.addRequiredProperty("equipment");
-		description.addProperty("scheduleDate");
-		description.addProperty("duration");
+		description.addRequiredProperty("date");
+		description.addRequiredProperty("endDate");
 		return description;
 	}
 	
-	@PropertyGetter("equipment")
-	public Map getEquipment(MaintenanceRequest delegate) {
-		Equipment equipment = delegate.getEquipment();
-		Map category = new HashMap();
-		category.put("categoryId", equipment.getCategoryId());
-		category.put("categoryName", equipment.getCategoryName());
-		Map equipmentResource = new HashMap();
-		equipmentResource.put("id", equipment.getId());
-		equipmentResource.put("name", equipment.getName());
-		equipmentResource.put("serialNo", equipment.getSerialNo());
-		equipmentResource.put("location", equipment.getLocation());
-		equipmentResource.put("category", category);
-		equipmentResource.put("display", equipment.getName());
-		return equipmentResource;
-	}
-	
-	@PropertyGetter("requestDate")
-	public String getScheduleDate(MaintenanceRequest delegate) {
-		return OdooConstants.DATE_FORMATTER.format(delegate.getRequestDate());
+	@PropertyGetter("endDate")
+	public String getScheduleDate(InventoryAdjustment delegate) {
+		return OdooConstants.DATE_FORMATTER.format(delegate.getEndDate());
 	}
 	
 	protected PageableResult doGetAll(RequestContext context) throws ResponseException {
-		List<MaintenanceRequest> requests = Context.getService(ErpMaintenanceService.class).getMaintenanceRequests();
-		return new AlreadyPaged(context, requests, false);
+		List<InventoryAdjustment> adjustments = Context.getService(ErpInventoryService.class).getInventoryAdjustments();
+		return new AlreadyPaged(context, adjustments, false);
 	}
 	
 }
