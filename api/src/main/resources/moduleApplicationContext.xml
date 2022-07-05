@@ -34,12 +34,36 @@
         </property>
     </bean>
 
+    <bean parent="serviceContext">
+        <property name="moduleService">
+            <list>
+                <value>${project.parent.groupId}.${project.parent.artifactId}.api.ErpInventoryService</value>
+                <ref bean="erp.odooInventoryService" />
+            </list>
+        </property>
+    </bean>
+
     <bean name="erp.odooMaintenanceService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
         <property name="transactionManager">
             <ref bean="transactionManager" />
         </property>
         <property name="target">
             <bean class="${project.parent.groupId}.${project.parent.artifactId}.api.impl.odoo.OdooMaintenanceServiceImpl" />
+        </property>
+        <property name="preInterceptors">
+            <ref bean="serviceInterceptors" />
+        </property>
+        <property name="transactionAttributeSource">
+            <ref bean="transactionAttributeSource" />
+        </property>
+    </bean>
+
+    <bean name="erp.odooInventoryService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref bean="transactionManager" />
+        </property>
+        <property name="target">
+            <bean class="${project.parent.groupId}.${project.parent.artifactId}.api.impl.odoo.OdooInventoryServiceImpl" />
         </property>
         <property name="preInterceptors">
             <ref bean="serviceInterceptors" />

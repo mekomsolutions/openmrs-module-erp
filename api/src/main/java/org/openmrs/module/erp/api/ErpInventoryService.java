@@ -6,17 +6,17 @@ import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.erp.ErpConstants;
-import org.openmrs.module.erp.impl.odoo.MaintenanceRequest;
+import org.openmrs.module.erp.impl.odoo.InventoryAdjustment;
 
-public interface ErpMaintenanceService extends OpenmrsService {
+public interface ErpInventoryService extends OpenmrsService {
 	
 	/**
-	 * Fetches all maintenance requests that are not yet done.
+	 * Fetches all active inventory adjustments.
 	 * 
-	 * @return list of {@link MaintenanceRequest}
+	 * @return list of {@link InventoryAdjustment}
 	 * @throws APIException
 	 */
 	@Authorized(ErpConstants.MODULE_PRIVILEGE)
-	List<MaintenanceRequest> getMaintenanceRequests() throws APIException;
+	List<InventoryAdjustment> getInventoryAdjustments() throws APIException;
 	
 }
