@@ -7,7 +7,7 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.erp.rest.v1_0.resource;
+package org.openmrs.module.erp.web.rest.v1_0.resource;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +18,7 @@ import org.openmrs.module.erp.api.ErpMaintenanceService;
 import org.openmrs.module.erp.impl.odoo.Equipment;
 import org.openmrs.module.erp.impl.odoo.MaintenanceRequest;
 import org.openmrs.module.erp.impl.odoo.OdooConstants;
-import org.openmrs.module.erp.rest.ErpRestConstants;
+import org.openmrs.module.erp.web.rest.ErpRestConstants;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.annotation.PropertyGetter;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;

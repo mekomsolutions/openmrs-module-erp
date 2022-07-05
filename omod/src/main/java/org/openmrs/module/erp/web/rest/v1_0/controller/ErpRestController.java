@@ -1,6 +1,6 @@
-package org.openmrs.module.erp.rest.v1_0.controller;
+package org.openmrs.module.erp.web.rest.v1_0.controller;
 
-import org.openmrs.module.erp.rest.ErpRestConstants;
+import org.openmrs.module.erp.web.rest.ErpRestConstants;
 import org.openmrs.module.webservices.rest.web.v1_0.controller.MainResourceController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -1,4 +1,4 @@
-package org.openmrs.module.erp.rest;
+package org.openmrs.module.erp.web.rest;
 
 import org.openmrs.module.webservices.rest.web.RestConstants;
 
