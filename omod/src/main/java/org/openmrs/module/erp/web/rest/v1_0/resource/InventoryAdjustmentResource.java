@@ -38,12 +38,16 @@ public class InventoryAdjustmentResource extends BaseNamedOdooResource<Inventory
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
 		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
 		description.addRequiredProperty("date");
-		description.addRequiredProperty("endDate");
+		description.addProperty("endDate");
 		return description;
 	}
 	
 	@PropertyGetter("endDate")
-	public String getScheduleDate(InventoryAdjustment delegate) {
+	public String getEndDate(InventoryAdjustment delegate) {
+		if (delegate.getEndDate() == null) {
+			return null;
+		}
+		
 		return OdooConstants.DATE_FORMATTER.format(delegate.getEndDate());
 	}
 	

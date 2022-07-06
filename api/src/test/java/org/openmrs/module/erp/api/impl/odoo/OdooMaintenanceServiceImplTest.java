@@ -35,7 +35,8 @@ public class OdooMaintenanceServiceImplTest {
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		service = new OdooMaintenanceServiceImpl(mockOdooClient);
+		service = new OdooMaintenanceServiceImpl();
+		service.setOdooClient(mockOdooClient);
 	}
 	
 	private Object[] getStageIds() throws Exception {

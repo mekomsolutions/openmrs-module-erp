@@ -15,14 +15,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class OdooInventoryServiceImpl extends BaseOpenmrsService implements ErpInventoryService {
 	
-	protected static final String MODEL_INVENTORY = "stock.inventory";
+	public static final String MODEL_INVENTORY = "stock.inventory";
 	
-	protected static final List<String> INVENTORY_FETCH_FIELDS = unmodifiableList(asList("name", "date", "end_date"));
+	public static final List<String> INVENTORY_FETCH_FIELDS = unmodifiableList(asList("name", "date", "end_date"));
 	
 	private OdooClient odooClient;
 	
+	/**
+	 * Sets the odooClient
+	 * 
+	 * @param odooClient the odooClient to set
+	 */
 	@Autowired
-	public OdooInventoryServiceImpl(OdooClient odooClient) {
+	public void setOdooClient(OdooClient odooClient) {
 		this.odooClient = odooClient;
 	}
 	

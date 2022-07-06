@@ -24,22 +24,27 @@ public class OdooMaintenanceServiceImpl extends BaseOpenmrsService implements Er
 	
 	private static final Logger logger = LoggerFactory.getLogger(OdooMaintenanceServiceImpl.class);
 	
-	protected static final String MODEL_REQUEST = "maintenance.request";
+	public static final String MODEL_REQUEST = "maintenance.request";
 	
-	protected static final String MODEL_EQUIPMENT = "maintenance.equipment";
+	public static final String MODEL_EQUIPMENT = "maintenance.equipment";
 	
-	protected static final String MODEL_STAGE = "maintenance.stage";
+	public static final String MODEL_STAGE = "maintenance.stage";
 	
-	protected static final List<String> REQUEST_FETCH_FIELDS = unmodifiableList(
+	public static final List<String> REQUEST_FETCH_FIELDS = unmodifiableList(
 	    asList("name", "equipment_id", "request_date", "schedule_date", "duration"));
 	
-	protected static final List<String> EQUIPMENT_FETCH_FIELDS = unmodifiableList(
+	public static final List<String> EQUIPMENT_FETCH_FIELDS = unmodifiableList(
 	    asList("name", "category_id", "serial_no", "location"));
 	
 	private OdooClient odooClient;
 	
+	/**
+	 * Sets the odooClient
+	 * 
+	 * @param odooClient the odooClient to set
+	 */
 	@Autowired
-	public OdooMaintenanceServiceImpl(OdooClient odooClient) {
+	public void setOdooClient(OdooClient odooClient) {
 		this.odooClient = odooClient;
 	}
 	

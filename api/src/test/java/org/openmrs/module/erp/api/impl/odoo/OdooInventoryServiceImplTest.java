@@ -30,7 +30,8 @@ public class OdooInventoryServiceImplTest {
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		service = new OdooInventoryServiceImpl(mockOdooClient);
+		service = new OdooInventoryServiceImpl();
+		service.setOdooClient(mockOdooClient);
 	}
 	
 	@Test

@@ -65,7 +65,7 @@ public class MaintenanceRequestResource extends BaseNamedOdooResource<Maintenanc
 	}
 	
 	@PropertyGetter("requestDate")
-	public String getScheduleDate(MaintenanceRequest delegate) {
+	public String getRequestDate(MaintenanceRequest delegate) {
 		return OdooConstants.DATE_FORMATTER.format(delegate.getRequestDate());
 	}
 	
