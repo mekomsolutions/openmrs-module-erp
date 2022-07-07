@@ -17,7 +17,7 @@ public class OdooInventoryServiceImpl extends BaseOpenmrsService implements ErpI
 	
 	public static final String MODEL_INVENTORY = "stock.inventory";
 	
-	public static final List<String> INVENTORY_FETCH_FIELDS = unmodifiableList(asList("name", "date", "end_date"));
+	public static final List<String> INVENTORY_FETCH_FIELDS = unmodifiableList(asList("name", "date"));
 	
 	private OdooClient odooClient;
 	

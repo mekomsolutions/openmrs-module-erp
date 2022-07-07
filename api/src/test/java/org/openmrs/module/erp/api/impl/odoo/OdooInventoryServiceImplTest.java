@@ -5,14 +5,12 @@ import static java.util.Date.from;
 import static org.junit.Assert.assertEquals;
 import static org.openmrs.module.erp.api.impl.odoo.OdooInventoryServiceImpl.INVENTORY_FETCH_FIELDS;
 import static org.openmrs.module.erp.api.impl.odoo.OdooInventoryServiceImpl.MODEL_INVENTORY;
-import static org.openmrs.module.erp.impl.odoo.OdooConstants.DATE_FORMATTER;
 import static org.openmrs.module.erp.impl.odoo.OdooConstants.DATE_TIME_FORMATTER;
 import static org.openmrs.module.erp.impl.odoo.OdooConstants.ZONE_ID_UTC;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -46,20 +44,17 @@ public class OdooInventoryServiceImplTest {
 		assertEquals("Annual Inventory", annual.getName());
 		assertEquals(from(LocalDateTime.parse("2021-12-31 10:00:15", DATE_TIME_FORMATTER).atZone(ZONE_ID_UTC).toInstant()),
 		    annual.getDate());
-		assertEquals(DATE_FORMATTER.parse("2021-12-31"), annual.getEndDate());
 		
 		InventoryAdjustment firstQtr = adjustments.get(1);
 		assertEquals(2, firstQtr.getId().intValue());
 		assertEquals("First Quarter Inventory", firstQtr.getName());
 		assertEquals(from(LocalDateTime.parse("2022-03-31 15:00:20", DATE_TIME_FORMATTER).atZone(ZONE_ID_UTC).toInstant()),
 		    firstQtr.getDate());
-		assertEquals(DATE_FORMATTER.parse("2022-04-01"), firstQtr.getEndDate());
 		
 		InventoryAdjustment secondQtr = adjustments.get(2);
 		assertEquals(3, secondQtr.getId().intValue());
 		assertEquals("Second Quarter Inventory", secondQtr.getName());
 		assertEquals(from(LocalDateTime.parse("2022-06-30 16:00:20", DATE_TIME_FORMATTER).atZone(ZONE_ID_UTC).toInstant()),
 		    secondQtr.getDate());
-		Assert.assertNull(secondQtr.getEndDate());
 	}
 }

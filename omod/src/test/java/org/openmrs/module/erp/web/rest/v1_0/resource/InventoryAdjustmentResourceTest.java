@@ -22,7 +22,6 @@ import org.openmrs.module.erp.api.impl.odoo.OdooClient;
 import org.openmrs.module.erp.api.impl.odoo.OdooInventoryServiceImpl;
 import org.openmrs.module.erp.api.impl.odoo.OdooTestUtils;
 import org.openmrs.module.erp.impl.odoo.InventoryAdjustment;
-import org.openmrs.module.erp.impl.odoo.OdooConstants;
 import org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResourceTest;
 
 public class InventoryAdjustmentResourceTest extends BaseDelegatingResourceTest<InventoryAdjustmentResource, InventoryAdjustment> {
@@ -67,7 +66,6 @@ public class InventoryAdjustmentResourceTest extends BaseDelegatingResourceTest<
 		assertPropEquals("id", getObject().getId());
 		assertPropEquals("name", getObject().getName());
 		assertPropEquals("date", getObject().getDate());
-		assertPropEquals("endDate", OdooConstants.DATE_FORMATTER.format(getObject().getEndDate()));
 		assertPropEquals("display", getObject().getName());
 	}
 	

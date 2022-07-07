@@ -14,10 +14,8 @@ import java.util.List;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.erp.api.ErpInventoryService;
 import org.openmrs.module.erp.impl.odoo.InventoryAdjustment;
-import org.openmrs.module.erp.impl.odoo.OdooConstants;
 import org.openmrs.module.erp.web.rest.ErpRestConstants;
 import org.openmrs.module.webservices.rest.web.RequestContext;
-import org.openmrs.module.webservices.rest.web.annotation.PropertyGetter;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
@@ -38,17 +36,7 @@ public class InventoryAdjustmentResource extends BaseNamedOdooResource<Inventory
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
 		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
 		description.addRequiredProperty("date");
-		description.addProperty("endDate");
 		return description;
-	}
-	
-	@PropertyGetter("endDate")
-	public String getEndDate(InventoryAdjustment delegate) {
-		if (delegate.getEndDate() == null) {
-			return null;
-		}
-		
-		return OdooConstants.DATE_FORMATTER.format(delegate.getEndDate());
 	}
 	
 	protected PageableResult doGetAll(RequestContext context) throws ResponseException {
