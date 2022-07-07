@@ -30,9 +30,6 @@ public class OdooMaintenanceServiceImpl extends BaseOpenmrsService implements Er
 	
 	public static final String MODEL_STAGE = "maintenance.stage";
 	
-	public static final List<String> REQUEST_FETCH_FIELDS = unmodifiableList(
-	    asList("name", "equipment_id", "request_date", "schedule_date", "duration"));
-	
 	public static final List<String> EQUIPMENT_FETCH_FIELDS = unmodifiableList(
 	    asList("name", "category_id", "serial_no", "location"));
 	
@@ -82,7 +79,7 @@ public class OdooMaintenanceServiceImpl extends BaseOpenmrsService implements Er
 				logger.debug("Non terminal maintenance stage ids: " + asList(stageIds));
 			}
 			
-			return odooClient.searchAndRead(MODEL_REQUEST, asList("stage_id", "in", stageIds), REQUEST_FETCH_FIELDS);
+			return odooClient.searchAndRead(MODEL_REQUEST, asList("stage_id", "in", stageIds), null);
 		}
 		catch (XmlRpcException e) {
 			throw new APIException(e);

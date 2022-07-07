@@ -18,7 +18,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.openmrs.module.erp.ErpConstants;
-import org.openmrs.module.erp.api.impl.odoo.OdooClient;
 import org.powermock.reflect.Whitebox;
 
 public class OdooClientTest {
@@ -61,6 +60,21 @@ public class OdooClientTest {
 		Mockito.verify(mockXmlRpcClient).execute("execute_kw",
 		    asList(ODOO_DB, ODOO_USER_ID, ODOO_PASSWORD, modelName, "search_read",
 		        singletonList(singletonList(asList(idField, op, id))), singletonMap("fields", singletonList(nameField))));
+	}
+	
+	@Test
+	public void searchAndRead_shouldExecuteTheOdooRpcSearchReadCallWithNoFields() throws Exception {
+		final String modelName = "maintenance.equipment";
+		final String idField = "id";
+		final String op = "=";
+		final Integer id = 1;
+		when(mockProperties.getProperty(ErpConstants.PASSWORD_PROPERTY)).thenReturn(ODOO_PASSWORD);
+		when(mockProperties.getProperty(ErpConstants.DATABASE_PROPERTY)).thenReturn(ODOO_DB);
+		
+		odooClient.searchAndRead(modelName, asList(idField, op, id), null);
+		
+		Mockito.verify(mockXmlRpcClient).execute("execute_kw", asList(ODOO_DB, ODOO_USER_ID, ODOO_PASSWORD, modelName,
+		    "search_read", singletonList(singletonList(asList(idField, op, id)))));
 	}
 	
 	@Test

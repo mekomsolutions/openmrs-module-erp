@@ -159,7 +159,7 @@ public class OdooClient implements ErpClient {
 	 * 
 	 * @param model the name of the odoo model to search
 	 * @param criteria the search criteria to apply e.g. ["name", "=", "test"], ["id", ">", "2"]
-	 * @param fields the list of the model fields to include for each returned item's payload
+	 * @param fields optional list of the model fields to include for each returned item's payload
 	 * @return an array of matching results
 	 * @throws XmlRpcException
 	 * @throws MalformedURLException
@@ -169,9 +169,19 @@ public class OdooClient implements ErpClient {
 		
 		authenticateIfNecessary();
 		
+		List<Object> params = new ArrayList();
+		params.add(getDatabase());
+		params.add(uid);
+		params.add(getPassword());
+		params.add(model);
+		params.add("search_read");
+		params.add(singletonList(singletonList(criteria)));
+		if (fields != null) {
+			params.add(singletonMap("fields", fields));
+		}
+		
 		//TODO Add an API for the criteria argument instead of using a list
-		return (Object[]) client.execute("execute_kw", asList(getDatabase(), uid, getPassword(), model, "search_read",
-		    singletonList(singletonList(criteria)), singletonMap("fields", fields)));
+		return (Object[]) client.execute("execute_kw", params);
 	}
 	
 	/**

@@ -52,7 +52,13 @@ public class OdooJsonUtils {
 		}
 		
 		CollectionType javaType = MAPPER.getTypeFactory().constructCollectionType(List.class, itemClass);
-		return MAPPER.convertValue(data, javaType);
+		List<T> items = MAPPER.convertValue(data, javaType);
+		
+		for (int i = 0; i < items.size(); i++) {
+			items.get(i).setData((Map) data[i]);
+		}
+		
+		return items;
 	}
 	
 	private static Object convertToNullIfFalse(Object o) {
