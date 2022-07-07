@@ -32,7 +32,8 @@ public interface OdooModel {
 	void setData(Map<String, Object> data);
 	
 	/**
-	 * Gets the value of the field matching the specified name
+	 * Gets the value of the field matching the specified name, this method returns the raw value as
+	 * read from odoo.
 	 *
 	 * @param fieldName the name of the field
 	 * @return the field value

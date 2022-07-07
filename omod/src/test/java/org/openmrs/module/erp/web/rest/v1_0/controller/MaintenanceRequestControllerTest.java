@@ -6,7 +6,6 @@ import static org.openmrs.module.erp.api.impl.odoo.OdooMaintenanceServiceImpl.EQ
 import static org.openmrs.module.erp.api.impl.odoo.OdooMaintenanceServiceImpl.MODEL_EQUIPMENT;
 import static org.openmrs.module.erp.api.impl.odoo.OdooMaintenanceServiceImpl.MODEL_REQUEST;
 import static org.openmrs.module.erp.api.impl.odoo.OdooMaintenanceServiceImpl.MODEL_STAGE;
-import static org.openmrs.module.erp.api.impl.odoo.OdooMaintenanceServiceImpl.REQUEST_FETCH_FIELDS;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -46,7 +45,7 @@ public class MaintenanceRequestControllerTest extends BaseErpControllerTest {
 		Mockito.when(mockOdooClient.search(MODEL_STAGE, asList("done", "=", false))).thenReturn(stageIds);
 		
 		Object[] requestData = OdooTestUtils.loadResource("odoo_maintenance_requests.json");
-		Mockito.when(mockOdooClient.searchAndRead(MODEL_REQUEST, asList("stage_id", "in", stageIds), REQUEST_FETCH_FIELDS))
+		Mockito.when(mockOdooClient.searchAndRead(MODEL_REQUEST, asList("stage_id", "in", stageIds), null))
 		        .thenReturn(requestData);
 		
 		List<Map> activeRequests = Arrays.stream(requestData).map(r -> (Map) r).collect(Collectors.toList());

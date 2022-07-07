@@ -1,7 +1,6 @@
 package org.openmrs.module.erp.api.impl.odoo;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.unmodifiableList;
 
 import java.net.MalformedURLException;
 import java.util.List;
@@ -16,8 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class OdooInventoryServiceImpl extends BaseOpenmrsService implements ErpInventoryService {
 	
 	public static final String MODEL_INVENTORY = "stock.inventory";
-	
-	public static final List<String> INVENTORY_FETCH_FIELDS = unmodifiableList(asList("name", "date"));
 	
 	private OdooClient odooClient;
 	
@@ -34,9 +31,7 @@ public class OdooInventoryServiceImpl extends BaseOpenmrsService implements ErpI
 	@Override
 	public List<InventoryAdjustment> getInventoryAdjustments() throws APIException {
 		try {
-			Object[] adjustments = odooClient.searchAndRead(MODEL_INVENTORY, asList("state", "=", "confirm"),
-			    INVENTORY_FETCH_FIELDS);
-			
+			Object[] adjustments = odooClient.searchAndRead(MODEL_INVENTORY, asList("state", "=", "confirm"), null);
 			return OdooJsonUtils.convertToList(adjustments, InventoryAdjustment.class);
 		}
 		catch (XmlRpcException e) {

@@ -2,7 +2,6 @@ package org.openmrs.module.erp.web.rest.v1_0.controller;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertNotNull;
-import static org.openmrs.module.erp.api.impl.odoo.OdooInventoryServiceImpl.INVENTORY_FETCH_FIELDS;
 import static org.openmrs.module.erp.api.impl.odoo.OdooInventoryServiceImpl.MODEL_INVENTORY;
 
 import org.junit.Assert;
@@ -34,7 +33,7 @@ public class InventoryAdjustmentControllerTest extends BaseErpControllerTest {
 		MockitoAnnotations.initMocks(this);
 		OdooInventoryServiceImpl s = (OdooInventoryServiceImpl) ((Advised) service).getTargetSource().getTarget();
 		s.setOdooClient(mockOdooClient);
-		Mockito.when(mockOdooClient.searchAndRead(MODEL_INVENTORY, asList("state", "=", "confirm"), INVENTORY_FETCH_FIELDS))
+		Mockito.when(mockOdooClient.searchAndRead(MODEL_INVENTORY, asList("state", "=", "confirm"), null))
 		        .thenReturn(OdooTestUtils.loadResource("odoo_inventory_adjustments.json"));
 	}
 	

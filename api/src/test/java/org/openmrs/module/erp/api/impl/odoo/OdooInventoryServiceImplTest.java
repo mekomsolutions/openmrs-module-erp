@@ -3,7 +3,6 @@ package org.openmrs.module.erp.api.impl.odoo;
 import static java.util.Arrays.asList;
 import static java.util.Date.from;
 import static org.junit.Assert.assertEquals;
-import static org.openmrs.module.erp.api.impl.odoo.OdooInventoryServiceImpl.INVENTORY_FETCH_FIELDS;
 import static org.openmrs.module.erp.api.impl.odoo.OdooInventoryServiceImpl.MODEL_INVENTORY;
 import static org.openmrs.module.erp.impl.odoo.OdooConstants.DATE_TIME_FORMATTER;
 import static org.openmrs.module.erp.impl.odoo.OdooConstants.ZONE_ID_UTC;
@@ -34,7 +33,7 @@ public class OdooInventoryServiceImplTest {
 	
 	@Test
 	public void getInventoryAdjustments_shouldFetchTheActiveInventoryAdjustments() throws Exception {
-		Mockito.when(mockOdooClient.searchAndRead(MODEL_INVENTORY, asList("state", "=", "confirm"), INVENTORY_FETCH_FIELDS))
+		Mockito.when(mockOdooClient.searchAndRead(MODEL_INVENTORY, asList("state", "=", "confirm"), null))
 		        .thenReturn(OdooTestUtils.loadResource("odoo_inventory_adjustments.json"));
 		
 		List<InventoryAdjustment> adjustments = service.getInventoryAdjustments();

@@ -10,7 +10,6 @@
 package org.openmrs.module.erp.web.rest.v1_0.resource;
 
 import static java.util.Arrays.asList;
-import static org.openmrs.module.erp.api.impl.odoo.OdooInventoryServiceImpl.INVENTORY_FETCH_FIELDS;
 import static org.openmrs.module.erp.api.impl.odoo.OdooInventoryServiceImpl.MODEL_INVENTORY;
 
 import org.junit.Before;
@@ -41,8 +40,7 @@ public class InventoryAdjustmentResourceTest extends BaseDelegatingResourceTest<
 	@Override
 	public InventoryAdjustment newObject() {
 		try {
-			Mockito.when(
-			    mockOdooClient.searchAndRead(MODEL_INVENTORY, asList("state", "=", "confirm"), INVENTORY_FETCH_FIELDS))
+			Mockito.when(mockOdooClient.searchAndRead(MODEL_INVENTORY, asList("state", "=", "confirm"), null))
 			        .thenReturn(OdooTestUtils.loadResource("odoo_inventory_adjustments.json"));
 			
 			return service.getInventoryAdjustments().get(0);
