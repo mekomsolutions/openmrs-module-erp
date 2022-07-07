@@ -7,6 +7,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -89,6 +92,17 @@ public class BaseOdooModelTest {
 	public void hashCode_shouldDelegateToSuperclassIfTheObjectHasNoId() {
 		OdooModel obj = new TestModel(null);
 		Assert.assertNotNull(obj.hashCode());
+	}
+	
+	@Test
+	public void getValue_shouldReturnTheFieldValue() {
+		Map data = new HashMap();
+		data.put("firstName", "John");
+		data.put("lastName", "Doe");
+		OdooModel obj = new TestModel(null);
+		obj.setData(data);
+		Assert.assertEquals("John", obj.getValue("firstName"));
+		Assert.assertEquals("Doe", obj.getValue("lastName"));
 	}
 	
 }
