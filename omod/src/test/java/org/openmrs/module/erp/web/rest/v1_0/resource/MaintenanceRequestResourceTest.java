@@ -90,8 +90,7 @@ public class MaintenanceRequestResourceTest extends BaseDelegatingResourceTest<M
 		return null;
 	}
 	
-	@Override
-	public void validateRefRepresentation() {
+	private void assertProps() {
 		assertPropEquals("id", getObject().getId());
 		assertPropEquals("name", getObject().getName());
 		assertPropEquals("requestDate", OdooConstants.DATE_FORMATTER.format(getObject().getRequestDate()));
@@ -110,49 +109,20 @@ public class MaintenanceRequestResourceTest extends BaseDelegatingResourceTest<M
 		equipmentResource.put("category", category);
 		equipmentResource.put("display", equipment.getName());
 		assertPropEquals("equipment", equipmentResource);
+	}
+	
+	@Override
+	public void validateRefRepresentation() {
+		assertProps();
 	}
 	
 	@Override
 	public void validateDefaultRepresentation() {
-		assertPropEquals("id", getObject().getId());
-		assertPropEquals("name", getObject().getName());
-		assertPropEquals("requestDate", OdooConstants.DATE_FORMATTER.format(getObject().getRequestDate()));
-		assertPropEquals("scheduleDate", getObject().getScheduleDate());
-		assertPropEquals("duration", getObject().getDuration());
-		assertPropEquals("display", getObject().getName());
-		Equipment equipment = getObject().getEquipment();
-		Map category = new HashMap();
-		category.put("categoryId", equipment.getCategoryId());
-		category.put("categoryName", equipment.getCategoryName());
-		Map equipmentResource = new HashMap();
-		equipmentResource.put("id", equipment.getId());
-		equipmentResource.put("name", equipment.getName());
-		equipmentResource.put("serialNo", equipment.getSerialNo());
-		equipmentResource.put("location", equipment.getLocation());
-		equipmentResource.put("category", category);
-		equipmentResource.put("display", equipment.getName());
-		assertPropEquals("equipment", equipmentResource);
+		assertProps();
 	}
 	
 	@Override
 	public void validateFullRepresentation() {
-		assertPropEquals("id", getObject().getId());
-		assertPropEquals("name", getObject().getName());
-		assertPropEquals("requestDate", OdooConstants.DATE_FORMATTER.format(getObject().getRequestDate()));
-		assertPropEquals("scheduleDate", getObject().getScheduleDate());
-		assertPropEquals("duration", getObject().getDuration());
-		assertPropEquals("display", getObject().getName());
-		Equipment equipment = getObject().getEquipment();
-		Map category = new HashMap();
-		category.put("categoryId", equipment.getCategoryId());
-		category.put("categoryName", equipment.getCategoryName());
-		Map equipmentResource = new HashMap();
-		equipmentResource.put("id", equipment.getId());
-		equipmentResource.put("name", equipment.getName());
-		equipmentResource.put("serialNo", equipment.getSerialNo());
-		equipmentResource.put("location", equipment.getLocation());
-		equipmentResource.put("category", category);
-		equipmentResource.put("display", equipment.getName());
-		assertPropEquals("equipment", equipmentResource);
+		assertProps();
 	}
 }

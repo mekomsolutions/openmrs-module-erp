@@ -63,30 +63,26 @@ public class InventoryAdjustmentResourceTest extends BaseDelegatingResourceTest<
 		return null;
 	}
 	
-	@Override
-	public void validateRefRepresentation() {
+	private void assertProps() {
 		assertPropEquals("id", getObject().getId());
 		assertPropEquals("name", getObject().getName());
 		assertPropEquals("date", getObject().getDate());
 		assertPropEquals("endDate", OdooConstants.DATE_FORMATTER.format(getObject().getEndDate()));
 		assertPropEquals("display", getObject().getName());
+	}
+	
+	@Override
+	public void validateRefRepresentation() {
+		assertProps();
 	}
 	
 	@Override
 	public void validateDefaultRepresentation() {
-		assertPropEquals("id", getObject().getId());
-		assertPropEquals("name", getObject().getName());
-		assertPropEquals("date", getObject().getDate());
-		assertPropEquals("endDate", OdooConstants.DATE_FORMATTER.format(getObject().getEndDate()));
-		assertPropEquals("display", getObject().getName());
+		assertProps();
 	}
 	
 	@Override
 	public void validateFullRepresentation() {
-		assertPropEquals("id", getObject().getId());
-		assertPropEquals("name", getObject().getName());
-		assertPropEquals("date", getObject().getDate());
-		assertPropEquals("endDate", OdooConstants.DATE_FORMATTER.format(getObject().getEndDate()));
-		assertPropEquals("display", getObject().getName());
+		assertProps();
 	}
 }
