@@ -111,7 +111,13 @@ public class MaintenanceRequestResourceTest extends BaseDelegatingResourceTest<M
 	
 	@Override
 	public void validateRefRepresentation() {
-		assertProps();
+		assertPropEquals("id", getObject().getId());
+		assertPropEquals("name", getObject().getName());
+		assertPropEquals("display", getObject().getName());
+		assertPropNotPresent("requestDate");
+		assertPropNotPresent("scheduleDate");
+		assertPropNotPresent("duration");
+		assertPropNotPresent("equipment");
 	}
 	
 	@Override

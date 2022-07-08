@@ -9,12 +9,20 @@
  */
 package org.openmrs.module.erp.web.rest.v1_0.resource;
 
+import static org.openmrs.module.erp.web.rest.ErpRestConstants.REPRESENTATION_ODOO_PREFIX;
+
 import org.openmrs.module.erp.impl.odoo.BaseNamedOdooModel;
+import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.annotation.PropertyGetter;
+import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
+import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
+import org.openmrs.module.webservices.rest.web.representation.NamedRepresentation;
+import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingCrudResource;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
+import org.openmrs.module.webservices.rest.web.response.ConversionException;
 import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOperationException;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
@@ -25,16 +33,39 @@ public abstract class BaseNamedOdooResource<R extends BaseNamedOdooModel> extend
 	 */
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
-		DelegatingResourceDescription description = new DelegatingResourceDescription();
-		description.addRequiredProperty("id");
-		description.addRequiredProperty("name");
-		description.addProperty("display");
-		return description;
+		if (rep instanceof RefRepresentation || rep instanceof DefaultRepresentation || rep instanceof FullRepresentation) {
+			DelegatingResourceDescription description = new DelegatingResourceDescription();
+			description.addRequiredProperty("id");
+			description.addRequiredProperty("name");
+			description.addProperty("display");
+			
+			return description;
+		}
+		
+		return null;
 	}
 	
 	@PropertyGetter("display")
 	public String getDisplayString(R delegate) {
 		return delegate.getName();
+	}
+	
+	/**
+	 * @see DelegatingCrudResource#asRepresentation(Object, Representation)
+	 */
+	@Override
+	public SimpleObject asRepresentation(R delegate, Representation representation) throws ConversionException {
+		String rep = representation.getRepresentation();
+		if (representation instanceof NamedRepresentation && rep.startsWith(REPRESENTATION_ODOO_PREFIX)) {
+			SimpleObject simpleObject = new SimpleObject();
+			for (String propertyName : rep.replace(REPRESENTATION_ODOO_PREFIX, "").split(",")) {
+				simpleObject.put(propertyName, delegate.getValue(propertyName));
+			}
+			
+			return simpleObject;
+		}
+		
+		return super.asRepresentation(delegate, representation);
 	}
 	
 	/**

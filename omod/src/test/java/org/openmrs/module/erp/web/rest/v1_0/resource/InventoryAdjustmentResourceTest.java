@@ -69,7 +69,10 @@ public class InventoryAdjustmentResourceTest extends BaseDelegatingResourceTest<
 	
 	@Override
 	public void validateRefRepresentation() {
-		assertProps();
+		assertPropEquals("id", getObject().getId());
+		assertPropEquals("name", getObject().getName());
+		assertPropEquals("display", getObject().getName());
+		assertPropNotPresent("date");
 	}
 	
 	@Override

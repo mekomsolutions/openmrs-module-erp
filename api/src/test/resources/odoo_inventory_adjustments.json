@@ -2,16 +2,19 @@
     {
         "id": 1,
         "name": "Annual Inventory",
-        "date": "2021-12-31 10:00:15"
+        "date": "2021-12-31 10:00:15",
+        "other_field": "other1"
     },
     {
         "id": 2,
         "name": "First Quarter Inventory",
-        "date": "2022-03-31 15:00:20"
+        "date": "2022-03-31 15:00:20",
+        "other_field": "other2"
     },
     {
         "id": 3,
         "name": "Second Quarter Inventory",
-        "date": "2022-06-30 16:00:20"
+        "date": "2022-06-30 16:00:20",
+        "other_field": "false"
     }
 ]

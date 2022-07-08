@@ -22,6 +22,8 @@ import org.openmrs.module.erp.web.rest.ErpRestConstants;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.annotation.PropertyGetter;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
+import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
+import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.AlreadyPaged;
@@ -40,11 +42,14 @@ public class MaintenanceRequestResource extends BaseNamedOdooResource<Maintenanc
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
 		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
-		description.addRequiredProperty("equipment");
-		description.addRequiredProperty("requestDate");
-		description.addRequiredProperty("equipment");
-		description.addProperty("scheduleDate");
-		description.addProperty("duration");
+		if (rep instanceof DefaultRepresentation || rep instanceof FullRepresentation) {
+			description.addRequiredProperty("equipment");
+			description.addRequiredProperty("requestDate");
+			description.addRequiredProperty("equipment");
+			description.addProperty("scheduleDate");
+			description.addProperty("duration");
+		}
+		
 		return description;
 	}
 	

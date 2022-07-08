@@ -17,6 +17,8 @@ import org.openmrs.module.erp.impl.odoo.InventoryAdjustment;
 import org.openmrs.module.erp.web.rest.ErpRestConstants;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
+import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
+import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.AlreadyPaged;
@@ -35,7 +37,10 @@ public class InventoryAdjustmentResource extends BaseNamedOdooResource<Inventory
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
 		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
-		description.addRequiredProperty("date");
+		if (rep instanceof DefaultRepresentation || rep instanceof FullRepresentation) {
+			description.addRequiredProperty("date");
+		}
+		
 		return description;
 	}
 	
