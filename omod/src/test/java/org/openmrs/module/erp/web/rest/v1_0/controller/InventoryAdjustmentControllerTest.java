@@ -5,7 +5,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.openmrs.module.erp.api.impl.odoo.OdooInventoryServiceImpl.MODEL_INVENTORY;
-import static org.openmrs.module.erp.web.rest.ErpRestConstants.REPRESENTATION_ODOO_PREFIX;
+import static org.openmrs.module.erp.web.rest.ErpRestConstants.REPRESENTATION_ERP;
+import static org.openmrs.module.erp.web.rest.ErpRestConstants.REPRESENTATION_ERP_PREFIX;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -83,9 +84,9 @@ public class InventoryAdjustmentControllerTest extends BaseErpControllerTest {
 	}
 	
 	@Test
-	public void shouldGetAllTheActiveInventoryAdjustmentsAsTheOdooRepresentation() throws Exception {
+	public void shouldGetAllTheActiveInventoryAdjustmentsAsTheErpCustomRepresentation() throws Exception {
 		SimpleObject result = deserialize(
-		    handle(newGetRequest(getURI(), new Parameter("v", REPRESENTATION_ODOO_PREFIX + "name,other_field"))));
+		    handle(newGetRequest(getURI(), new Parameter("v", REPRESENTATION_ERP_PREFIX + "name,other_field"))));
 		
 		assertNotNull(result);
 		assertEquals(getAllCount(), Util.getResultsSize(result));
@@ -101,6 +102,31 @@ public class InventoryAdjustmentControllerTest extends BaseErpControllerTest {
 		assertEquals("Second Quarter Inventory", Util.getByPath(result, "results[2]/name"));
 		assertNull(Util.getByPath(result, "results[2]/other_field"));
 		assertNull(Util.getByPath(result, "results[2]/date"));
+	}
+	
+	@Test
+	public void shouldGetAllTheActiveInventoryAdjustmentsAsTheErpRepresentation() throws Exception {
+		SimpleObject result = deserialize(handle(newGetRequest(getURI(), new Parameter("v", REPRESENTATION_ERP))));
+		
+		assertNotNull(result);
+		assertEquals(getAllCount(), Util.getResultsSize(result));
+		assertEquals(1, Util.getByPath(result, "results[0]/id"));
+		assertEquals("Annual Inventory", Util.getByPath(result, "results[0]/name"));
+		assertEquals("2021-12-31 10:00:15", Util.getByPath(result, "results[0]/date"));
+		assertEquals("other1", Util.getByPath(result, "results[0]/other_field"));
+		assertNull(Util.getByPath(result, "results[0]/display"));
+		
+		assertEquals(2, Util.getByPath(result, "results[1]/id"));
+		assertEquals("First Quarter Inventory", Util.getByPath(result, "results[1]/name"));
+		assertEquals("2022-03-31 15:00:20", Util.getByPath(result, "results[1]/date"));
+		assertEquals("other2", Util.getByPath(result, "results[1]/other_field"));
+		assertNull(Util.getByPath(result, "results[1]/display"));
+		
+		assertEquals(3, Util.getByPath(result, "results[2]/id"));
+		assertEquals("Second Quarter Inventory", Util.getByPath(result, "results[2]/name"));
+		assertEquals("2022-06-30 16:00:20", Util.getByPath(result, "results[2]/date"));
+		assertNull(Util.getByPath(result, "results[2]/other_field"));
+		assertNull(Util.getByPath(result, "results[2]/display"));
 	}
 	
 }

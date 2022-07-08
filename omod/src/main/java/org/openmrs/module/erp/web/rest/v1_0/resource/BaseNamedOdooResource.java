@@ -9,12 +9,14 @@
  */
 package org.openmrs.module.erp.web.rest.v1_0.resource;
 
-import static org.openmrs.module.erp.web.rest.ErpRestConstants.REPRESENTATION_ODOO_PREFIX;
+import static org.openmrs.module.erp.web.rest.ErpRestConstants.REPRESENTATION_ERP;
+import static org.openmrs.module.erp.web.rest.ErpRestConstants.REPRESENTATION_ERP_PREFIX;
 
 import org.openmrs.module.erp.impl.odoo.BaseNamedOdooModel;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.annotation.PropertyGetter;
+import org.openmrs.module.webservices.rest.web.annotation.RepHandler;
 import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.NamedRepresentation;
@@ -50,15 +52,23 @@ public abstract class BaseNamedOdooResource<R extends BaseNamedOdooModel> extend
 		return delegate.getName();
 	}
 	
+	@RepHandler(name = REPRESENTATION_ERP)
+	public SimpleObject asRepresentation(R delegate) {
+		SimpleObject simpleObject = new SimpleObject();
+		simpleObject.putAll(delegate.getData());
+		
+		return simpleObject;
+	}
+	
 	/**
 	 * @see DelegatingCrudResource#asRepresentation(Object, Representation)
 	 */
 	@Override
 	public SimpleObject asRepresentation(R delegate, Representation representation) throws ConversionException {
 		String rep = representation.getRepresentation();
-		if (representation instanceof NamedRepresentation && rep.startsWith(REPRESENTATION_ODOO_PREFIX)) {
+		if (representation instanceof NamedRepresentation && rep.startsWith(REPRESENTATION_ERP_PREFIX)) {
 			SimpleObject simpleObject = new SimpleObject();
-			for (String propertyName : rep.replace(REPRESENTATION_ODOO_PREFIX, "").split(",")) {
+			for (String propertyName : rep.replace(REPRESENTATION_ERP_PREFIX, "").split(",")) {
 				simpleObject.put(propertyName, delegate.getValue(propertyName));
 			}
 			

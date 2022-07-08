@@ -8,7 +8,8 @@ import static org.openmrs.module.erp.api.impl.odoo.OdooMaintenanceServiceImpl.EQ
 import static org.openmrs.module.erp.api.impl.odoo.OdooMaintenanceServiceImpl.MODEL_EQUIPMENT;
 import static org.openmrs.module.erp.api.impl.odoo.OdooMaintenanceServiceImpl.MODEL_REQUEST;
 import static org.openmrs.module.erp.api.impl.odoo.OdooMaintenanceServiceImpl.MODEL_STAGE;
-import static org.openmrs.module.erp.web.rest.ErpRestConstants.REPRESENTATION_ODOO_PREFIX;
+import static org.openmrs.module.erp.web.rest.ErpRestConstants.REPRESENTATION_ERP;
+import static org.openmrs.module.erp.web.rest.ErpRestConstants.REPRESENTATION_ERP_PREFIX;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -103,9 +104,9 @@ public class MaintenanceRequestControllerTest extends BaseErpControllerTest {
 	}
 	
 	@Test
-	public void shouldGetAllTheMaintenanceRequestsAsTheOdooRepresentation() throws Exception {
+	public void shouldGetAllTheMaintenanceRequestsAsTheErpCustomRepresentation() throws Exception {
 		SimpleObject result = deserialize(
-		    handle(newGetRequest(getURI(), new Parameter("v", REPRESENTATION_ODOO_PREFIX + "name,other_field"))));
+		    handle(newGetRequest(getURI(), new Parameter("v", REPRESENTATION_ERP_PREFIX + "name,other_field"))));
 		
 		assertNotNull(result);
 		assertEquals(getAllCount(), Util.getResultsSize(result));
@@ -117,6 +118,39 @@ public class MaintenanceRequestControllerTest extends BaseErpControllerTest {
 		assertEquals("Lower Left Limb Repair", Util.getByPath(result, "results[1]/name"));
 		assertNull(Util.getByPath(result, "results[1]/other_field"));
 		assertNull(Util.getByPath(result, "results[1]/request_date"));
+	}
+	
+	@Test
+	public void shouldGetAllTheMaintenanceRequestsAsTheErpRepresentation() throws Exception {
+		SimpleObject result = deserialize(handle(newGetRequest(getURI(), new Parameter("v", REPRESENTATION_ERP))));
+		
+		assertNotNull(result);
+		assertEquals(getAllCount(), Util.getResultsSize(result));
+		assertEquals(1, Util.getByPath(result, "results[0]/id"));
+		assertEquals("Upper Left Limb Repair", Util.getByPath(result, "results[0]/name"));
+		assertEquals(101, Util.getByPath(result, "results[0]/equipment_id[0]"));
+		assertEquals("Upper Left Limb", Util.getByPath(result, "results[0]/equipment_id[1]"));
+		assertEquals("2022-06-28", Util.getByPath(result, "results[0]/request_date"));
+		assertEquals("2022-06-28 11:00:15", Util.getByPath(result, "results[0]/schedule_date"));
+		assertEquals(new Double(1.0), Util.getByPath(result, "results[0]/duration"));
+		assertEquals("other1", Util.getByPath(result, "results[0]/other_field"));
+		assertNull(Util.getByPath(result, "results[0]/equipment"));
+		assertNull(Util.getByPath(result, "results[0]/requestDate"));
+		assertNull(Util.getByPath(result, "results[0]/scheduleDate"));
+		assertNull(Util.getByPath(result, "results[0]/display"));
+		
+		assertEquals(2, Util.getByPath(result, "results[1]/id"));
+		assertEquals("Lower Left Limb Repair", Util.getByPath(result, "results[1]/name"));
+		assertEquals(102, Util.getByPath(result, "results[1]/equipment_id[0]"));
+		assertEquals("Lower Left Limb", Util.getByPath(result, "results[1]/equipment_id[1]"));
+		assertEquals("2022-06-29", Util.getByPath(result, "results[1]/request_date"));
+		assertEquals("2022-06-29 16:00:20", Util.getByPath(result, "results[1]/schedule_date"));
+		assertEquals(new Double(2.0), Util.getByPath(result, "results[1]/duration"));
+		assertNull(Util.getByPath(result, "results[1]/other_field"));
+		assertNull(Util.getByPath(result, "results[1]/equipment"));
+		assertNull(Util.getByPath(result, "results[1]/requestDate"));
+		assertNull(Util.getByPath(result, "results[1]/scheduleDate"));
+		assertNull(Util.getByPath(result, "results[1]/display"));
 	}
 	
 }
