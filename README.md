@@ -99,17 +99,18 @@ _Optional:_ `v`, the object representation, see below.
 
 The v parameter allows a client to specify how the returned object should be modeled/represented, there is 4 types of 
 representations available:
-- `default` Returns a subset set of entity properties in as defined on the mapped entity class in the module, usually 
+- `default` Returns a subset of entity properties as they are defined on the mapped entity class in the module, usually 
   includes the **id**, **name**, **display** and some other extra useful properties.
 - `full` Similar to the default representation but returns all the properties defined on the mapped entity class in this 
   module.
-- `custom` Allows a client to pass the mapped entity property names you want to retrieve. E.g. for maintenance requests, provide it with 
-  the following example syntax:
+- `custom` Allows a client to pass the mapped entity property names you want to retrieve. E.g. for maintenance requests, 
+  provide it with the following example syntax:
 ```
 ?v=custom:name,equipment,requestDate,scheduleDate
 ```
 - `erp` Allows a client to request the entity in the same representation as the ERP web service would return, this can 
-  be useful when a client needs to fetch specific custom fields that were added to a model.
+  be useful when a client needs to fetch specific custom fields that were added to a model, provide it with the 
+  following example syntax:
 ```
 ?v=erp
 ```
@@ -120,8 +121,8 @@ with the following example syntax:
 ```
 
 **NOTE**: Datetime fields for `ref`, `default`, `full` and `custom` representations are formatted just like any other 
-date field in the web service module i.e. include timezone information but for `erp` representation the datetime fields 
-are returned as they are in odoo i.e. in UTC and with no extra timezone information. 
+datetime field in the web service module i.e. including timezone information but for `erp` representation the datetime 
+fields are represented exactly like the odoo web service API i.e. in UTC and with no extra timezone information. 
 
 
 ### How to query the ERP objects?
