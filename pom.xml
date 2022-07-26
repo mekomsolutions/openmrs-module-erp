@@ -69,12 +69,6 @@
             <version>${openmrsPlatformVersion}</version>
             <scope>provided</scope>
             <type>jar</type>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.servlet</groupId>
-                    <artifactId>servlet-api</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <!-- OpenMRS Core test dependencies -->
