@@ -38,7 +38,7 @@
         <uiframeworkVersion>3.3.1</uiframeworkVersion>
         <uicommonsVersion>1.4</uicommonsVersion>
 
-        <emrapiVersion>1.19</emrapiVersion>
+        <emrapiVersion>1.21.0</emrapiVersion>
 
         <reportingVersion>1.12.0</reportingVersion>
         <calculationVersion>1.1</calculationVersion>
@@ -103,13 +103,13 @@
         <repository>
             <id>openmrs-repo</id>
             <name>OpenMRS Nexus Repository</name>
-            <url>http://mavenrepo.openmrs.org/nexus/content/repositories/public</url>
+            <url>https://mavenrepo.openmrs.org/nexus/content/repositories/public</url>
         </repository>
         <repository>
             <id>central</id>
             <name>Maven Repository Switchboard</name>
             <layout>default</layout>
-            <url>http://repo1.maven.org/maven2</url>
+            <url>https://repo1.maven.org/maven2</url>
         </repository>
         <repository>
             <id>mks-nexus-public</id>
@@ -124,7 +124,7 @@
         <pluginRepository>
             <id>openmrs-repo</id>
             <name>OpenMRS Nexus Repository</name>
-            <url>http://mavenrepo.openmrs.org/nexus/content/repositories/public</url>
+            <url>https://mavenrepo.openmrs.org/nexus/content/repositories/public</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>

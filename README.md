@@ -5,8 +5,10 @@ OpenMRS module to expose an API endpoint to access ERP data
 - Odoo 10
   + Orders
   + Invoices
+  + Products
 
 ### Required setup
+mvn package -Dmaven.test.skip=true
 
 ##### Properties file:
 
