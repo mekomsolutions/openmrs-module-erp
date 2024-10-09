@@ -8,7 +8,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.openmrs.module.erp.ErpContext;
 import org.openmrs.module.erp.api.ErpPartnerService;
 import org.openmrs.module.erp.api.utils.TestHelper;
 import org.openmrs.web.test.BaseModuleWebContextSensitiveTest;
@@ -20,12 +19,11 @@ import java.util.List;
 import java.util.Map;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
 
 public class ErpPartnerControllerTest extends BaseModuleWebContextSensitiveTest {
 	
 	@Mock
-	protected ErpContext erpContext;
+	protected ErpPartnerService erpPartnerService;
 	
 	@InjectMocks
 	@Autowired
@@ -40,9 +38,7 @@ public class ErpPartnerControllerTest extends BaseModuleWebContextSensitiveTest 
 	public void setup() {
 		
 		MockitoAnnotations.initMocks(this);
-		ErpPartnerService erpPartnerService = mock(ErpPartnerService.class);
 		
-		Mockito.doReturn(erpPartnerService).when(erpContext).getErpPartnerService();
 		Mockito.doReturn(Collections.singletonList(getPartner())).when(erpPartnerService).getErpPartnersByFilters(any());
 		
 		Mockito.doReturn(getPartner()).when(erpPartnerService).getErpPartnerById(any());
