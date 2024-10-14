@@ -3,7 +3,9 @@ package org.openmrs.module.erp.api.utils;
 //import com.odoojava.api.*;
 import org.openmrs.module.erp.ErpActivator;
 import org.openmrs.module.erp.ErpConstants;
-import org.openmrs.module.erp.ErpContext;
+import org.openmrs.module.erp.api.ErpInvoiceService;
+import org.openmrs.module.erp.api.ErpOrderService;
+import org.openmrs.module.erp.api.ErpPartnerService;
 import org.openmrs.util.OpenmrsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -29,8 +31,16 @@ public class TestHelper {
 	private ErpActivator erpActivator;
 	
 	@Autowired
-	@Qualifier(ErpConstants.COMPONENT_ERP_CONTEXT)
-	protected ErpContext context;
+	@Qualifier(ErpConstants.COMPONENT_ODOO_ORDER_SERVICE)
+	protected ErpOrderService erpOrderService;
+	
+	@Autowired
+	@Qualifier(ErpConstants.COMPONENT_ODOO_INVOICE_SERVICE)
+	protected ErpInvoiceService erpInvoiceService;
+	
+	@Autowired
+	@Qualifier(ErpConstants.COMPONENT_ODOO_PARTNER_SERVICE)
+	protected ErpPartnerService erpPartnerService;
 	
 	public static void createErpPropertiesFile() {
 		File erpPropsFile = new File(OpenmrsUtil.getApplicationDataDirectory(), fileName);

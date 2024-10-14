@@ -3,12 +3,12 @@ package org.openmrs.module.erp.web.controller;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.openmrs.module.erp.ErpConstants;
-import org.openmrs.module.erp.ErpContext;
 import org.openmrs.module.erp.Filter;
 import org.openmrs.module.erp.api.ErpInvoiceService;
 import org.openmrs.module.erp.web.RecordRepresentation;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,16 +21,13 @@ import java.util.Map;
 public class ErpInvoiceController {
 	
 	@Autowired
-	protected ErpContext erpContext;
-	
-	@Autowired
-	private ErpInvoiceService erpInvoiceService;
-	
+	@Qualifier(ErpConstants.COMPONENT_ODOO_INVOICE_SERVICE)
+	protected ErpInvoiceService erpInvoiceService;
+		
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseBody
 	public Object getInvoicesByFilters(@RequestBody String jsonString,
 	                                   @RequestParam(value = "rep", defaultValue = "default") String rep) {
-		erpInvoiceService = erpContext.getErpInvoiceService();
 		
 		RecordRepresentation recordRepresentation = new RecordRepresentation(erpInvoiceService.defaultModelAttributes());
 		
@@ -64,8 +61,6 @@ public class ErpInvoiceController {
 	@ResponseBody
 	public Object getInvoiceById(@PathVariable("id") String invoiceId,
 	                             @RequestParam(value = "rep", defaultValue = "default") String rep) {
-		
-		erpInvoiceService = erpContext.getErpInvoiceService();
 		
 		return new RecordRepresentation(erpInvoiceService.defaultModelAttributes())
 		        .getRepresentedRecord(erpInvoiceService.getInvoiceById(invoiceId), rep);

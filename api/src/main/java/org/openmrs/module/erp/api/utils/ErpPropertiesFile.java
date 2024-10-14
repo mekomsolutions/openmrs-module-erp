@@ -21,7 +21,12 @@ public class ErpPropertiesFile {
 	
 	public static File getFile() {
 		String fileName = ErpConstants.ERP_PROPERTY_FILE_NAME;
-		return new File(OpenmrsUtil.getApplicationDataDirectory(), fileName);
+		File file = new File(OpenmrsUtil.getApplicationDataDirectory(), fileName);
+		if (file.exists()) {
+			return file;
+		}
+		LogFactory.getLog(ErpPropertiesFile.class).warn("Could not find erp.properties file in directory: " + file.getParent() + ". Failing over to location /etc/properties/.");
+		return new File("/etc/properties/", fileName);
 	}
 	
 	public static InputStream getInputStream() throws FileNotFoundException {

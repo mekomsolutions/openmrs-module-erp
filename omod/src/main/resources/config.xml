@@ -23,9 +23,6 @@
 		<require_module version="${webservices.restVersion}">
 			org.openmrs.module.webservices.rest
 		</require_module>
-		<require_module version="${emrapiVersion}">
-			org.openmrs.module.emrapi
-		</require_module>
 	</require_modules>
 
 	<!-- Privileges -->

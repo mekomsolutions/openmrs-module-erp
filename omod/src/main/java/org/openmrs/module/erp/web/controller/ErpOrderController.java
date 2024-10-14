@@ -3,13 +3,13 @@ package org.openmrs.module.erp.web.controller;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.openmrs.module.erp.ErpConstants;
-import org.openmrs.module.erp.ErpContext;
 import org.openmrs.module.erp.Filter;
 import org.openmrs.module.erp.api.ErpOrderService;
 import org.openmrs.module.erp.web.RecordRepresentation;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.v1_0.controller.BaseRestController;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,16 +22,14 @@ import java.util.Map;
 public class ErpOrderController extends BaseRestController {
 	
 	@Autowired
-	protected ErpContext erpContext;
-	
-	@Autowired
-	private ErpOrderService erpOrderService;
+	@Qualifier(ErpConstants.COMPONENT_ODOO_ORDER_SERVICE)
+	protected ErpOrderService erpOrderService;
 	
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseBody
 	public Object getErpOrdersByFilters(@RequestBody String jsonString,
 	                                    @RequestParam(value = "rep", defaultValue = "default") String rep) {
-		erpOrderService = erpContext.getErpOrderService();
+		
 		RecordRepresentation recordRepresentation = new RecordRepresentation(erpOrderService.defaultModelAttributes());
 		
 		ArrayList<Filter> filtersArray = new ArrayList<>();
@@ -64,7 +62,7 @@ public class ErpOrderController extends BaseRestController {
 	@ResponseBody
 	public Object getErpOrderById(@PathVariable("id") String id,
 	                              @RequestParam(value = "rep", defaultValue = "default") String rep) {
-		erpOrderService = erpContext.getErpOrderService();
+		
 		return new RecordRepresentation(erpOrderService.defaultModelAttributes())
 		        .getRepresentedRecord(erpOrderService.getErpOrderById(id), rep);
 	}

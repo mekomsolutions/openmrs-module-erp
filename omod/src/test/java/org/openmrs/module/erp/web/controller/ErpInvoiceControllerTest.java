@@ -7,12 +7,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.openmrs.module.erp.ErpContext;
 import org.openmrs.module.erp.api.ErpInvoiceService;
 import org.openmrs.module.erp.api.utils.TestHelper;
 import org.openmrs.web.test.BaseModuleWebContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -20,12 +18,11 @@ import java.util.Map;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
 
 public class ErpInvoiceControllerTest extends BaseModuleWebContextSensitiveTest {
 	
 	@Mock
-	protected ErpContext erpContext;
+	protected ErpInvoiceService erpInvoiceService;
 	
 	@InjectMocks
 	@Autowired
@@ -40,9 +37,7 @@ public class ErpInvoiceControllerTest extends BaseModuleWebContextSensitiveTest 
 	public void setup() {
 		
 		MockitoAnnotations.initMocks(this);
-		ErpInvoiceService erpInvoiceService = mock(ErpInvoiceService.class);
 		
-		Mockito.doReturn(erpInvoiceService).when(erpContext).getErpInvoiceService();
 		Mockito.doReturn(getInvoice()).when(erpInvoiceService).getInvoiceById(anyString());
 		Mockito.doReturn(Collections.singletonList(getInvoice())).when(erpInvoiceService).getInvoicesByFilters(any());
 		
