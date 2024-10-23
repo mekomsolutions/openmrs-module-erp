@@ -125,7 +125,7 @@ datetime field in the web service module i.e. including timezone information but
 fields are represented exactly like the odoo web service API i.e. in UTC and with no extra timezone information. 
 
 
-### How to query the ERP objects?
+### How To Query For Orders And Invoices
 
 _Example with ERP Orders_
 
