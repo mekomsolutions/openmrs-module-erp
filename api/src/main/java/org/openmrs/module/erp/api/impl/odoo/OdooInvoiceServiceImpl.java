@@ -22,8 +22,12 @@ public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 	
 	private static final String INVOICE_MODEL = "account.move";
 	
-	private ArrayList<String> invoiceDefaultAttributes = new ArrayList<String>(Arrays.asList("name", "amount_total", "state",
-	    "pricelist_id", "payment_term_id", "invoice_status", "origin", "create_date", "currency_id"));
+	private ArrayList<String> invoiceDefaultAttributes = new ArrayList<String>(
+	        Arrays.asList("id", "name", "date", "state", "invoice_date", "invoice_date_due", "payment_state", "amount_total",
+	            "amount_residual", "currency_id", "partner_id", "invoice_origin", "create_date"));
+	
+	private ArrayList<String> invoiceLineAttributes = new ArrayList<String>(Arrays.asList("id", "name", "quantity",
+	    "product_uom_id", "move_id", "product_id", "price_unit", "price_subtotal", "price_total", "display_type"));
 	
 	@Autowired
 	private OdooClient odooClient;
@@ -57,7 +61,12 @@ public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 		try {
 			
 			Object[] records = (Object[]) odooClient.execute("read", INVOICE_MODEL,
-			    Collections.singletonList(Integer.parseInt(invoiceId)), null);
+			    Collections.singletonList(Integer.parseInt(invoiceId)), new HashMap() {
+				    
+				    {
+					    put("fields", invoiceDefaultAttributes);
+				    }
+			    });
 			
 			if ((records != null) && (records.length > 0)) {
 				Map record = (Map) records[0];
@@ -95,7 +104,7 @@ public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 				filterCollection.add(asList(filter.getFieldName(), filter.getComparison(), filter.getValue()));
 			}
 			
-			ArrayList<String> fields = odooClient.getDomainFields(INVOICE_MODEL);
+			ArrayList<String> fields = invoiceDefaultAttributes;
 			Object[] records = (Object[]) odooClient.execute("search_read", INVOICE_MODEL, filterCollection, new HashMap() {
 				
 				{
@@ -144,7 +153,7 @@ public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 			
 			filterCollection.add(condition);
 			
-			ArrayList<String> fields = odooClient.getDomainFields("account.move.line");
+			ArrayList<String> fields = invoiceLineAttributes;
 			Object[] records = (Object[]) odooClient.execute("search_read", "account.move.line", filterCollection,
 			    new HashMap() {
 				    
@@ -163,6 +172,7 @@ public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 						Object value = rec.get(field);
 						result.put(field, value);
 					}
+					result.put("exclude_from_invoice_tab", isExcludedFromInvoiceTab(result.get("display_type")));
 					response.add(result);
 				});
 			}
@@ -171,5 +181,12 @@ public class OdooInvoiceServiceImpl implements ErpInvoiceService {
 			throw new APIException("Error while reading data from ERP server", e);
 		}
 		return response;
+	}
+	
+	private boolean isExcludedFromInvoiceTab(Object displayType) {
+		if (displayType == null || Boolean.FALSE.equals(displayType)) {
+			return false;
+		}
+		return !"product".equals(displayType);
 	}
 }

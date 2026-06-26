@@ -23,7 +23,7 @@ public class ErpInvoiceController {
 	@Autowired
 	@Qualifier(ErpConstants.COMPONENT_ODOO_INVOICE_SERVICE)
 	protected ErpInvoiceService erpInvoiceService;
-		
+	
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseBody
 	public Object getInvoicesByFilters(@RequestBody String jsonString,
