@@ -29,7 +29,7 @@ public class ErpPartnerController extends BaseRestController {
 	@ResponseBody
 	public Object getErpPartnersByFilters(@RequestBody String jsonString,
 	                                      @RequestParam(value = "rep", defaultValue = "default") String rep) {
-
+		
 		RecordRepresentation recordRepresentation = new RecordRepresentation(erpPartnerService.defaultModelAttributes());
 		
 		ArrayList<Filter> filtersArray = new ArrayList<>();
@@ -62,7 +62,7 @@ public class ErpPartnerController extends BaseRestController {
 	@ResponseBody
 	public Object getErpPartnerById(@PathVariable("id") String id,
 	                                @RequestParam(value = "rep", defaultValue = "default") String rep) {
-
+		
 		return new RecordRepresentation(erpPartnerService.defaultModelAttributes())
 		        .getRepresentedRecord(erpPartnerService.getErpPartnerById(id), rep);
 	}

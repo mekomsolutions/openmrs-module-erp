@@ -25,7 +25,8 @@ public class ErpPropertiesFile {
 		if (file.exists()) {
 			return file;
 		}
-		LogFactory.getLog(ErpPropertiesFile.class).warn("Could not find erp.properties file in directory: " + file.getParent() + ". Failing over to location /etc/properties/.");
+		LogFactory.getLog(ErpPropertiesFile.class).warn("Could not find erp.properties file in directory: "
+		        + file.getParent() + ". Failing over to location /etc/properties/.");
 		return new File("/etc/properties/", fileName);
 	}
 	
